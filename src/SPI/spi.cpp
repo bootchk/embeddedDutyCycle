@@ -23,17 +23,6 @@
  * Too change to another instance substitute in many places.
  */
 
-/*
- * Specialize for one family member.
- * Must precede eusci_b_spi.h
- */
-// For compiling in some IDE's where these are not defined earlier
-#ifndef __MSP430__
-#define __MSP430__
-#define __MSP430FR2033__
-// #define MSPEXP430FR2433LP
-#endif
-
 
 
 // TI DriverLib

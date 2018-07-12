@@ -2,24 +2,6 @@
 #include "powerMgtModule.h"
 
 
-/*
- * Choose mcu family and chip.
- * Must precede SPI.h
- * This configures pins for SPI interface to the default for the Launchpad i.e. the dev kit board.
- * I.E. configures a board.h file.
- *
- * A hack to get a clean compile in Eclipse IDE.
- * !!! Not necessarily correct, they just eliminate compiler errors.
- * Not needed if compiling in Energia IDE (where the Board Manager does magic.)
- * Proper paths also necessary.
- */
-#ifndef __MSP430__
-#define __MSP430__
-#define __MSP430FR4133__
-#endif
-
-
-
 // mcu hal layer e.g. MSPWare DriverLib
 // depends on msp430.h
 #include <pmm.h>

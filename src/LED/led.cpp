@@ -2,14 +2,6 @@
 #include "led.h"
 
 
-// For compiling in some IDE's where these are not defined earlier
-#ifndef __MSP430__
-#define __MSP430__
-#define __MSP430FR4133__
-// #define MSPEXP430FR2433LP
-#endif
-
-
 // DriverLib
 #include <gpio.h>
 

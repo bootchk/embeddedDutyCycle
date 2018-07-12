@@ -3,28 +3,6 @@
 
 #include "spi.h"
 
-#ifdef USE_ENERGIA_SPI
-
-Not used. This constrains choice of pins.
-This requires a dev environment with Energia.
-
-/* Choose mcu family and chip.
- * Must precede SPI.h
- * This configures pins for SPI interface to the default for the Launchpad i.e. the dev kit board.
- * I.E. configures a board.h file.
- *
- * A hack to get a clean compile in Eclipse IDE.
- * !!! Not necessarily correct, they just eliminate compiler errors.
- * Not needed if compiling in Energia IDE (where the Board Manager does magic.)
- * Proper paths also necessary.
- */
-#define __MSP430__
-#define __MSP430FR4133__ 1
-// #define MSPEXP430FR2433LP 1
-
-#include <SPI.h>
-#endif
-
 
 
 void Serial::begin() {
