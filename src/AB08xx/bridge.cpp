@@ -6,8 +6,7 @@
 
 
 /*
- * This implementation is the SPI choice for channel.
- * Uses Arduino/Energia library.
+ * Uses a Serial channel, typically  SPI or I2C
  */
 
 
@@ -40,7 +39,11 @@ unsigned char mangleWriteAddress(Address address) {
 void readBuffer( unsigned char * bufferPtr, unsigned int size) {
 	// require slave already selected
 	for(unsigned int i = 0; i < size; i++) {
-		bufferPtr[i] = Serial::transfer(0);
+	    /*
+	     * Transfer as a read requires dummy byte here a distinctive pattern.
+	     * Expect return value is from slave
+	     */
+		bufferPtr[i] = Serial::transfer(0b10101010);
 	}
 }
 

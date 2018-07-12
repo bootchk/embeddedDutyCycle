@@ -32,6 +32,7 @@ void Serial::end() {
 
 
 unsigned char Serial::transfer(unsigned char value) {
+    // requires slave selected
 	return SPI::transfer(value);
 }
 

@@ -149,10 +149,17 @@ void SPI::configureMasterDevice() {
 	// setBitOrder()
 	param.msbFirst = EUSCI_A_SPI_MSB_FIRST;
 
-    // SPI_MODE == 0
+    // SPI clock mode
+	// SPI_MODE == 0
 	// setDataMode()
 	param.clockPhase = EUSCI_A_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
 	param.clockPolarity = EUSCI_A_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
+
+	/*
+	 * TI's SPI mode
+	 * 3-pin mode (SCLK, SMOSI, and SMISO) w separate SS not part of eUSCI module
+	 */
+	param.spiMode = EUSCI_A_SPI_3PIN;
 
 	EUSCI_A_SPI_initMaster(SPIInstanceAddress, &param);
 }

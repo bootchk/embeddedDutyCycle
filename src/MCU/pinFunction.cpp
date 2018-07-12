@@ -51,8 +51,6 @@ void PinFunction::configureSelectSPIPin() {
 void PinFunction::selectSPISlave(){
 	GPIO_setOutputLowOnPin(RTCSelectPort, RTCSelectPin);
 }
-
-
 void PinFunction::deselectSPISlave(){
 	GPIO_setOutputHighOnPin(RTCSelectPort, RTCSelectPin);
 }
