@@ -102,6 +102,10 @@ public:
 	 * Configure one mcu GPIO pin for alarm interrupts from rtc.
 	 */
 	static void configureMcuAlarmInterface();
+	/*
+	 * Was pin configured as input for Alarm?
+	 */
+	static bool isConfiguredMcuAlarmInterface();
 
     /*
      * Over SPI, configure RTC clock mode and alarm interrupt.

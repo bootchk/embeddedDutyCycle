@@ -82,6 +82,14 @@ void SPI::disable() {
  * I.E. duplex communication.
  */
 unsigned char SPI::transfer(unsigned char value) {
+
+    /*
+     * Requires any previous transfer complete.
+     * we wait afterwards, but for safety also check before.
+     * Maybe configuration takes some time before SPI module is not busy?
+     */
+    while(EUSCI_A_SPI_isBusy(SPIInstanceAddress)) ;
+
 	EUSCI_A_SPI_transmitData(SPIInstanceAddress, value);
 
 	/*
@@ -111,10 +119,20 @@ void SPI::unconfigureMaster() {
 
 
 void SPI::configureMasterPins() {
-	GPIO_setAsPeripheralModuleFunctionOutputPin(MOSI_PORT,   MOSI_PIN,     GPIO_SECONDARY_MODULE_FUNCTION);
-	GPIO_setAsPeripheralModuleFunctionOutputPin(SPI_CLK_PORT, SPI_CLK_PIN, GPIO_SECONDARY_MODULE_FUNCTION);
+    /*
+     * See Datasheet, Table 6.19 (IO Diagrams) for ordinal of module.
+     *
+     * The SEL bits:
+     * 00 == GPIO
+     * 01 == primary module
+     * 10 == secondary module
+     *
+     * On Port2, UCA1 is primary module
+     */
+	GPIO_setAsPeripheralModuleFunctionOutputPin(MOSI_PORT,   MOSI_PIN,     GPIO_PRIMARY_MODULE_FUNCTION);
+	GPIO_setAsPeripheralModuleFunctionOutputPin(SPI_CLK_PORT, SPI_CLK_PIN, GPIO_PRIMARY_MODULE_FUNCTION);
 	// One input pin
-	GPIO_setAsPeripheralModuleFunctionInputPin(MISO_PORT,     MISO_PIN,    GPIO_SECONDARY_MODULE_FUNCTION);
+	GPIO_setAsPeripheralModuleFunctionInputPin(MISO_PORT,     MISO_PIN,    GPIO_PRIMARY_MODULE_FUNCTION);
 }
 
 void SPI::unconfigureMasterPins() {
@@ -135,6 +153,8 @@ void SPI::unconfigureMasterPins() {
  * Configuration of master's SPI device must match that of remote device.
  *
  * Other config: clock source not dictated by SPI standard
+ *
+ * FUTURE: this could be done with a const struct
  */
 void SPI::configureMasterDevice() {
 	// require disabled

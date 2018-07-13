@@ -17,12 +17,23 @@
 
 
 
-
+/*
+ * Alarm pin
+ */
 
 void PinFunction::configureAlarmPinPullupLoToHiInterrupt() {
 	GPIO_setAsInputPinWithPullUpResistor(AlarmSignalPort, AlarmSignalPin);
     GPIO_enableInterrupt(AlarmSignalPort, AlarmSignalPin);
 	GPIO_selectInterruptEdge(AlarmSignalPort, AlarmSignalPin, GPIO_LOW_TO_HIGH_TRANSITION);
+}
+
+/*
+ * Hack for asserts only.
+ * Not implemented
+ * Should either use a variable in FRAM, or access port dir bit directly
+ */
+bool PinFunction::isConfiguredAlarmPin() {
+    return true;
 }
 
 void PinFunction::clearAlarmInterruptOnPin() {

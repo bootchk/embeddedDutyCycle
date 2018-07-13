@@ -14,6 +14,8 @@
  * The design intends that the rtc also suffered a reset.
  */
 void Duty::onPowerOnReset() {
+    // Must precede waitSPIReadyOrReset
+    Alarm::configureMcuAlarmInterface();
 
 	/*
 	 * Spin finite time waiting for rtc ready for SPI, i.e. out of reset.
@@ -27,8 +29,6 @@ void Duty::onPowerOnReset() {
 
 	// Must precede use of SPI to configure rtc
 	Alarm::configureMcuSPIInterface();
-
-	Alarm::configureMcuAlarmInterface();
 
 	Alarm::configureRTC();
 

@@ -16,6 +16,7 @@ public:
 	static void deselectSPISlave();
 
 	static void configureAlarmPinPullupLoToHiInterrupt();
+	static bool isConfiguredAlarmPin();
 	static void clearAlarmInterruptOnPin();
 	static bool isAlarmPinHigh();
 

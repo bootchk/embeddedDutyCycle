@@ -6,7 +6,7 @@
 #include "MCU/pinFunction.h"    // hides GPIO functions
 #include "MCU/powerMgtModule.h"
 
-
+#include <cassert>
 
 /*
  * RTC signals SPI not ready (during reset) by asserting rtc:Fout/nIRQ pin low.
@@ -16,6 +16,7 @@
  * Alternatively, if signal is another RTC pin (nRST), the interrupt could be configured falling edge.
  */
 bool Alarm::isSPIReady() {
+    assert(isConfiguredMcuAlarmInterface());    // requires
 	return (Alarm::isAlarmInterruptSignalHigh());
 }
 
@@ -30,10 +31,10 @@ void Alarm::resetIfSPINotReady() {
 
 
 void Alarm::waitSPIReadyOrReset() {
-	int i;
+	int i = 0;
 	while ( ! Alarm::isSPIReady() ) {
 		i++;
-		if (i > 100) {
+		if (i > 1000) {
 			PMM::triggerSoftwareBORReset();
 		}
 	}
@@ -94,9 +95,11 @@ void Alarm::configureMcuAlarmInterface() {
 	 * Use trailing edge, low-to-high
 	 */
 	PinFunction::configureAlarmPinPullupLoToHiInterrupt();
-
 }
 
+bool Alarm::isConfiguredMcuAlarmInterface() {
+    return PinFunction::isConfiguredAlarmPin();
+}
 
 
 void Alarm::configureRTC() {
