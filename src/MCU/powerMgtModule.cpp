@@ -12,9 +12,11 @@
 
 
 
-
+/*
+ * Hack: use bare metal instead of DriverLib.  Should be equivalent.
+ */
 void PMM::stopWatchdog() {
-	// bare metal
+	// bare metal: password & disable bit
 	WDTCTL = WDTPW + WDTHOLD;
 
 	// Using Driverlib
@@ -45,6 +47,12 @@ bool PMM::isResetAWakeFromSleep() {
 void PMM::clearIsResetAWakeFromSleep() {
 	PMM_clearInterrupt(PMM_LPM5_INTERRUPT);
 }
+
+void PMM::clearAllResetInterruptFlags() {
+    PMM_clearInterrupt(PMM_ALL);
+}
+
+
 
 
 void PMM::triggerSoftwareBORReset() {

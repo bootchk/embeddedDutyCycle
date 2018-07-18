@@ -8,6 +8,47 @@
 
 #include <cassert>
 
+
+
+
+
+void Alarm::configureForAlarming() {
+        // Must precede waitSPIReadyOrReset
+        Alarm::configureMcuAlarmInterface();
+
+        /*
+         * Spin finite time waiting for rtc ready for SPI, i.e. out of reset.
+         */
+        Alarm::waitSPIReadyOrReset();
+
+        // assert alarm interrupt signal is high
+        // mcu pin resets to an input, but without interrupt enabled
+
+        // Assume rtc was reset also
+
+        // Must precede use of SPI to configure rtc
+        Alarm::configureMcuSPIInterface();
+
+        Alarm::configureRTC();
+}
+
+
+void Alarm::configureAfterWake() {
+        // Fail reset if RTC not alive.
+        Alarm::resetIfSPINotReady();
+
+        Alarm::configureMcuSPIInterface();
+}
+
+
+void Alarm::clearAlarm() {
+        // May fail reset since RTC is remote device.
+        Alarm::clearAlarmOnRTCOrReset();
+
+        Alarm::clearAlarmOnMCU();
+}
+
+
 /*
  * RTC signals SPI not ready (during reset) by asserting rtc:Fout/nIRQ pin low.
  * !!! Same pin as for the Alarm signal.

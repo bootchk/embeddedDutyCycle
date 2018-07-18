@@ -11,24 +11,27 @@
 
 
 
-
+#ifdef USE_WRAPPERS
 void MCUSleep::enterLowestPowerSleep(){
 	 /*
-	     XT1 xtal oscillator must be off.
+	    Require XT1 xtal oscillator off.
 	     See family guide, section 3.2.4 "XT1 Oscillator"
 	     The HW enables it for several conditions such as:
 	     - the sw has configured it as a source for a clock and the clock is active
 	     - a peripheral requests it (typically RTC)
 	     - sw cleared AUTOFF and the power mode is in range [active, LPM4]
-	  */
+
+        Require Watchdog disabled.
+     */
+
 	  /*
 	      In this example, none of conditions exist for XT1 enabled by hw
 	      assert SCG0 == 1 SCG1 == 1, OSCOFF == 1
 	      but those bit field names may be for another family member?
-	  */
 
-	  // This is also necessary if XT1 is on
-      // UCSCTL6 |= XT1OFF | XT2OFF;
+	      This is also necessary if XT1 is on
+          UCSCTL6 |= XT1OFF | XT2OFF;
+	  */
 
 	  // For lowest power, PMM must be off
 	  PMM::configureOff();
@@ -44,6 +47,36 @@ void MCUSleep::enterLowestPowerSleep(){
 	  // ensure Icc is least for family member e.g. Ilpm4.5 == 12nA for MSP430fr2433.
 	  // ensure CPUOFF == 1
 }
+#else
+
+/*
+ * Use exact sequence proscribed by user's guide, to avoid any possiblity of race conditions
+ * or subsequent alteration by unfamiliar programmers.
+ * Without any function wrappers.
+ */
+
+#include <msp430.h>
+
+void MCUSleep::enterLowestPowerSleep(){
+
+    // Disable interrupts
+    __bic_SR_register(GIE);
+    // Unlock PMM
+    PMMCTL0_H = PMMPW_H;
+    // Disable SVS high side
+    PMMCTL0_L &= ~(SVSHE);
+    // Core regulator off
+    PMMCTL0_L |= PMMREGOFF;
+    // Lock PPM
+    PMMCTL0_H = 0;
+
+    // Atomically enable global interrupts and sleep.
+    __bis_SR_register(LPM4_bits & GIE);
+    // __bis_SR_register(LPM4_bits);
+    // Never get here, does not return
+}
+
+#endif
 
 
 

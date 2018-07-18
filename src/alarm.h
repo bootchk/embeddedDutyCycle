@@ -61,8 +61,6 @@ class Alarm {
 	 */
 	static bool isSPIReady();
 
-public:
-
 	/*
 	 * Both might reset instead of return.
 	 */
@@ -89,19 +87,7 @@ public:
 	static void configureMcuSPIInterface();
 
 
-	/*
-	 * Change SPI interface to a low power condition.
-	 * When called, exists a set of in and out GPIO for SPI.
-	 * Ensure all all are low power (inputs not floating.)
-	 * Since RTC is expected to be alive and driving input pins, this might not do anything.
-	 */
-	static void unconfigureMcuSPIInterface();
 
-
-	/*
-	 * Configure one mcu GPIO pin for alarm interrupts from rtc.
-	 */
-	static void configureMcuAlarmInterface();
 	/*
 	 * Was pin configured as input for Alarm?
 	 */
@@ -114,7 +100,6 @@ public:
 	static void configureRTC();
 
 
-private:
 	/*
 	 * Tell RTC to not assert alarm signal.
 	 *
@@ -158,6 +143,20 @@ private:
 	 */
 	static bool clearAlarmOnRTC();
 
+    /*
+     * Is logical state of signal high?
+     * Does not mean the mcu interrupt flag is not set.
+     * The interrupt is usually generated on an upward edge of downward pulse on signal.
+     * The interrupt exists after the signal goes high again.
+     *
+     * The signal is on a net of two pins:
+     *  - RTC Fout/nIRQ pin
+     *  - some GPIO pin of the mcu
+     */
+    static bool isAlarmInterruptSignalHigh();
+
+
+
 
 public:
 	/*
@@ -181,18 +180,39 @@ public:
 	 */
 	static bool setAlarm(Duration);
 
-
-private:
 	/*
-	 * Is logical state of signal high?
-	 * Does not mean the mcu interrupt flag is not set.
-	 * The interrupt is usually generated on an upward edge of downward pulse on signal.
-	 * The interrupt exists after the signal goes high again.
-	 *
-	 * The signal is on a net of two pins:
-	 *  - RTC Fout/nIRQ pin
-	 *  - some GPIO pin of the mcu
+	 * Clear alarm on both sides of interface.
 	 */
-	static bool isAlarmInterruptSignalHigh();
+	static void clearAlarm();
+
+    /*
+     * Prepare for setAlarm()
+     * May reset on failure.
+     *
+     * May lose time on RTC.
+     */
+    static void configureForAlarming();
+
+    /*
+     * After a wake from alarm, configure for clearing alarm.
+     *
+     * May reset on failure.
+     */
+    static void configureAfterWake();
+
+    /*
+     * Change SPI interface to a low power condition.
+     * When called, exists a set of in and out GPIO for SPI.
+     * Ensure all all are low power (inputs not floating.)
+     * Since RTC is expected to be alive and driving input pins, this might not do anything.
+     */
+    static void unconfigureMcuSPIInterface();
+
+
+    /*
+     * Configure one mcu GPIO pin for alarm interrupts from rtc.
+     */
+    static void configureMcuAlarmInterface();
+
 
 };

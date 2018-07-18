@@ -81,8 +81,14 @@ int main(void) {
 		// assert GPIO in sleeping configuration
 	}
 	else {	// power on reset or other reasons
+
+
+
 		// POR reset clears lock bit but other reasons may not.  Requires unlocked, so safer to always unlock.
 		MCUSleep::unlockMCUFromSleep();
+
+		// Must clear flags else will not sleep
+		PMM::clearAllResetInterruptFlags();
 
 		/*
 		 * GPIO configuration is reset.
@@ -114,6 +120,10 @@ int main(void) {
 	 * Does not return.  Continuation is a reset.
 	 * We don't need an infinite loop coded here, the loop is via interrupt and reset back to main()
 	 */
+	while (true) {
+	    __no_operation();
+	}
+
 	MCUSleep::enterLowestPowerSleep();
 	// Never get here...
 }

@@ -37,4 +37,8 @@ public:
 	 */
 	static bool isResetAWakeFromSleep();
 	static void clearIsResetAWakeFromSleep();
+	/*
+	 * Clear all flags for any reset reasons.
+	 */
+	static void clearAllResetInterruptFlags();
 };

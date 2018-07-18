@@ -14,23 +14,7 @@
  * The design intends that the rtc also suffered a reset.
  */
 void Duty::onPowerOnReset() {
-    // Must precede waitSPIReadyOrReset
-    Alarm::configureMcuAlarmInterface();
-
-	/*
-	 * Spin finite time waiting for rtc ready for SPI, i.e. out of reset.
-	 */
-	Alarm::waitSPIReadyOrReset();
-
-	// assert alarm interrupt signal is high
-	// mcu pin resets to an input, but without interrupt enabled
-
-	// Assume rtc was reset also
-
-	// Must precede use of SPI to configure rtc
-	Alarm::configureMcuSPIInterface();
-
-	Alarm::configureRTC();
+    Alarm::configureForAlarming();
 
 	// ensure Alarm is ready for setAlarm()
 	// caller typically calls setAlarm() and then sleeps.
@@ -54,17 +38,9 @@ void Duty::onWakeForAlarm() {
 
 	// require alarm pin (also mean SPI ready) still configured as input
 
-	// Fail reset if RTC not alive.
-	Alarm::resetIfSPINotReady();
+    Alarm::configureAfterWake();
 
-	Alarm::configureMcuSPIInterface();
-
-	/*
-	 May fail reset since RTC is remote device.
-	 */
-	Alarm::clearAlarmOnRTCOrReset();
-
-	Alarm::clearAlarmOnMCU();
+    Alarm::clearAlarm();
 
 	/*
 	 * Assert alarm is cleared and no more will come, yet.
