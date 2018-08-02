@@ -78,8 +78,17 @@ void PinFunction::configureAllGPIOPinsLowPower() {
 	 */
 	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
 	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN1);
+
+	/*
+	 * Used.  Configure high so SPI Ready is also high?
+	 */
 	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN2);
-	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN3);
+	deselectSPISlave();
+
+	// TODO
+	// This will be an input always
+	// GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN3);
+
 	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN4);
 	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN5);
 	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN6);

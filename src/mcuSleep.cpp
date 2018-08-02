@@ -79,6 +79,13 @@ void MCUSleep::enterLowestPowerSleep(){
 #endif
 
 
+void MCUSleep::spinWithInterruptsEnabled() {
+    __bis_SR_register(GIE);
+    while (true) {
+        __no_operation();
+    }
+}
+
 
 void MCUSleep::unlockMCUFromSleep(){
 	PMM::unlockLPM5();

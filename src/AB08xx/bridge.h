@@ -50,9 +50,26 @@ public:
 	static unsigned char read(Address);
 
 	/*
-	 * Write one byte to remote register at address
+	 * Write one byte to remote register at address.
+	 *
+	 * Assertions ensure register contains value.
+	 * Said assertions read back the register.
+	 * This is not appropriate when a read will clear a register
+	 * (But there are no such registers on this RTC chip.)
 	 */
 	static void write(Address, unsigned char value);
+
+	/*
+	 * Sets bits given by mask to remote register at address.
+	 * Ensures that masked bits of register are set.
+	 * Ensures all other bits (not masked) retain their values.
+	 *
+	 * Not general purpose: more generally, you would pass a mask and a value for the masked bits.
+	 */
+	static void setBits(Address, unsigned char mask);
+
+	static void clearBits(Address, unsigned char mask);
+
 
 	/*
 	 * Read Time register.
@@ -61,5 +78,7 @@ public:
 	 * For both, RTCTime is raw, i.e. still BCD encoded for AB08xx
 	 */
 	static void writeAlarm(RTCTime);
+	static void readAlarm(RTCTime*);
+
 	static void readTime(RTCTime* time);
 };

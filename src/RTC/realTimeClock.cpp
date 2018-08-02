@@ -4,6 +4,8 @@
 
 
 
+
+
 /*
  * Implementation knows:
  * - RTC is connected via SPI
@@ -44,13 +46,20 @@ void RTC::configureAlarmInterruptToFoutnIRQPin() {
 	RTC::connectFoutnIRQPinToAlarmSignal();
 }
 
+
+
+
+
+/*
+ * BIT7 == 0 -> not stopped
+ * BIT6 == 0 -> 24 hour mode
+ * BIT0 == 0 -> counter registers locked
+ *
+ * !!! Note that bit 5 is not writeable when LKO2 bits is set.
+ * Must use writeBits: does not ensure that given mask is the final contents of register.
+ */
 void RTC::configure24HourMode() {
-	/*
-	 * BIT7 == 0 -> not stopped
-	 * BIT6 == 1 -> 24 hour mode
-	 * BIT0 == 0 -> counter registers locked
-	 */
-	Bridge::write(Address::Control1, (unsigned char) 0b01000000 ); // (BIT6) ); );
+	Bridge::clearBits(Address::Control1, (unsigned char) 0b01000000 ); // BIT6
 }
 
 
@@ -80,6 +89,10 @@ void RTC::enableAutocalibrationFilter() {
 
 
 
+/*
+ * Related to alarm and its interrupt.
+ */
+
 void RTC::enablePulseInterruptForAlarm() {
 	/*
 	 * Bit 2:  AIE: enable alarm interrupt
@@ -99,6 +112,18 @@ void RTC::connectFoutnIRQPinToAlarmSignal() {
 	Bridge::write(Address::Control2, 0b11 );
 }
 
+void RTC::enableAlarm() {
+    /*
+     * Reset state of TimerControl is all zeros.
+     *
+     * Bits [4:2]==1 => alarm once per year
+     * Bits [4:2]==0 => alarm disabled
+     */
+    Bridge::write(Address::TimerControl, 0b100 );
+}
+
+
+
 
 void RTC::unlockMiscRegisters() {
 	Bridge::write(Address::ConfigurationKey, (unsigned char) Key::UnlockMiscRegisters );
@@ -106,4 +131,21 @@ void RTC::unlockMiscRegisters() {
 
 void RTC::unlockOscControlRegister() {
 	Bridge::write(Address::ConfigurationKey, (unsigned char) Key::UnlockOscillatorControl );
+}
+
+bool RTC::isReadable() {
+    /*
+     * Sane if upper byte of part ID reads as 08, from 08xx part family.
+     * Read will return 0 if SPI not working.
+     */
+    unsigned char ID;
+
+    ID = Bridge::read(Address::Identifier);
+    return (ID == 0x08);
+}
+
+
+bool RTC::readOUTBit() {
+    unsigned char control1 = Bridge::read(Address::Control1);
+    return (control1 & 0b1000);
 }

@@ -4,6 +4,7 @@
 #include "../MCU/pinFunction.h"
 #include "../SPI/serial.h"
 
+#include <cassert>
 
 /*
  * Uses a Serial channel, typically  SPI or I2C
@@ -101,10 +102,40 @@ void Bridge::unconfigureMcuSide() {
 void Bridge::write(Address address, unsigned char value) {
 	// require mcu Serial interface configured
 
+    // Value returned by slave on the write.  Is it the final value, or the previous value?
+    unsigned char transferredValue;
+
 	PinFunction::selectSPISlave();
 	(void) Serial::transfer(mangleWriteAddress(address));
-	(void) Serial::transfer( value);
+	transferredValue = Serial::transfer( value);
 	PinFunction::deselectSPISlave();
+
+	unsigned char finalValue = Bridge::read(address);
+	assert(finalValue == value);
+}
+
+
+/*
+ * See I2C Device library, Github for comparable code.
+ */
+void Bridge::setBits(Address address, unsigned char mask) {
+
+    unsigned char initialValue = Bridge::read(address);
+
+    Bridge::write(address, mask | initialValue );
+}
+
+void Bridge::clearBits(Address address, unsigned char mask) {
+
+    /*
+     * initial value          11
+     * mask                   01
+     * ~mask                  10
+     * initial value & ~mask  10
+     */
+    unsigned char initialValue = Bridge::read(address);
+
+    Bridge::write(address, initialValue & ~mask );
 }
 
 
@@ -134,6 +165,14 @@ void Bridge::writeAlarm(RTCTime alarm) {
 	// assert time was written to RTC
 }
 
+void Bridge::readAlarm(RTCTime* alarm) {
+
+    PinFunction::selectSPISlave();
+    Serial::transfer(mangleReadAddress(Address::Alarm));
+    readBuffer((unsigned char*) alarm, sizeof(RTCTime));
+    PinFunction::deselectSPISlave();
+}
+
 
 
 void Bridge::readTime(RTCTime* time) {
@@ -144,5 +183,4 @@ void Bridge::readTime(RTCTime* time) {
 	PinFunction::deselectSPISlave();
 	// assert time buffer filled with read from rtc
 }
-
 

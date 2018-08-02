@@ -7,6 +7,7 @@
 
 #include <msp430.h>   // PORT1_VECTOR
 
+#include <cassert>
 
 /*
  * ISR for RTC alarm interrupt.
@@ -27,6 +28,7 @@ void __attribute__ ((interrupt(PORT1_VECTOR))) Port1_ISR (void)
 #error Compiler not supported!
 #endif
 {
+    assert(false);  // TEMP
 	Duty::clearAlarmOnMCU();
 }
 
@@ -120,9 +122,10 @@ int main(void) {
 	 * Does not return.  Continuation is a reset.
 	 * We don't need an infinite loop coded here, the loop is via interrupt and reset back to main()
 	 */
-	while (true) {
-	    __no_operation();
-	}
+
+	// TEMP
+	MCUSleep::spinWithInterruptsEnabled();
+
 
 	MCUSleep::enterLowestPowerSleep();
 	// Never get here...

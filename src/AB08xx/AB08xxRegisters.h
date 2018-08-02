@@ -6,8 +6,6 @@
  * Only the ones we use.
  *
  * This should be machine-generated instead of hand coded.
- *
- *
  */
 
 enum class Address : unsigned char {
@@ -18,9 +16,11 @@ enum class Address : unsigned char {
 	Control1 =           0x10,
 	Control2 =           0x11,
 	InterruptMask =      0x12,
+	TimerControl =       0x18,
 	OscillatorControl =  0x1c,
 	ConfigurationKey =   0x1f,
 	AutocalibrationFilter = 0x26,
+	Identifier =         0x28
 
 };
 

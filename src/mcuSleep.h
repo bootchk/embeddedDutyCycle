@@ -21,6 +21,13 @@ public:
 	 */
 	static void enterLowestPowerSleep();
 
+
+	/*
+	 * Not low power.
+	 * For testing.
+	 */
+	static void spinWithInterruptsEnabled();
+
 	/*
 	 * Unlocks GPIO state and makes effective any prior configuration.
 	 * GPIO can be configured prior, but said configuration is not effective until this call.

@@ -9,6 +9,7 @@
 // some mcu family members have watchdog a and b
 // #include <wdt_a.h>
 
+#include <cassert>
 
 
 
@@ -56,5 +57,12 @@ void PMM::clearAllResetInterruptFlags() {
 
 
 void PMM::triggerSoftwareBORReset() {
+    // TODO
+    /*
+     * For debugging, uncomment this assert and catch an attempted reset
+     * in an infinite loop (see definition of assert.)
+     */
+    assert(false);
+
 	PMM_trigBOR();
 }

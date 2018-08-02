@@ -36,6 +36,8 @@ bool timeIsMonotonic(EpochTime nowTime) {
  * except that reads will return zero e.g. now time will be zero.
  */
 
+
+
 /*
  * Implementation is largely converting type (RTCTime) that RTC delivers
  * to type EpochTime (seconds since epoch) so we can use simple math to add Duration
@@ -79,6 +81,10 @@ bool RTC::setAlarm(Duration duration) {
 		 * If it is not set properly, the system may sleep a very long time.
 		 * Also verify that now time is not zero.
 		 */
+		RTCTime readAlarmRTCTime;
+		Bridge::readAlarm(&readAlarmRTCTime);
+		// assert(readAlarmRTCTime == alarmRTCTime);
+
 		result = true;
 	}
 

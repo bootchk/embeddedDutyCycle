@@ -8,10 +8,27 @@
 
 #include <cassert>
 
+// TODO non-volatile
+/*
+ * Hacky approximation of: both sides of interface configured.
+ * Since we can and do set all GPIO to outputs,
+ * this does not account for alarm pin.
+ */
+bool _isConfigured = false;
+
+namespace {
+bool isConfiguredForAlarming() {
+    return _isConfigured;
+}
+
+}
 
 
-
-
+/*
+ * ??? Can not assume RTC was reset also.
+ * RTC might not have powered down and up.
+ * RTC could be in some bizarre state.
+ */
 void Alarm::configureForAlarming() {
         // Must precede waitSPIReadyOrReset
         Alarm::configureMcuAlarmInterface();
@@ -19,7 +36,8 @@ void Alarm::configureForAlarming() {
         /*
          * Spin finite time waiting for rtc ready for SPI, i.e. out of reset.
          */
-        Alarm::waitSPIReadyOrReset();
+        // TODO TEMP
+        //Alarm::waitSPIReadyOrReset();
 
         // assert alarm interrupt signal is high
         // mcu pin resets to an input, but without interrupt enabled
@@ -29,7 +47,14 @@ void Alarm::configureForAlarming() {
         // Must precede use of SPI to configure rtc
         Alarm::configureMcuSPIInterface();
 
+        assert(RTC::isReadable());
+
         Alarm::configureRTC();
+
+        _isConfigured = true;
+        /*
+         * Ensures SPI interface and RTC are configured.
+         */
 }
 
 
@@ -38,6 +63,8 @@ void Alarm::configureAfterWake() {
         Alarm::resetIfSPINotReady();
 
         Alarm::configureMcuSPIInterface();
+
+        // RTC is still configured
 }
 
 
@@ -72,6 +99,15 @@ void Alarm::resetIfSPINotReady() {
 
 
 void Alarm::waitSPIReadyOrReset() {
+    /*
+     * Require RTC in reset condition:  OUT bit is 1 and FOUT/nIRQ configured to show OUT bit.
+     * Otherwise, this code will reset.
+     */
+    /*
+     * Does NOT require SPI interface is ready, only requires alarm pin configured on MCU side.
+     */
+    // WRONG assert(RTC::readOUTBit() == true);
+
 	int i = 0;
 	while ( ! Alarm::isSPIReady() ) {
 		i++;
@@ -125,7 +161,11 @@ bool Alarm::isAlarmInterruptSignalHigh() {
 
 
 void Alarm::configureMcuSPIInterface(){ Bridge::configureMcuSide(); }
-void Alarm::unconfigureMcuSPIInterface() { Bridge::unconfigureMcuSide(); }
+
+void Alarm::unconfigureMcuSPIInterface() {
+    Bridge::unconfigureMcuSide();
+    _isConfigured = false;
+}
 
 
 void Alarm::configureMcuAlarmInterface() {
@@ -145,6 +185,11 @@ bool Alarm::isConfiguredMcuAlarmInterface() {
 
 void Alarm::configureRTC() {
 	// require configureMcuSPIInterface
+    /*
+     * Require alarm is behind the counter.
+     * Otherwise, by chance it could soon match,
+     * resulting in an alarm coming before calling setAlarm().
+     */
 
 	// Order of configuration not important.
 	RTC::configure24HourMode();
@@ -152,6 +197,8 @@ void Alarm::configureRTC() {
 	RTC::configureRCCalibratedOscillatorMode();
 
 	RTC::configureAlarmInterruptToFoutnIRQPin();
+
+	RTC::enableAlarm();
 }
 
 
@@ -160,6 +207,8 @@ void Alarm::configureRTC() {
  */
 bool Alarm::setAlarm(Duration duration) {
 	bool result;
+
+	assert(isConfiguredForAlarming());
 
 	// delegate to RTC
 	result = RTC::setAlarm(duration);
