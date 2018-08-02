@@ -5,8 +5,10 @@
  * Implementation is MSP430 specific.
  */
 #include "MCU/mcu.h"
-#include "MCU/powerMgtModule.h"
 #include "MCU/pinFunction.h"
+
+#include "PMM/powerMgtModule.h"
+#include "resetReason.h"
 
 
 
@@ -50,7 +52,7 @@ void MCUSleep::enterLowestPowerSleep(){
 #else
 
 /*
- * Use exact sequence proscribed by user's guide, to avoid any possiblity of race conditions
+ * Use exact sequence prescribed by user's guide, to avoid any possibility of race conditions
  * or subsequent alteration by unfamiliar programmers.
  * Without any function wrappers.
  */
@@ -91,20 +93,26 @@ void MCUSleep::unlockMCUFromSleep(){
 	PMM::unlockLPM5();
 }
 
+/*
+ The user's guide says alternatives for determinig are:
+ - flag PMMLPM5IFG
+ - decode SYSRSTIV
 
-bool MCUSleep::isResetAWakeFromSleep() {
-	/*
-	 * The user's guide says alternatives are:
-	 * - flag PMMLPM5IFG
-	 * - decode SYSRSTIV
-	 */
-	return PMM::isResetAWakeFromSleep();
-}
+ The PPMLPM5IFG didn't seem to work reliably???
+ */
+#ifdef USE_PPMLPM5IFG
 
-void MCUSleep::clearIsResetAWakeFromSleep() {
-	PMM::clearIsResetAWakeFromSleep();
-}
+bool MCUSleep::isResetAWakeFromSleep() { return PMM::isResetAWakeFromSleep(); }
+void MCUSleep::clearIsResetAWakeFromSleep() { PMM::clearIsResetAWakeFromSleep(); }
 
+#else
+
+bool MCUSleep::isResetAWakeFromSleep() { return ResetReason::isResetAWakeFromSleep(); }
+
+// ??? Need to clear the IFG
+void MCUSleep::clearIsResetAWakeFromSleep() { PMM::clearIsResetAWakeFromSleep(); }
+
+#endif
 
 
 

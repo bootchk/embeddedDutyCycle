@@ -3,7 +3,7 @@
 #include "mcuSleep.h"
 #include "app.h"
 
-#include "MCU/powerMgtModule.h"   // stopWatchdog
+#include "PMM/powerMgtModule.h"   // stopWatchdog
 
 #include <msp430.h>   // PORT1_VECTOR
 
@@ -28,7 +28,7 @@ void __attribute__ ((interrupt(PORT1_VECTOR))) Port1_ISR (void)
 #error Compiler not supported!
 #endif
 {
-    assert(false);  // TEMP
+    // assert(false);  // TEMP
 	Duty::clearAlarmOnMCU();
 }
 
@@ -118,15 +118,12 @@ int main(void) {
 	 *
 	 * Assert some interrupt will come (E.G. a Duty Alarm) else we would sleep forever.
 	 */
+
 	/*
 	 * Does not return.  Continuation is a reset.
 	 * We don't need an infinite loop coded here, the loop is via interrupt and reset back to main()
 	 */
-
-	// TEMP
-	MCUSleep::spinWithInterruptsEnabled();
-
-
+	// MCUSleep::spinWithInterruptsEnabled();  // For debugging.
 	MCUSleep::enterLowestPowerSleep();
 	// Never get here...
 }

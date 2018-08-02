@@ -26,7 +26,6 @@ void RTC::clearIRQInterrupt() {
 	 * AIRQ signal is configured to pin Fout/nIRQ.
 	 */
 	Bridge::write(Address::Status, 0);
-	// Bridge::write(Status, 0);
 }
 
 
