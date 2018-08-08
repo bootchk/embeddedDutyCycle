@@ -14,52 +14,24 @@
  * Serial
  *    USCI	(older device)
  *    eUSCI (newer device)
- *       eUSCI_A variant support UART, iRDA, SPI
- *          one or more instances
- *       eUSCI_B variant support I2C or SPI   <====== this
+ *       eUSCI_A variant support UART, iRDA, SPI  <====== this
+ *          one or more instances, e.g. A0 and A1
+ *       eUSCI_B variant support I2C or SPI
  *          one or more instances per family member
  */
+
+
+
 /*
- * Too change to another instance substitute in many places.
+ * To change to another instance, edit board.h and include different driverlib
  */
-
-
-
 // TI DriverLib
 #include "eusci_a_spi.h"
 //#include "eusci_b_spi.h"
 
 #include "gpio.h"
 
-
-
-
-/*
- * Local alias to definitions specific to:
- * - choice of family member (here MSP430FR2433)
- * - choice of instance of serial device (here UCA1)
- * Right hand sides from gpio.h
- */
-
-/*
- * Address of chosen device instance on chosen family member.
- * MSP430FR2433 choices are A0, A1, B0
- * !!! if family member does not contain the choice of instance, you get compile errors.
- */
-#define SPIInstanceAddress		EUSCI_A1_BASE
-
-// msp430fr2433 specific, using instance UCB0: 1.2, 1.3, 1.1
-// msp430fr2433 specific, using instance UCA1: 2.6, 2.5, 2.4
-
-// P2.6
-#define MOSI_PORT     GPIO_PORT_P2
-#define MOSI_PIN      GPIO_PIN6
-// P2.5
-#define MISO_PORT     GPIO_PORT_P2
-#define MISO_PIN      GPIO_PIN5
-// P2.4
-#define SPI_CLK_PORT  GPIO_PORT_P2
-#define SPI_CLK_PIN   GPIO_PIN4
+#include "../board.h"
 
 
 
@@ -72,6 +44,27 @@ void SPI::enable() {
 
 void SPI::disable() {
 	EUSCI_A_SPI_disable(SPIInstanceAddress);
+}
+
+bool SPI::isEnabled() {
+    // implemented raw registers since Driverlib has no function
+    // (bit0 == 1) => held in reset i.e. disabled
+    return ((UCA1CTLW0 & BIT0) == 0) ;
+}
+
+
+bool SPI::isInterrupt() {
+    bool result;
+
+    unsigned int foo = SPIInstanceAddress;
+    result = EUSCI_A_SPI_getInterruptStatus(SPIInstanceAddress,
+                                           (EUSCI_A_SPI_TRANSMIT_INTERRUPT | EUSCI_A_SPI_RECEIVE_INTERRUPT));
+    return result;
+}
+
+void SPI::clearInterrupt() {
+    EUSCI_A_SPI_clearInterrupt(SPIInstanceAddress,
+                               (EUSCI_A_SPI_TRANSMIT_INTERRUPT | EUSCI_A_SPI_RECEIVE_INTERRUPT));
 }
 
 

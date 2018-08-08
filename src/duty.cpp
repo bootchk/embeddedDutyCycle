@@ -2,7 +2,7 @@
 #include "duty.h"
 
 #include "alarm.h"
-#include "MCU/powerMgtModule.h"	// Software reset
+#include "PMM/powerMgtModule.h"	// Software reset
 
 
 

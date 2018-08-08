@@ -24,11 +24,12 @@ public:
 	static void triggerSoftwareBORReset();
 
 	/*
-	 * LPM5 is a state of mcu.
-	 * It actually is two states: sleepingLPM5 and awakeLPM5.
-	 * sleepingLPM5 is cpu off but GPIO pins locked.
-	 * mcu transitions to awakeLPM5 on interrupt, but GPIO pins are still locked.
-	 * This takes the mcu from awakeLPM5 to operational state, with GPIO pins locked.
+	 * Take mcu from awakeLPM5 to active state, with GPIO pins unlocked, and any prior
+	 *
+	 * State of mcu w/r to LPM5:
+	 * -sleepingLPM5: cpu off but GPIO pins locked.
+	 * -awakeLPM5: cpu on but GPIO pins locked.  Any GPIO configuration done in this state is not effective.
+	 * -active: cpu on and GPIO pins unlocked
 	 */
 	static void unlockLPM5();
 

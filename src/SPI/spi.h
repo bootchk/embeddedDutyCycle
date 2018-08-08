@@ -17,6 +17,7 @@ private:
 public:
 	static void enable();
 	static void disable();
+	static bool isEnabled();
 	static void configureMaster();
 
 	/*
@@ -25,4 +26,8 @@ public:
 	static void unconfigureMaster();
 
 	static unsigned char transfer(unsigned char);
+
+	// Is RX or TX interrupt flag set?
+	static bool isInterrupt();
+	static void clearInterrupt();
 };

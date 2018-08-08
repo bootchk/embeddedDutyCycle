@@ -4,16 +4,8 @@
 // mcu hal layer e.g. MSPWare DriverLib
 #include <gpio.h>	// depends on msp430.h
 
+#include "../board.h"
 
-// rename from hal namespace to alarmLib namespace
-
-// P1.3
-#define AlarmSignalPort GPIO_PORT_P1
-#define AlarmSignalPin  GPIO_PIN3
-
-// P1.2
-#define RTCSelectPort GPIO_PORT_P1
-#define RTCSelectPin  GPIO_PIN2
 
 
 

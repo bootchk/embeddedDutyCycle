@@ -18,3 +18,9 @@ void MCU::enterLPM4orLPM4_5(){
 	 */
 	__bis_SR_register(LPM4_bits & GIE);
 }
+
+
+
+void MCU::enableGlobalInterrupts() {
+    __bis_SR_register(GIE);
+}

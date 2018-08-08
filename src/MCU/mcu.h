@@ -6,4 +6,6 @@
 class MCU {
 public:
 	static void enterLPM4orLPM4_5();
+
+	static void enableGlobalInterrupts();
 };
