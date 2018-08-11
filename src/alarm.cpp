@@ -3,7 +3,7 @@
 
 #include "RTC/realTimeClock.h"  // Avoid clash with rtc.h"
 #include "AB08xx/bridge.h"	    //  hides SPI
-#include "MCU/pinFunction.h"    // hides GPIO functions
+#include "pinFunction/pinFunction.h"    // hides GPIO functions
 #include "PMM/powerMgtModule.h"
 
 #include <cassert>
@@ -24,47 +24,55 @@ bool isConfiguredForAlarming() {
 }
 
 
+
+void Alarm::configureMcuSide() {
+    // Must precede waitSPIReadyOrReset
+    Alarm::configureMcuAlarmInterface();
+
+    // Must precede use of SPI to configure rtc
+    Alarm::configureMcuSPIInterface();
+
+    PMM::unlockLPM5();
+}
+
+#ifdef OLD
+            /*
+             * Spin finite time waiting for rtc ready for SPI, i.e. out of reset.
+             */
+            // TODO TEMP
+            //Alarm::waitSPIReadyOrReset();
+
+            // assert alarm interrupt signal is high
+            // mcu pin resets to an input, but without interrupt enabled
+
+            // Assume rtc was reset also
+#endif
+
+
 /*
- * ??? Can not assume RTC was reset also.
+ * Not assume RTC was reset also.
  * RTC might not have powered down and up.
  * RTC could be in some bizarre state.
  */
 void Alarm::configureForAlarming() {
-        // Must precede waitSPIReadyOrReset
-        Alarm::configureMcuAlarmInterface();
+    Alarm::configureMcuSide();
 
-        /*
-         * Spin finite time waiting for rtc ready for SPI, i.e. out of reset.
-         */
-        // TODO TEMP
-        //Alarm::waitSPIReadyOrReset();
+    assert(RTC::isReadable());
 
-        // assert alarm interrupt signal is high
-        // mcu pin resets to an input, but without interrupt enabled
+    //Alarm::configureRTC();
 
-        // Assume rtc was reset also
-
-        // Must precede use of SPI to configure rtc
-        Alarm::configureMcuSPIInterface();
-
-        assert(RTC::isReadable());
-
-        Alarm::configureRTC();
-
-        _isConfigured = true;
-        /*
-         * Ensures SPI interface and RTC are configured.
-         */
+    _isConfigured = true;
+    // Ensure MCU SPI interface and RTC are configured for alarming
 }
 
 
 void Alarm::configureAfterWake() {
-        // Fail reset if RTC not alive.
-        Alarm::resetIfSPINotReady();
+    // Fail reset if RTC not alive.
+    Alarm::resetIfSPINotReady();
 
-        Alarm::configureMcuSPIInterface();
+    Alarm::configureMcuSPIInterface();
 
-        // RTC is still configured
+    // RTC is still configured
 }
 
 

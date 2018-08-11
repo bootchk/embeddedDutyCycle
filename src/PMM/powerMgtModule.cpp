@@ -1,6 +1,8 @@
 
 #include "powerMgtModule.h"
 
+// depends on register symbols
+#include <msp430.h>
 
 // mcu hal layer e.g. MSPWare DriverLib
 // depends on msp430.h
@@ -36,9 +38,19 @@ void PMM::configureOff() {
 }
 
 
+
+
 void PMM::unlockLPM5() {
 	PMM_unlockLPM5();
 }
+
+bool PMM::isLockedLPM5() {
+    // is lockplm5 bit set?
+    return (PM5CTL0 & LOCKLPM5);
+}
+
+
+
 
 
 bool PMM::isResetAWakeFromSleep() {

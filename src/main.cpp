@@ -4,6 +4,7 @@
 
 #include "mainObject.h"
 #include "mcuSleep.h"
+#include "PMM/powerMgtModule.h"
 
 
 
@@ -17,7 +18,10 @@
  * Must disconnect from debug probe for it to work.
  */
 
-// Disable BSL
+/*
+ * Disable BSL
+ * BSL might already have executed, this only affects subsequent resets.
+ */
 #pragma location=0xFF84
 unsigned int bslSignature1=0x5555;
 #pragma location=0xFF86
@@ -28,20 +32,27 @@ int main(void)
 {
     WDTCTL = WDTPW | WDTHOLD;               // Stop WDT
 
+    // LPM5 might be locked
     Main::onResetPreamble();
-    // assert GPIO unfrozen
-    // !!! Since no interrupt is enabled when unlocked,
-    // no ISR was called, even though interrupt occurred in wakeup case.
+
+    /*
+     * !!! If no interrupt is enabled when unlocked,
+     * no ISR is called, even though interrupt occurred in wakeup case.
+     */
 
     // Dispatch on reset reason: reset is wake out of an LPMx.5 OR any other (typically cold start.)
-    // if (SYSRSTIV == SYSRSTIV_LPM5WU)
-    if ( MCUSleep::isResetAWakeFromSleep()) {
+    if ( Main::isResetAwakeFromSleep()) {
+        PMM::unlockLPM5();
         Main::onWakeFromLPM();
     }
     else {
         // Device powered up from a cold start or other reset reason
+        // assert(not PMM::isLockedLPM5());
+        // LPM5 might be locked if reset reason is not a cold start
         Main::onColdReset();
     }
+
+    assert(not PMM::isLockedLPM5());
 
     Main::configureWakeupSource();
 

@@ -76,8 +76,10 @@
 #define AlarmSignalPort GPIO_PORT_P2
 #define AlarmSignalPin  GPIO_PIN7
 
-// P1.7
-#define RTCSelectPort GPIO_PORT_P1
-#define RTCSelectPin  GPIO_PIN7
+// P1.7 UCA0STE doesn't work?
+// P2.0 (must not conflict with Xin)
+// p3.2
+#define RTCSelectPort GPIO_PORT_P3
+#define RTCSelectPin  GPIO_PIN2
 
 #endif

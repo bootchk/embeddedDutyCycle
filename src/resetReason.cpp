@@ -3,6 +3,8 @@
 
 #include <msp430.h>
 
+#include "testMain.h"
+
 #include <cassert>
 
 
@@ -82,7 +84,8 @@ bool ResetReason::isResetAWakeFromSleep() {
          * Probably errant
          */
     case SYSRSTIV_SECYV:     // Security violation
-        assert(false);
+        //assert(false);
+        TestMain::lightGreenLED();
         break;
 
     // Keys

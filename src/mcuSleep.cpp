@@ -5,7 +5,7 @@
  * Implementation is MSP430 specific.
  */
 #include "MCU/mcu.h"
-#include "MCU/pinFunction.h"
+#include "pinFunction/pinFunction.h"
 
 #include "PMM/powerMgtModule.h"
 #include "resetReason.h"
@@ -116,6 +116,6 @@ void MCUSleep::clearIsResetAWakeFromSleep() { PMM::clearIsResetAWakeFromSleep();
 
 
 
-void MCUSleep::configureAllPinsLowPower() {
-	PinFunction::configureAllGPIOPinsLowPower();
+void MCUSleep::configureUnusedPinsLowPower() {
+	PinFunction::configureUnusedPinsLowPower();
 }

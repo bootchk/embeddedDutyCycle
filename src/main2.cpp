@@ -55,11 +55,8 @@ int main2(void) {
 	SysCtl_disableBSLProtect();
 
 
-	/*
-	 * Establish base to be overridden.
-	 * This is not effective immediately in all cases, when GPIO is locked (on wake from alarm.)
-	 */
-    MCUSleep::configureAllPinsLowPower();
+	// not effective until GPIO is unlocked
+    MCUSleep::configureUnusedPinsLowPower();
 
 	/*
 	 * Dispatch on reason for wake.

@@ -76,6 +76,16 @@ class Alarm {
 
 	static void resetIfSPINotReady();
 
+
+
+	/*
+	 * Configure all pins used by Alarm:
+	 * - slave select
+	 * - alarm
+	 * - 3 SPI pins
+	 */
+	static void configureMcuSide();
+
 	/*
 	 * Configure a set of mcu's GPIO pins for the mcu's SPI peripheral/module,
 	 * and configure the mcu's SPI peripheral with parameters matching the rtc's SPI.
@@ -85,8 +95,6 @@ class Alarm {
 	 * The library does not support use of said GPIO pins for other purposes while the library is in use.
 	 */
 	static void configureMcuSPIInterface();
-
-
 
 	/*
 	 * Was pin configured as input for Alarm?

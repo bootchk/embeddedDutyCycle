@@ -1,3 +1,4 @@
+#pragma once
 
 /*
  * Facade to Power Management Module
@@ -32,6 +33,7 @@ public:
 	 * -active: cpu on and GPIO pins unlocked
 	 */
 	static void unlockLPM5();
+	static bool isLockedLPM5();
 
 	/*
 	 * A flag set by HW, checkable, and must be cleared.

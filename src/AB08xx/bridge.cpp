@@ -1,7 +1,7 @@
 
 #include "bridge.h"
 
-#include "../MCU/pinFunction.h"
+#include "../pinFunction/pinFunction.h"
 #include "../SPI/serial.h"
 
 #include <cassert>

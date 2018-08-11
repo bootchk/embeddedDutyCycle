@@ -20,5 +20,5 @@ public:
 	static void clearAlarmInterruptOnPin();
 	static bool isAlarmPinHigh();
 
-	static void configureAllGPIOPinsLowPower();
+	static void configureUnusedPinsLowPower();
 };

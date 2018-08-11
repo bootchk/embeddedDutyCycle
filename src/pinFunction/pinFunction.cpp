@@ -44,9 +44,17 @@ bool PinFunction::isAlarmPinHigh() {
 
 
 
-
+/*
+ * Slave selection pin
+ */
 
 void PinFunction::configureSelectSPIPin() {
+    /*
+     * PxOut resets to undefined.
+     * Here we set value high before we enable pin.
+     * This also chooses a pull direction if it is already configured as input (on reset.)
+     */
+    PinFunction::deselectSPISlave();
 	GPIO_setAsOutputPin(RTCSelectPort, RTCSelectPin);
 }
 
@@ -60,7 +68,57 @@ void PinFunction::deselectSPISlave(){
 
 
 
-void PinFunction::configureAllGPIOPinsLowPower() {
+void PinFunction::configureUnusedPinsLowPower() {
+    /*
+     * Not require LPM5 locked.
+     * Only configure pins not connected,
+     * since configuring connected pins as output can trigger connected devices.
+     */
+
+    /*
+     * TODO This should depend on board.h
+     * For now, hardcoded:
+     * Used pins:
+     * - SPI 1.4-1.6
+     * - slave select 3.2
+     * - alarm 2.7
+     *
+     * Test pins:
+     * - leds 1.1 and 1.2
+     */
+        GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
+        GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN1);
+        GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN2);
+        GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN3);
+        //GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN4);
+        //GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN5);
+        //GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN6);
+        GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN7);
+
+        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0);
+        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN1);
+        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2);
+        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN3);
+        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN4);
+        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN5);
+        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN6);
+        //GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN7);
+
+        // Only 5 pins on port 3
+        GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN0);
+        GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN1);
+        //GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN2);
+        GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN3);
+        GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN4);
+
+        // Test pins (leds) low
+        GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
+        GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN1);
+}
+
+#ifdef OLD
+Flawed because hardcoded to pins that have changed.
+void PinFunction::configureUnusedPinsLowPower() {
 	/*
 	 * Specific to msp430fr2433
 	 *
@@ -102,3 +160,4 @@ void PinFunction::configureAllGPIOPinsLowPower() {
 	GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN3);
 	GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN4);
 }
+#endif
