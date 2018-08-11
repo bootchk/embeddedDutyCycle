@@ -32,6 +32,13 @@ void TestMain::blinkRedLED() {
     }
 }
 
+void TestMain::blinkGreenLED() {
+    for (unsigned int i = 10; i > 0; i-- ) {
+            P1OUT ^= BIT1;                      // P1.1 = toggle
+            __delay_cycles(100000);
+    }
+}
+
 
 void TestMain::lightGreenLED() {
     // require direction OUT

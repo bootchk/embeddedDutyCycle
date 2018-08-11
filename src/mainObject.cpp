@@ -12,7 +12,25 @@
 
 #include <cassert>
 
-// Two versions, working and non-working development
+/*
+ * Two versions, working and non-working development.
+ *
+ * The working version sleeps until a button is pushed.
+ * Then it blinks the red LED.
+ *
+ * The dev version uses an external RTC clock to periodically wake.
+ */
+
+
+/*
+ * Categories of GPIO pins:
+ * - unused
+ * - sleeping
+ * - - alarm pin
+ * - - test pins (LED's)
+ * - - app outputs (LED's)
+ * - only awake (SPI pins)
+ */
 
 
 #define WORKING_VERSION
@@ -24,7 +42,7 @@ bool Main::isResetAwakeFromSleep() {
     // checks only one reason
     return TestMain::isResetAwakeFromSleep();
 #else
-    // decodes all reasons
+    // decodes all reasons and may assert
     return MCUSleep::isResetAWakeFromSleep();
 #endif
 }
@@ -47,12 +65,13 @@ void Main::onResetPreamble() {
 
 
 void Main::onWakeFromLPM() {
-#ifdef WORKING_VERSION
+#ifndef WORKING_VERSION
     // No interrupts configured, ISR not called
     TestMain::blinkRedLED();
 #else
     assert(PMM::isLockedLPM5());
     PMM::unlockLPM5();
+    // Here app would do something useful.
 #endif
 }
 
@@ -69,7 +88,6 @@ void Main::onColdReset() {
      */
 #else
     // assert unused pins already configured
-    // MCUSleep::configureUnusedPinsLowPower();
 
     // require external RTC connected, because this configures it
 
@@ -79,12 +97,33 @@ void Main::onColdReset() {
 
     // assert Duty is ready for setAlarm
 
-    //App::onPowerOnReset();
+    App::onPowerOnReset();
     // assert app in initial state
+
+    // TODO this is not right, SPI is configured but should be off for sleeping.
     // assert GPIO in sleeping configuration
 #endif
 }
 
-void Main::configureWakeupSource() {
+void Main::onResetPostlude() {
+#ifndef WORKING_VERSION
     TestMain::configureButtonWakeupSource();
+#else
+    // For testing, an alternate source of wake
+    TestMain::configureButtonWakeupSource();
+
+
+    // Assert app is done with its useful work, or is in initial state
+
+    // Assert app has unconfigured any devices used temporarily in its useful work.
+    // Some GPIO pins that app persists during sleep may still be in use (e.g. an LED)
+    // Some GPIO pins are still configured for Duty i.e. SPI pins
+
+        // Resets if fail to set alarm
+        Duty::setAlarmOrReset(App::durationOfSleep());
+
+        // TestMain::blinkGreenLED();
+
+        Duty::lowerMCUToPresleepConfiguration();
+#endif
 }

@@ -59,7 +59,7 @@ void Alarm::configureForAlarming() {
 
     assert(RTC::isReadable());
 
-    //Alarm::configureRTC();
+    Alarm::configureRTC();
 
     _isConfigured = true;
     // Ensure MCU SPI interface and RTC are configured for alarming

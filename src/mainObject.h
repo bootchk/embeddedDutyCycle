@@ -13,5 +13,5 @@ public:
 
     static void onColdReset();
 
-    static void configureWakeupSource();
+    static void onResetPostlude();
 };

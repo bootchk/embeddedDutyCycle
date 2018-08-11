@@ -12,10 +12,13 @@
  * Basic framework for an app that sleeps in LPM4.5 between external interrupts.
  *
  * Derived from TI example code.
- * Developed by adding pieces until it breaks.
+ * This portion should not be changed.
+ *
+ * See mainObject.cpp for prelude, cold reset, wake, and postlude implementations.
  *
  * It doesn't seem to work in the debugger.
  * Must disconnect from debug probe for it to work.
+ * I have posted a bug report to TI forum.
  */
 
 /*
@@ -54,10 +57,19 @@ int main(void)
 
     assert(not PMM::isLockedLPM5());
 
-    Main::configureWakeupSource();
+    // Configure one or more wakeup sources
+    Main::onResetPostlude();
 
     // require a wakeup source else never wake
 
+    // assert GPIO configured for sleeping, to soon be locked
+
+    /*
+     * Some TI sources say there is a race here,
+     * that this cannot be wrapped in a function call.
+     * That is, powering down the core regulator
+     * leaves little time to enter sleep.
+     */
     // This gives LPMx.5 (cpu unpowered)
     PMMCTL0_H = PMMPW_H;                // Unlock PMM Registers
     PMMCTL0_L |= PMMREGOFF;             // Core regulator off

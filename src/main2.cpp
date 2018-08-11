@@ -16,28 +16,7 @@
 
 #include <cassert>
 
-/*
- * ISR for RTC alarm interrupt.
- *
- * Alarm pin is P1.3, so need ISR for Port 1
- *
- * It is possible to eliminate this if you don't enable interrupt after sleep before unlocking.
- * Then the ISR is not called, even though interrupt occurred.
- *
- * Here, the ISR just clears interrupt flag, so no infinite interrupt loop.
- */
-#if defined(__TI_COMPILER_VERSION__)
-#pragma vector=PORT1_VECTOR
-__interrupt void Port1_ISR(void)
-#elif defined(__GNUC__)
-void __attribute__ ((interrupt(PORT1_VECTOR))) Port1_ISR (void)
-#else
-#error Compiler not supported!
-#endif
-{
-    // assert(false);  // TEMP
-	Duty::clearAlarmOnMCU();
-}
+
 
 
 
@@ -111,7 +90,7 @@ int main2(void) {
 		// assert app in initial state and GPIO in sleeping configuration
 	}
 
-	// Assert app is done with its useful work, or is in intial state
+	// Assert app is done with its useful work, or is in initial state
 
 	// Assert app has unconfigured any devices used ephemerally in its useful work
 	// Some GPIO pins that app persists during sleep may still be in use (e.g. an LED)
