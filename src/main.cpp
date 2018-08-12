@@ -5,6 +5,7 @@
 #include "mainObject.h"
 #include "mcuSleep.h"
 #include "PMM/powerMgtModule.h"
+#include "MCU/mcu.h"
 
 
 
@@ -34,6 +35,8 @@ unsigned int bslSignature2=0x5555;
 int main(void)
 {
     WDTCTL = WDTPW | WDTHOLD;               // Stop WDT
+
+    MCU::enableBSLOffAndVacantMemoryNMI();
 
     // LPM5 might be locked
     Main::onResetPreamble();

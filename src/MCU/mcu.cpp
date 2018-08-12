@@ -24,3 +24,17 @@ void MCU::enterLPM4orLPM4_5(){
 void MCU::enableGlobalInterrupts() {
     __bis_SR_register(GIE);
 }
+
+
+
+void MCU::enableBSLOffAndVacantMemoryNMI() {
+
+    // vacant memory generate interrupt as well as read and execute funny
+    // bit set
+    SFRIE1 |= VMAIE;
+
+    // BSL memory behave as vacant memory
+    // bit set
+    SYSBSLC |= SYSBSLOFF;
+
+}

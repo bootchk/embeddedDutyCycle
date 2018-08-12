@@ -32,11 +32,21 @@ void TestMain::blinkRedLED() {
     }
 }
 
-void TestMain::blinkGreenLED() {
-    for (unsigned int i = 10; i > 0; i-- ) {
+/*
+ * Blink on count number of times.
+ * Leave off.
+ */
+void TestMain::blinkGreenLED(unsigned int count) {
+    // start with off
+    P1OUT &= ~BIT1;
+
+    for (unsigned int i = count * 2; i > 0; i-- ) {
             P1OUT ^= BIT1;                      // P1.1 = toggle
             __delay_cycles(100000);
     }
+
+    // delay extra to distinguish consecutive calls
+    __delay_cycles(500000);
 }
 
 

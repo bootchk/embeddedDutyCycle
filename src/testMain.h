@@ -6,7 +6,7 @@ public:
     static void configureButtonWakeupSource();
 
     static void blinkRedLED();
-    static void blinkGreenLED();
+    static void blinkGreenLED(unsigned int);
 
     static void lightGreenLED();
 };

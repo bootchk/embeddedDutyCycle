@@ -79,13 +79,13 @@ bool ResetReason::isResetAWakeFromSleep() {
         break;
 
     // Security
-        /*
-         * Accessing BSL that is protected.
-         * Probably errant
-         */
+            /*
+             * Accessing BSL that is protected.
+             * Probably errant
+             */
     case SYSRSTIV_SECYV:     // Security violation
         //assert(false);
-        TestMain::lightGreenLED();
+        TestMain::blinkGreenLED(3);
         break;
 
     // Keys
