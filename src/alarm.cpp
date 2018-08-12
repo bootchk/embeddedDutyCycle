@@ -8,19 +8,14 @@
 
 #include <cassert>
 
-// TODO non-volatile
 /*
- * Hacky approximation of: both sides of interface configured.
- * Since we can and do set all GPIO to outputs,
- * this does not account for alarm pin.
+ * State variable that is NOT persistent across sleeps.
  */
-bool _isConfigured = false;
+bool _isConfiguredForAlarming = false;
 
-namespace {
-bool isConfiguredForAlarming() {
-    return _isConfigured;
-}
 
+bool Alarm::isConfiguredForAlarming() {
+    return _isConfiguredForAlarming;
 }
 
 
@@ -61,18 +56,19 @@ void Alarm::configureForAlarming() {
 
     Alarm::configureRTC();
 
-    _isConfigured = true;
+    _isConfiguredForAlarming = true;
     // Ensure MCU SPI interface and RTC are configured for alarming
 }
 
 
 void Alarm::configureAfterWake() {
     // Fail reset if RTC not alive.
-    Alarm::resetIfSPINotReady();
+    // TODO Alarm::resetIfSPINotReady();
 
     Alarm::configureMcuSPIInterface();
 
     // RTC is still configured
+    _isConfiguredForAlarming = true;
 }
 
 
@@ -172,7 +168,7 @@ void Alarm::configureMcuSPIInterface(){ Bridge::configureMcuSide(); }
 
 void Alarm::unconfigureMcuSPIInterface() {
     Bridge::unconfigureMcuSide();
-    _isConfigured = false;
+    _isConfiguredForAlarming = false;
 }
 
 

@@ -202,6 +202,19 @@ public:
     static void configureForAlarming();
 
     /*
+     * Is interface and RTC configured?
+     * Does not access interface or RTC, only a state variable.
+     * The state variable is not persistent.
+     * It is set by:
+     * - on cold reset: configureForAlarming()
+     * - on wake for alarm:
+     *
+     * The interface: 3 SPI pins and SlaveSelect.
+     * This does not check configuration of alarm pin.
+     */
+    static bool isConfiguredForAlarming();
+
+    /*
      * After a wake from alarm, configure for clearing alarm.
      *
      * May reset on failure.

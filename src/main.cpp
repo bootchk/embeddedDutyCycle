@@ -48,7 +48,6 @@ int main(void)
 
     // Dispatch on reset reason: reset is wake out of an LPMx.5 OR any other (typically cold start.)
     if ( Main::isResetAwakeFromSleep()) {
-        PMM::unlockLPM5();
         Main::onWakeFromLPM();
     }
     else {
