@@ -4,6 +4,7 @@
 
 #include <msp430.h>
 
+#include <cassert>
 
 
 // TODO does this need to be C?
@@ -49,6 +50,15 @@ __interrupt void Port2_ISR(void)
 #pragma vector = SYSNMI_VECTOR
 __interrupt void SYSNMI_ISR(void)
 {
+    // Decode NMI source
+    // Not enabled by JMBINIE and JMPOUTIE
+    //if (SFRIFG1 & JMBOUTIFG) assert(false);
+    //if (SFRIFG1 & JMBINIFG) assert(false);
+    //if (SFRIFG1 & VMAIFG) assert(false);
+    // Not enabled CBDIFG, UBDIFG
+    unsigned int reason = SYSSNIV;
+    // see data sheet under SYS module for values.  0x12 is VMA
+
     while (true) {
         TestMain::blinkGreenLED(10);
     }

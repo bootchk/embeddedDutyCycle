@@ -3,9 +3,6 @@
 
 #include "LED/led.h"
 
-// C syntax: #pragma PERSISTENT(ledState)
-#pragma PERSISTENT
-bool ledState = false;
 
 
 
@@ -16,7 +13,6 @@ void App::onPowerOnReset() {
 
 	// initialize state
 	LED::turnOn();
-	ledState = true;
 
 	// decide first alarm duration
 }
@@ -26,14 +22,8 @@ void App::onWakeForAlarm() {
 
 	// app state transition
 
-	// toggle LED every time we wake
-	if (ledState) {
-		LED::turnOff();
-	}
-	else {
-		LED::turnOn();
-	}
-	ledState = ! ledState;
+	LED::toggle();
+
 
 	// TODO decide next alarm duration
 }

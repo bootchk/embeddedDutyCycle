@@ -39,3 +39,8 @@ void LED::turnOff(){
 void LED::turnOn(){
 	GPIO_setOutputHighOnPin(APP_LED1_PORT,    APP_LED1_PIN);
 }
+
+void LED::toggle() {
+    GPIO_toggleOutputOnPin(APP_LED1_PORT, APP_LED1_PIN);
+}
+
