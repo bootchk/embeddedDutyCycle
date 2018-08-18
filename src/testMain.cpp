@@ -7,6 +7,8 @@
 
 #include <msp430.h>
 
+#include "PMM/powerMgtModule.h"
+
 
 bool TestMain::isResetAwakeFromSleep() {
     return (SYSRSTIV == SYSRSTIV_LPM5WU);
@@ -32,6 +34,7 @@ void TestMain::blinkRedLED() {
     }
 }
 
+
 /*
  * Blink on count number of times.
  * Leave off.
@@ -42,7 +45,20 @@ void TestMain::blinkGreenLED(unsigned int count) {
 
     for (unsigned int i = count * 2; i > 0; i-- ) {
             P1OUT ^= BIT1;                      // P1.1 = toggle
-            __delay_cycles(100000);
+            __delay_cycles(200000);
+    }
+
+    // delay extra to distinguish consecutive calls
+    __delay_cycles(500000);
+}
+
+void TestMain::blinkRedLED(unsigned int count) {
+    // start with off
+    P1OUT &= ~BIT0;
+
+    for (unsigned int i = count * 2; i > 0; i-- ) {
+            P1OUT ^= BIT0;                      // P1.0 = toggle
+            __delay_cycles(200000);
     }
 
     // delay extra to distinguish consecutive calls
@@ -63,4 +79,23 @@ void TestMain::configureButtonWakeupSource() {
     P2IES |= BIT3;                      // P1.3 Hi/Low edge
     P2IFG = 0;                          // Clear all P1 interrupt flags
     P2IE |= BIT3;                       // P1.3 interrupt enabled
+}
+
+
+void TestMain::abortGreenLED() {
+    // Ensure GPIO will have effect
+    PMM::unlockLPM5();
+
+    TestMain::lightGreenLED();
+
+    // spin
+    while(true) ;
+}
+
+void TestMain::warbleGreenLEDForever() {
+    while(true) {
+        P1OUT ^= BIT1;                      // P1.1 = toggle
+        __delay_cycles(50000);
+    }
+
 }

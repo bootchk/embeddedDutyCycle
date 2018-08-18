@@ -27,7 +27,7 @@ void DutyMain::onColdReset() {
 
 
 void DutyMain::onWakeFromLPM() {
-    PMM::unlockLPM5();
+    assert(PMM::isLockedLPM5());
 
     MCUSleep::clearIsResetAWakeFromSleep();
 
@@ -66,8 +66,6 @@ void DutyMain::onResetPostlude() {
 
     // Resets if fail to set alarm
     Duty::setAlarmOrReset(App::durationOfSleep());
-
-    TestMain::blinkGreenLED(5);
 
     Duty::lowerMCUToPresleepConfiguration();
     // GPIO configuration: sleep:all

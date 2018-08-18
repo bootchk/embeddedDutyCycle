@@ -14,4 +14,10 @@ public:
 	 * and enable vacant memory non maskable interrupt
 	 */
 	static void enableBSLOffAndVacantMemoryNMI();
+
+
+	/*
+	 * Disable write protect for all FRAM.
+	 */
+	static void disableFRAMWriteProtect();
 };

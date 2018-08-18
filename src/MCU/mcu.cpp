@@ -1,7 +1,9 @@
 
 #include "mcu.h"
 
-#include "msp430.h"
+#include <msp430.h>
+
+#include <driverlib.h>
 
 
 void MCU::enterLPM4orLPM4_5(){
@@ -29,6 +31,9 @@ void MCU::enableGlobalInterrupts() {
 
 void MCU::enableBSLOffAndVacantMemoryNMI() {
 
+    // Clear NMI flag so we don't get an immediate interrupt if one has already occurred.
+    SFRIFG1 &= ~NMIIFG;
+
     // vacant memory generate interrupt as well as read and execute funny
     // bit set
     SFRIE1 |= VMAIE;
@@ -37,4 +42,10 @@ void MCU::enableBSLOffAndVacantMemoryNMI() {
     // bit set
     SYSBSLC |= SYSBSLOFF;
 
+}
+
+
+void MCU::disableFRAMWriteProtect() {
+    // By default, writes cause NMI.  To disable, enable writing.
+    SysCtl_enableFRAMWrite(SYSCTL_FRAMWRITEPROTECTION_DATA | SYSCTL_FRAMWRITEPROTECTION_PROGRAM);
 }

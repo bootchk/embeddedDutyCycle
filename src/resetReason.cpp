@@ -47,59 +47,48 @@ bool ResetReason::isResetAWakeFromSleep() {
     switch (resetReason)
     {
     case SYSRSTIV_NONE:
+        /// Won't work, LPM5 locked TestMain::blinkGreenLED(1);
       done = true;  // stop loop - all reset reasons are cleared
       break;
 
+    // Expected
     case SYSRSTIV_LPM5WU:
+      /// Won't work, LPM5 locked TestMain::blinkGreenLED(2);
       result = true;
       break;
 
-    // Expected, normal
+    // Expected
     case SYSRSTIV_BOR:     // power up
     case SYSRSTIV_RSTNMI:  // RST/NMI pin reset e.g. from debug prove
-      //toggleGreenLED();
+        /// Won't work, LPM5 locked TestMain::blinkGreenLED(3);
       break;
+
+    // Security. Accessing BSL that is protected. Probably errant
+    case SYSRSTIV_SECYV:     // Security violation
+       //assert(false);
+        /// Won't work, LPM5 locked TestMain::blinkGreenLED(4);
+       break;
 
      // WDT Time out
      case SYSRSTIV_WDTTO:
-         assert(false);
-         break;
 
     // Software initiated
     case SYSRSTIV_DOBOR:
     case SYSRSTIV_DOPOR:
-        assert(false);
-        break;
-
-
 
     // Faults, abnormal e.g. "bus error"
     case SYSRSTIV_UBDIFG:    // FRAM Uncorrectable bit Error
-        assert(false);
-        break;
-
-    // Security
-            /*
-             * Accessing BSL that is protected.
-             * Probably errant
-             */
-    case SYSRSTIV_SECYV:     // Security violation
-        //assert(false);
-        TestMain::blinkGreenLED(3);
-        break;
 
     // Keys
     case SYSRSTIV_WDTKEY:    // WDT Key violation
     case SYSRSTIV_FRCTLPW:   // FRAM Key violation
-        assert(false);
-        break;
+
     case SYSRSTIV_PERF:      // peripheral/config area fetch
     case SYSRSTIV_PMMPW:     // PMM Password violation
     case SYSRSTIV_FLLUL:     // FLL unlock
-      assert(false);
-      break;
 
     default:
+        /// Won't work, LPM5 locked TestMain::blinkGreenLED(5);
       assert(false);
       break;
     }
