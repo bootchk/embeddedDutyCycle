@@ -56,7 +56,7 @@ bool SPI::isEnabled() {
 bool SPI::isInterrupt() {
     bool result;
 
-    unsigned int foo = SPIInstanceAddress;
+    /// unsigned int foo = SPIInstanceAddress;
     result = EUSCI_A_SPI_getInterruptStatus(SPIInstanceAddress,
                                            (EUSCI_A_SPI_TRANSMIT_INTERRUPT | EUSCI_A_SPI_RECEIVE_INTERRUPT));
     return result;

@@ -5,7 +5,7 @@
 
 #include "testMain.h"
 
-#include <cassert>
+#include "myAssert.h"
 
 
 /*
@@ -89,7 +89,7 @@ bool ResetReason::isResetAWakeFromSleep() {
 
     default:
         /// Won't work, LPM5 locked TestMain::blinkGreenLED(5);
-      assert(false);
+      myAssert(false);
       break;
     }
   }

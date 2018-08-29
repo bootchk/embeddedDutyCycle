@@ -11,7 +11,7 @@
 #include <sysctl.h>
 #include <gpio.h>
 
-#include "mainObject.h"
+#include "../mainObject.h"
 
 
 
@@ -185,7 +185,7 @@ bool isResetAwakeFromSleep() {
 
 
 
-int main(void)
+int main777(void)
 {
     WDTCTL = WDTPW | WDTHOLD;               // Stop WDT
 

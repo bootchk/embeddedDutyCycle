@@ -10,7 +10,7 @@
 #include "PMM/powerMgtModule.h"
 #include "mcuSleep.h"
 
-#include <cassert>
+/// #include "myAssert.h"
 
 /*
  * Two versions, working and non-working development.
@@ -35,12 +35,16 @@
  */
 
 
-#define WORKING_VERSION
+/*
+ * Uncomment to use last working version,
+ * but also the logice of some ifdefs can be reversed to ifndef
+ */
+// #define WORKING_VERSION
 
 
 
 bool Main::isResetAwakeFromSleep() {
-#ifndef WORKING_VERSION
+#ifdef WORKING_VERSION
     // checks only one reason
     return TestMain::isResetAwakeFromSleep();
 #else
@@ -55,7 +59,7 @@ bool Main::isResetAwakeFromSleep() {
 void Main::onResetPreamble() {
     // !!! not require PMM::isLockedLPM5()
 
-#ifndef WORKING_VERSION
+#ifdef WORKING_VERSION
     TestMain::initAllGpioOutLow();
     PMM::unlockLPM5();
 #else
@@ -67,12 +71,12 @@ void Main::onResetPreamble() {
 
 
 void Main::onWakeFromLPM() {
-#ifndef WORKING_VERSION
+#ifdef WORKING_VERSION
     // No interrupts configured, ISR not called
-    TestMain::blinkRedLED();
 #else
     // Interrupts configured: ISR called when unlock
-    assert(PMM::isLockedLPM5());
+    /// This assertion is true only when not using forceBlink
+    /// assert(PMM::isLockedLPM5());
 
     DutyMain::onWakeFromLPM();
 #endif
@@ -84,7 +88,7 @@ void Main::onColdReset() {
     // !!! not require PMM::isLockedLPM5()
     // since actually called for any reset not LPM5, which may include non BOR resets.
 
-#ifndef WORKING_VERSION
+#ifdef WORKING_VERSION
     /*
      * LED already configured as output.
      * Later in postlude, we configure button input
@@ -97,7 +101,7 @@ void Main::onColdReset() {
 }
 
 void Main::onResetPostlude() {
-#ifndef WORKING_VERSION
+#ifdef WORKING_VERSION
     TestMain::configureButtonWakeupSource();
 #else
     // For testing, an alternate source of wake

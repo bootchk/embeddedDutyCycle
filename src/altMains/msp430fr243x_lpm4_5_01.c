@@ -77,7 +77,7 @@
 void initGpio(void);
 void blinkLED(void);
 
-int mainaaa(void)
+int mainaaaa(void)
 {
     WDTCTL = WDTPW | WDTHOLD;               // Stop WDT
 

@@ -1,6 +1,6 @@
 #include <msp430.h>
 
-#include <cassert>
+#include "myAssert.h"
 
 #include "mainObject.h"
 #include "mcuSleep.h"
@@ -38,13 +38,15 @@ unsigned int bslSignature2=0x5555;
 
 
 
-int main6(void)
+int main(void)
 {
     WDTCTL = WDTPW | WDTHOLD;               // Stop WDT
 
     Debug::leaveCrumb(1);
 
     MCU::enableBSLOffAndVacantMemoryNMI();
+
+    TestMain::blinkForcedGreenLED(1);
 
     // Prevent NMI on FRAM writes
     MCU::disableFRAMWriteProtect();
@@ -69,6 +71,9 @@ int main6(void)
         while (isTrapped)
             ;
 #endif
+        TestMain::blinkForcedGreenLED(3);
+
+        Debug::leaveCrumb(20);
         Main::onWakeFromLPM();
         TestMain::blinkRedLED(5);
     }
@@ -76,12 +81,16 @@ int main6(void)
         // Device powered up from a cold start or other reset reason
         // assert(not PMM::isLockedLPM5());
         // LPM5 might be locked if reset reason is not a cold start
+        Debug::leaveCrumb(10);
+        TestMain::blinkForcedGreenLED(2);
+
         Main::onColdReset();
         TestMain::blinkRedLED(2);
     }
 
-    assert(not PMM::isLockedLPM5());
+    myAssert(not PMM::isLockedLPM5());
 
+    Debug::leaveCrumb(30);
     // Configure one or more wakeup sources
     Main::onResetPostlude();
 
@@ -111,5 +120,5 @@ int main6(void)
      */
     __bis_SR_register(LPM4_bits | GIE);
     __no_operation();
-    assert(false);
+    myAssert(false);
 }

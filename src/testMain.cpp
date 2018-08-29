@@ -27,13 +27,14 @@ void TestMain::initAllGpioOutLow()
 }
 
 
+#ifdef OLD
 void TestMain::blinkRedLED() {
     for (unsigned int i = 30; i > 0; i-- ) {
             P1OUT ^= BIT0;                      // P1.0 = toggle
             __delay_cycles(100000);
     }
 }
-
+#endif
 
 /*
  * Blink on count number of times.
@@ -51,6 +52,7 @@ void TestMain::blinkGreenLED(unsigned int count) {
     // delay extra to distinguish consecutive calls
     __delay_cycles(500000);
 }
+
 
 void TestMain::blinkRedLED(unsigned int count) {
     // start with off
@@ -83,19 +85,54 @@ void TestMain::configureButtonWakeupSource() {
 
 
 void TestMain::abortGreenLED() {
-    // Ensure GPIO will have effect
-    PMM::unlockLPM5();
-
+    ensureGreenLEDLightable();
     TestMain::lightGreenLED();
-
     // spin
     while(true) ;
 }
 
-void TestMain::warbleGreenLEDForever() {
+
+
+void TestMain::blinkForcedGreenLED(unsigned int count) {
+    ensureGreenLEDLightable();
+    blinkGreenLED(count);
+}
+
+
+
+void TestMain::warbleRedLEDForever() {
+    ensureRedLEDLightable();
+
+    // warble
     while(true) {
-        P1OUT ^= BIT1;                      // P1.1 = toggle
+        P1OUT ^= BIT0;                      // toggle P1.0
         __delay_cycles(50000);
     }
+}
 
+void TestMain::warbleGreenLEDForever() {
+    ensureGreenLEDLightable();
+
+    // warble
+    while(true) {
+        P1OUT ^= BIT1;                      // toggle P1.1
+        __delay_cycles(50000);
+    }
+}
+
+
+void TestMain::ensureGreenLEDLightable() {
+    // Ensure GPIO config will have effect
+    PMM::unlockLPM5();
+
+    // GPIO configured out
+    P1DIR |= BIT1;
+}
+
+void TestMain::ensureRedLEDLightable() {
+    // Ensure GPIO config will have effect
+    PMM::unlockLPM5();
+
+    // GPIO configured out
+    P1DIR |= BIT0;
 }

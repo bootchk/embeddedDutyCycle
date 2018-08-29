@@ -11,7 +11,7 @@
 // some mcu family members have watchdog a and b
 // #include <wdt_a.h>
 
-#include <cassert>
+#include "../myAssert.h"
 
 
 
@@ -74,7 +74,7 @@ void PMM::triggerSoftwareBORReset() {
      * For debugging, uncomment this assert and catch an attempted reset
      * in an infinite loop (see definition of assert.)
      */
-    assert(false);
+    myAssert(false);
 
 	PMM_trigBOR();
 }

@@ -8,7 +8,7 @@
 
 #include "testMain.h"
 
-#include <cassert>
+#include "myAssert.h"
 
 
 void DutyMain::onColdReset() {
@@ -18,16 +18,17 @@ void DutyMain::onColdReset() {
 
         Duty::onPowerOnReset();
         PMM::unlockLPM5();
-        assert(not PMM::isLockedLPM5());
+        myAssert(not PMM::isLockedLPM5());
         // assert Duty is ready for setAlarm
-
+#ifdef APPPOR // test 1c
         App::onPowerOnReset();
         // assert app in initial state
+#endif
 }
 
 
 void DutyMain::onWakeFromLPM() {
-    assert(PMM::isLockedLPM5());
+    myAssert(PMM::isLockedLPM5());
 
     MCUSleep::clearIsResetAWakeFromSleep();
 
@@ -65,7 +66,9 @@ void DutyMain::onResetPostlude() {
      */
 
     // Resets if fail to set alarm
+#ifdef SETALARM // test 2
     Duty::setAlarmOrReset(App::durationOfSleep());
+#endif
 
     Duty::lowerMCUToPresleepConfiguration();
     // GPIO configuration: sleep:all

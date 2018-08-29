@@ -4,7 +4,7 @@
 #include "../pinFunction/pinFunction.h"
 #include "../SPI/serial.h"
 
-#include <cassert>
+#include "../myAssert.h"
 
 /*
  * Uses a Serial channel, typically  SPI or I2C
@@ -108,10 +108,11 @@ void Bridge::write(Address address, unsigned char value) {
 	PinFunction::selectSPISlave();
 	(void) Serial::transfer(mangleWriteAddress(address));
 	transferredValue = Serial::transfer( value);
+	(void) transferredValue;    // discard value read during write of address
 	PinFunction::deselectSPISlave();
 
 	unsigned char finalValue = Bridge::read(address);
-	assert(finalValue == value);
+	ensure(finalValue == value);
 }
 
 

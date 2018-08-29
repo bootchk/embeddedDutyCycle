@@ -3,7 +3,6 @@
 
 #include "../duty.h"
 
-#include <cassert>
 
 
 // Apparently this is C++ compatible
@@ -36,7 +35,6 @@
 #pragma vector = PORT2_VECTOR
 __interrupt void Port2_ISR(void)
 {
-    // assert(false);  // TEMP
     Duty::clearAlarmOnMCU();
 }
 
