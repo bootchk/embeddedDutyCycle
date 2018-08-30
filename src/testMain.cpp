@@ -53,7 +53,8 @@ void TestMain::blinkGreenLED(unsigned int count) {
     __delay_cycles(500000);
 }
 
-
+///#define TESTBLINKRED 1
+#ifdef TESTBLINKRED
 void TestMain::blinkRedLED(unsigned int count) {
     // start with off
     P1OUT &= ~BIT0;
@@ -66,6 +67,10 @@ void TestMain::blinkRedLED(unsigned int count) {
     // delay extra to distinguish consecutive calls
     __delay_cycles(500000);
 }
+#else
+// impotent
+void TestMain::blinkRedLED(unsigned int count) {}
+#endif
 
 
 void TestMain::lightGreenLED() {
@@ -135,4 +140,10 @@ void TestMain::ensureRedLEDLightable() {
 
     // GPIO configured out
     P1DIR |= BIT0;
+}
+
+
+
+void TestMain::delayBriefly() {
+    __delay_cycles(50000);
 }

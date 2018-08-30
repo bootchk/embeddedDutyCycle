@@ -36,4 +36,7 @@ public:
      */
     static void warbleGreenLEDForever();
     static void warbleRedLEDForever();
+
+
+    static void delayBriefly();
 };

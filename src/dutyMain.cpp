@@ -28,7 +28,8 @@ void DutyMain::onColdReset() {
 
 
 void DutyMain::onWakeFromLPM() {
-    myAssert(PMM::isLockedLPM5());
+    // LOCKLPM5 is set unless we are using forceBlink functions
+    /// myAssert(PMM::isLockedLPM5());
 
     MCUSleep::clearIsResetAWakeFromSleep();
 
@@ -66,6 +67,7 @@ void DutyMain::onResetPostlude() {
      */
 
     // Resets if fail to set alarm
+#define SETALARM 1
 #ifdef SETALARM // test 2
     Duty::setAlarmOrReset(App::durationOfSleep());
 #endif

@@ -8,7 +8,7 @@
 #include "MCU/mcu.h"
 
 #include "testMain.h"
-#include "debug.h"
+///#include "debug.h"
 
 
 
@@ -42,7 +42,7 @@ int main(void)
 {
     WDTCTL = WDTPW | WDTHOLD;               // Stop WDT
 
-    Debug::leaveCrumb(1);
+    /// Debug::leaveCrumb(1);
 
     MCU::enableBSLOffAndVacantMemoryNMI();
 
@@ -54,7 +54,7 @@ int main(void)
     // LPM5 might be locked
     // Cannot blink LEDs when LPM5 locked
     Main::onResetPreamble();
-    Debug::leaveCrumb(2);
+    /// Debug::leaveCrumb(2);
     /*
      * !!! If no interrupt is enabled when unlocked,
      * no ISR is called, even though interrupt occurred in wakeup case.
@@ -73,7 +73,7 @@ int main(void)
 #endif
         TestMain::blinkForcedGreenLED(3);
 
-        Debug::leaveCrumb(20);
+        /// Debug::leaveCrumb(20);
         Main::onWakeFromLPM();
         TestMain::blinkRedLED(5);
     }
@@ -81,7 +81,7 @@ int main(void)
         // Device powered up from a cold start or other reset reason
         // assert(not PMM::isLockedLPM5());
         // LPM5 might be locked if reset reason is not a cold start
-        Debug::leaveCrumb(10);
+        /// Debug::leaveCrumb(10);
         TestMain::blinkForcedGreenLED(2);
 
         Main::onColdReset();
@@ -90,11 +90,12 @@ int main(void)
 
     myAssert(not PMM::isLockedLPM5());
 
-    Debug::leaveCrumb(30);
+    /// Debug::leaveCrumb(30);
     // Configure one or more wakeup sources
     Main::onResetPostlude();
 
-    TestMain::blinkRedLED(10);
+    ///TestMain::blinkRedLED(10);
+    TestMain::delayBriefly();
 
     // require a wakeup source else never wake
 
