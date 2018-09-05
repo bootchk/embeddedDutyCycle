@@ -44,29 +44,6 @@ bool PinFunction::isAlarmPinHigh() {
 
 
 
-/*
- * Slave selection pin
- */
-
-void PinFunction::configureSelectSPIPin() {
-    /*
-     * PxOut resets to undefined.
-     * Set value high (not selected) before we enable pin.
-     * This also chooses a pull direction if it is already configured as input (on reset.)
-     */
-    PinFunction::deselectSPISlave();
-	GPIO_setAsOutputPin(RTCSelectPort, RTCSelectPin);
-}
-
-
-void PinFunction::selectSPISlave(){
-	GPIO_setOutputLowOnPin(RTCSelectPort, RTCSelectPin);
-}
-void PinFunction::deselectSPISlave(){
-	GPIO_setOutputHighOnPin(RTCSelectPort, RTCSelectPin);
-}
-
-
 
 void PinFunction::configureUnusedPinsLowPower() {
     /*
@@ -90,6 +67,7 @@ void PinFunction::configureUnusedPinsLowPower() {
         GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN1);
         GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN2);
         GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN3);
+        // SPI data pins
         //GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN4);
         //GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN5);
         //GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN6);
@@ -102,11 +80,14 @@ void PinFunction::configureUnusedPinsLowPower() {
         GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN4);
         GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN5);
         GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN6);
+        // RTC alarm pin
         //GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN7);
 
         // Only 5 pins on port 3
         GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN0);
         GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN1);
+
+        // SPI slave select pin
         //GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN2);
         GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN3);
         GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN4);

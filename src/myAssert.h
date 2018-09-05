@@ -8,9 +8,21 @@ void fail(unsigned int line);
  * Custom assert macros
  */
 
+/*
+ * TODO
+ * ifndef NDEBUG
+ * define myAssert(_ignore) ((void)0)
+ */
+
 
 // general assertion
 #define myAssert(expr) \
+    if (!(expr)) \
+        fail(__LINE__)
+
+
+// precondition assertion
+#define require(expr) \
     if (!(expr)) \
         fail(__LINE__)
 

@@ -31,9 +31,9 @@
 
 #include "gpio.h"
 
+#include "../pinFunction/spiPins.h"
 #include "../board.h"
-
-
+#include "../myAssert.h"
 
 
 
@@ -99,43 +99,28 @@ unsigned char SPI::transfer(unsigned char value) {
 	return EUSCI_A_SPI_receiveData(SPIInstanceAddress);
 }
 
-
+/*
+ * Per eUSCI chapter of user guide,
+ * configure when disabled, in this order
+ */
 void SPI::configureMaster() {
+    require(not isEnabled());
 	configureMasterDevice();
-	configureMasterPins();
+	SPIPins::configure();
 }
 
 void SPI::unconfigureMaster() {
-	// Leave device configured, only unconfigure pins
-	unconfigureMasterPins();
-}
-
-
-void SPI::configureMasterPins() {
-    /*
-     * See Datasheet, Table 6.19 (IO Diagrams) for ordinal of module.
-     *
-     * The SEL bits:
-     * 00 == GPIO
-     * 01 == primary module
-     * 10 == secondary module
-     *
-     * On Port2, UCA1 is primary module
-     */
-	GPIO_setAsPeripheralModuleFunctionOutputPin(MOSI_PORT,   MOSI_PIN,     GPIO_PRIMARY_MODULE_FUNCTION);
-	GPIO_setAsPeripheralModuleFunctionOutputPin(SPI_CLK_PORT, SPI_CLK_PIN, GPIO_PRIMARY_MODULE_FUNCTION);
-	// One input pin
-	GPIO_setAsPeripheralModuleFunctionInputPin(MISO_PORT,     MISO_PIN,    GPIO_PRIMARY_MODULE_FUNCTION);
-}
-
-void SPI::unconfigureMasterPins() {
 	/*
-	 * All pins output, which is low power and avoids all possibility of floating inputs.
+	 * Don't need to unconfigure SPI master (eUSCI), since disabled, is reset.
+	 * Only unconfigure pins.
 	 */
-	GPIO_setAsOutputPin(MOSI_PORT,    MOSI_PIN);
-	GPIO_setAsOutputPin(SPI_CLK_PORT, SPI_CLK_PIN);
-	GPIO_setAsOutputPin(MISO_PORT,    MISO_PIN);
+	SPIPins::unconfigure();
 }
+
+
+
+
+
 
 
 /*
@@ -150,7 +135,6 @@ void SPI::unconfigureMasterPins() {
  * FUTURE: this could be done with a const struct
  */
 void SPI::configureMasterDevice() {
-	// require disabled
 
 	EUSCI_A_SPI_initMasterParam param = {0};
 

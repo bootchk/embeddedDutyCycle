@@ -11,9 +11,6 @@
  */
 class PinFunction {
 public:
-	static void configureSelectSPIPin();
-	static void selectSPISlave();
-	static void deselectSPISlave();
 
 	static void configureAlarmPinPullupLoToHiInterrupt();
 	static bool isConfiguredAlarmPin();

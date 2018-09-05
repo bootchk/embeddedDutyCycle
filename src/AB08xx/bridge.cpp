@@ -1,7 +1,7 @@
 
 #include "bridge.h"
 
-#include "../pinFunction/pinFunction.h"
+#include "../pinFunction/spiPins.h"
 #include "../SPI/serial.h"
 
 #include "../myAssert.h"
@@ -85,9 +85,6 @@ void Bridge::configureMcuSide() {
 	 * Although there exists an overloaded transfer(SSpin, value) method apparently not implemented on Energia.
 	 */
 	Serial::begin();
-
-	// Configure fourth pin: slave select
-	PinFunction::configureSelectSPIPin();
 }
 
 
@@ -105,11 +102,11 @@ void Bridge::write(Address address, unsigned char value) {
     // Value returned by slave on the write.  Is it the final value, or the previous value?
     unsigned char transferredValue;
 
-	PinFunction::selectSPISlave();
+	SPIPins::selectSPISlave();
 	(void) Serial::transfer(mangleWriteAddress(address));
 	transferredValue = Serial::transfer( value);
 	(void) transferredValue;    // discard value read during write of address
-	PinFunction::deselectSPISlave();
+	SPIPins::deselectSPISlave();
 
 	unsigned char finalValue = Bridge::read(address);
 	ensure(finalValue == value);
@@ -146,10 +143,10 @@ unsigned char Bridge::read(Address address) {
 
 	unsigned char result;
 
-	PinFunction::selectSPISlave();
+	SPIPins::selectSPISlave();
 	(void) Serial::transfer(mangleReadAddress(address));
 	result = Serial::transfer( 0 );
-	PinFunction::deselectSPISlave();
+	SPIPins::deselectSPISlave();
 	return result;
 }
 
@@ -157,10 +154,10 @@ unsigned char Bridge::read(Address address) {
 
 void Bridge::writeAlarm(RTCTime alarm) {
 
-	PinFunction::selectSPISlave();
+	SPIPins::selectSPISlave();
 	Serial::transfer(mangleWriteAddress(Address::Alarm));
 	writeBuffer((unsigned char*) &alarm, sizeof(alarm));
-	PinFunction::deselectSPISlave();
+	SPIPins::deselectSPISlave();
 
 	// assert alarm parameter is unchanged.
 	// assert time was written to RTC
@@ -168,20 +165,20 @@ void Bridge::writeAlarm(RTCTime alarm) {
 
 void Bridge::readAlarm(RTCTime* alarm) {
 
-    PinFunction::selectSPISlave();
+    SPIPins::selectSPISlave();
     Serial::transfer(mangleReadAddress(Address::Alarm));
     readBuffer((unsigned char*) alarm, sizeof(RTCTime));
-    PinFunction::deselectSPISlave();
+    SPIPins::deselectSPISlave();
 }
 
 
 
 void Bridge::readTime(RTCTime* time) {
 
-	PinFunction::selectSPISlave();
+	SPIPins::selectSPISlave();
 	Serial::transfer(mangleReadAddress(Address::Time));
 	readBuffer((unsigned char*) time, sizeof(RTCTime));
-	PinFunction::deselectSPISlave();
+	SPIPins::deselectSPISlave();
 	// assert time buffer filled with read from rtc
 }
 
