@@ -128,10 +128,10 @@ bool Alarm::clearAlarmOnRTC() {
 	bool result;
 
 	// Simple write to a register of RTC
-	RTC::clearIRQInterrupt();
-
-	// RTC should lower signal
+	// RTC should raise nIRQ signal to high if not already so.
+	// mcu interrupt occurred on rising edge.
 	// TODO delay needed?
+	RTC::clearIRQInterrupt();
 
 	result = isAlarmInterruptSignalHigh();
 
@@ -207,7 +207,7 @@ void Alarm::configureRTC() {
 
 
 /*
- * Must be bulletproof since is alarm is failed to set, may sleep forever.
+ * Must be bulletproof since if alarm is failed to set, may sleep forever.
  */
 bool Alarm::setAlarm(Duration duration) {
 	bool result;
@@ -217,6 +217,6 @@ bool Alarm::setAlarm(Duration duration) {
 	// delegate to RTC
 	result = RTC::setAlarm(duration);
 
-	// ensure alarm is set
+	// ensure alarm is set or result is false
 	return result;
 }

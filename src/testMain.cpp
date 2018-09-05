@@ -145,5 +145,8 @@ void TestMain::ensureRedLEDLightable() {
 
 
 void TestMain::delayBriefly() {
-    __delay_cycles(50000);
+    __delay_cycles(500);
+    // 50000 works
+    // 50 fails another way
+    // 0 fails with NMI VMA
 }

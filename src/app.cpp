@@ -22,7 +22,8 @@ void App::onWakeForAlarm() {
 
 	// app state transition
 
-	LED::toggle();
+	///LED::toggle();
+    LED::blink();
 
 
 	// TODO decide next alarm duration

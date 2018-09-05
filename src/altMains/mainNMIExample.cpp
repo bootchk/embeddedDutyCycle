@@ -10,8 +10,21 @@
 #include <pmm.h>
 #include <sysctl.h>
 #include <gpio.h>
+#include "eusci_a_spi.h"
 
-#include "../mainObject.h"
+
+
+#define SPIInstanceAddress      EUSCI_A0_BASE
+// P1.4
+#define MOSI_PORT     GPIO_PORT_P1
+#define MOSI_PIN      GPIO_PIN4
+// P1.5
+#define MISO_PORT     GPIO_PORT_P1
+#define MISO_PIN      GPIO_PIN5
+// P1.6
+#define SPI_CLK_PORT  GPIO_PORT_P1
+#define SPI_CLK_PIN   GPIO_PIN6
+
 
 
 
@@ -56,7 +69,7 @@ void configureButtonWakeupSource() {
 
 
 #pragma vector = SYSNMI_VECTOR
-__interrupt void SYSNMI_ISR(void)
+__interrupt void mySYSNMI_ISR(void)
 {
   while (true) {
     // NMI source
@@ -118,6 +131,78 @@ void configureGPIO() {
     GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
     GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN1);
 }
+
+
+
+void configureSPI() {
+    EUSCI_A_SPI_initMasterParam param = {0};
+
+        // Other API's just setClockDivider()
+        param.selectClockSource = EUSCI_A_SPI_CLOCKSOURCE_SMCLK;
+        param.clockSourceFrequency = 8000000;
+        param.desiredSpiClock = 1000000;
+
+        // setBitOrder()
+        param.msbFirst = EUSCI_A_SPI_MSB_FIRST;
+
+        // SPI clock mode
+        // SPI_MODE == 0
+        // setDataMode()
+        param.clockPhase = EUSCI_A_SPI_PHASE_DATA_CAPTURED_ONFIRST_CHANGED_ON_NEXT;
+        param.clockPolarity = EUSCI_A_SPI_CLOCKPOLARITY_INACTIVITY_LOW;
+
+        /*
+         * TI's SPI mode
+         * 3-pin mode (SCLK, SMOSI, and SMISO) w separate SS not part of eUSCI module
+         */
+        param.spiMode = EUSCI_A_SPI_3PIN;
+
+        EUSCI_A_SPI_initMaster(SPIInstanceAddress, &param);
+}
+
+void configureSPIPins() {
+    GPIO_setAsPeripheralModuleFunctionOutputPin(MOSI_PORT, MOSI_PIN,
+                                                GPIO_PRIMARY_MODULE_FUNCTION);
+    GPIO_setAsPeripheralModuleFunctionOutputPin(SPI_CLK_PORT, SPI_CLK_PIN,
+                                                GPIO_PRIMARY_MODULE_FUNCTION);
+    // One input pin
+    GPIO_setAsPeripheralModuleFunctionInputPin(MISO_PORT, MISO_PIN,
+                                               GPIO_PRIMARY_MODULE_FUNCTION);
+}
+
+void unconfigureSPIPins() {
+    GPIO_setAsOutputPin(MOSI_PORT,    MOSI_PIN);
+    GPIO_setAsOutputPin(SPI_CLK_PORT, SPI_CLK_PIN);
+    GPIO_setAsOutputPin(MISO_PORT,    MISO_PIN);
+}
+
+
+
+unsigned char transfer(unsigned char value) {
+
+    /*
+     * Requires any previous transfer complete.
+     * we wait afterwards, but for safety also check before.
+     * Maybe configuration takes some time before SPI module is not busy?
+     */
+    while(EUSCI_A_SPI_isBusy(SPIInstanceAddress)) ;
+
+    EUSCI_A_SPI_transmitData(SPIInstanceAddress, value);
+
+    /*
+     * Spin until transfer is complete.
+     * SPI bus is slower than CPU.
+     * Wait until result (of duplex communication).
+     *
+     * Finite.  If infinite duration, hw has failed.
+     *
+     * Other implementations use an interrupt flag???
+     */
+    while(EUSCI_A_SPI_isBusy(SPIInstanceAddress)) ;
+
+    return EUSCI_A_SPI_receiveData(SPIInstanceAddress);
+}
+
 
 
 
@@ -184,6 +269,23 @@ bool isResetAwakeFromSleep() {
 }
 
 
+/*
+ * Use SPI to transfer.
+ * Doesn't need to be an actual slave.
+ */
+void futzWithSPI() {
+    // configure requires disabled
+    configureSPI();
+    configureSPIPins();
+    EUSCI_A_SPI_enable(SPIInstanceAddress);
+    while (EUSCI_A_SPI_isBusy(SPIInstanceAddress))
+        ;
+    transfer(0xbe);
+    EUSCI_A_SPI_disable(SPIInstanceAddress);
+    unconfigureSPIPins();
+}
+
+
 
 int main777(void)
 {
@@ -230,6 +332,8 @@ int main777(void)
     }
 
     configureButtonWakeupSource();
+
+    futzWithSPI();
 
     // sleep forever (no interrupt sources)
 

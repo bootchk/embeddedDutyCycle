@@ -9,4 +9,8 @@ public:
 	static void turnOn();
 	static void turnOff();
 	static void toggle();
+	/*
+	 * Busy wait blink.
+	 */
+	static void blink();
 };

@@ -44,3 +44,8 @@ void LED::toggle() {
     GPIO_toggleOutputOnPin(APP_LED1_PORT, APP_LED1_PIN);
 }
 
+void LED::blink() {
+    turnOn();
+    __delay_cycles(100000);
+    turnOff();
+}

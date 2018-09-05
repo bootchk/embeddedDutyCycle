@@ -51,7 +51,7 @@ bool PinFunction::isAlarmPinHigh() {
 void PinFunction::configureSelectSPIPin() {
     /*
      * PxOut resets to undefined.
-     * Here we set value high before we enable pin.
+     * Set value high (not selected) before we enable pin.
      * This also chooses a pull direction if it is already configured as input (on reset.)
      */
     PinFunction::deselectSPISlave();

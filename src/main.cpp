@@ -95,7 +95,7 @@ int main(void)
     Main::onResetPostlude();
 
     ///TestMain::blinkRedLED(10);
-    TestMain::delayBriefly();
+    ///TestMain::delayBriefly();
 
     // require a wakeup source else never wake
 
