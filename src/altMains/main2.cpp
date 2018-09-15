@@ -1,15 +1,15 @@
 
-#include "duty.h"
-#include "mcuSleep.h"
-#include "app.h"
+#include "../duty.h"
+#include "../mcuSleep.h"
+#include "../app.h"
 
-#include "PMM/powerMgtModule.h"   // stopWatchdog
+#include "../PMM/powerMgtModule.h"   // stopWatchdog
 
 #include <msp430.h>   // PORT1_VECTOR
 
 // assertions
-#include "SPI/spi.h"
-#include "MCU/mcu.h"
+#include "../SPI/spi.h"
+#include "../MCU/mcu.h"
 
 // test
 #include <sysctl.h>
@@ -17,10 +17,11 @@
 #include <cassert>
 
 
+#include "../ADC/adc.h"
 
 
 
-int main2(void) {
+int main(void) {
 
 	/*
 	 * Reset has occurred:
@@ -33,6 +34,11 @@ int main2(void) {
 	// Disable protection of BSL
 	SysCtl_disableBSLProtect();
 
+	// Test ADC
+	ADC::configureSolarCellVoltagePin();
+	ADC::isSolarCellDark();
+
+	ADC::isVccHigh();
 
 	// not effective until GPIO is unlocked
     MCUSleep::configureUnusedPinsLowPower();

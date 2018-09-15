@@ -1,7 +1,7 @@
 
 #include "duty.h"
 
-#include "alarm.h"
+#include "alarm/alarm.h"
 #include "PMM/powerMgtModule.h"	// Software reset
 
 
@@ -55,7 +55,7 @@ void Duty::setAlarmOrReset(unsigned int duration) {
 	/*
 	 * Fail means system might sleep forever, so only adequate response is reset mcu
 	 */
-	if (!Alarm::setAlarm(duration)) {
+	if (!Alarm::setAlarmInSeconds(duration)) {
 		PMM::triggerSoftwareBORReset();
 	}
 }

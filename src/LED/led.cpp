@@ -46,6 +46,7 @@ void LED::toggle() {
 
 void LED::blink() {
     turnOn();
+    // 100k cycles is about 1/100 Sec or 10 mSec
     __delay_cycles(100000);
     turnOff();
 }

@@ -186,7 +186,7 @@ public:
 	 * - duration too short
 	 * - library state errors (see algebra)
 	 */
-	static bool setAlarm(Duration);
+	static bool setAlarmInSeconds(Duration);
 
 	/*
 	 * Clear alarm on both sides of interface.

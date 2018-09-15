@@ -1,10 +1,10 @@
 
 #include "alarm.h"
 
-#include "RTC/realTimeClock.h"  // Avoid clash with rtc.h"
-#include "AB08xx/bridge.h"	    //  hides SPI
-#include "pinFunction/pinFunction.h"    // hides GPIO functions
-#include "PMM/powerMgtModule.h"
+#include "../RTC/realTimeClock.h"  // Avoid clash with rtc.h"
+#include "../AB08xx/bridge.h"	    //  hides SPI
+#include "../pinFunction/pinFunction.h"    // hides GPIO functions
+#include "../PMM/powerMgtModule.h"
 
 #include <cassert>
 
@@ -209,13 +209,13 @@ void Alarm::configureRTC() {
 /*
  * Must be bulletproof since if alarm is failed to set, may sleep forever.
  */
-bool Alarm::setAlarm(Duration duration) {
+bool Alarm::setAlarmInSeconds(Duration duration) {
 	bool result;
 
 	assert(isConfiguredForAlarming());
 
 	// delegate to RTC
-	result = RTC::setAlarm(duration);
+	result = RTC::setAlarmInSeconds(duration);
 
 	// ensure alarm is set or result is false
 	return result;

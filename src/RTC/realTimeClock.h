@@ -1,5 +1,5 @@
 
-#include "../alarmTypes.h"	// Duration
+#include "../alarm/alarmTypes.h"	// Duration
 
 
 /*
@@ -51,7 +51,7 @@ public:
 	 * There can be a race to set a short alarm.
 	 * This code has no special consideration for the race.
 	 */
-	static bool setAlarm(Duration);
+	static bool setAlarmInSeconds(Duration);
 
 	/*
 	 * Configure RTC so that match(counter, alarm) generates AIRQ signal.

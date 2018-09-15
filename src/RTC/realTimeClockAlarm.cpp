@@ -43,7 +43,7 @@ bool timeIsMonotonic(EpochTime nowTime) {
  * to type EpochTime (seconds since epoch) so we can use simple math to add Duration
  * then reverse conversion back to the type (RTCTime) that RTC expects.
  */
-bool RTC::setAlarm(Duration duration) {
+bool RTC::setAlarmInSeconds(Duration duration) {
 	bool result;
 
 	// TODO later, check preconditions for setting alarm
