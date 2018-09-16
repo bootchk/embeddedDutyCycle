@@ -5,6 +5,8 @@ class ADC {
 
     // Configuration common to the above
     static void configureCommon();
+    // used to measure vcc
+    static void configureVoltageBandgapReference();
 
 public:
     static void configureSolarCellVoltagePin();

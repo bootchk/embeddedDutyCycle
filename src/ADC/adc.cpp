@@ -6,7 +6,14 @@
 // DriverLib
 #include <gpio.h>
 #include <adc.h>
+#include <pmm.h>
 
+
+/*
+ * See mspware/examples/device/.../msp430fr243x_adc10_05.c
+ * for example code to measure vcc
+ * from which I derived this code.
+ */
 
 void ADC::configureSolarCellVoltagePin() {
     GPIO_setAsPeripheralModuleFunctionInputPin(
@@ -16,18 +23,31 @@ void ADC::configureSolarCellVoltagePin() {
 }
 
 
+// 8-bit resolution
+#define MaxADCRead 255
+
 
 bool ADC::isVccHigh() {
     configureForVccMeasure();
 
+    // Wait for VBG internal bandgap reference to stabilize
+
     // Cloned from below
     ADC_startConversion(ADC_BASE, ADC_SINGLECHANNEL);
     while ( ADC_isBusy(ADC_BASE) == ADC_BUSY );
-    unsigned int voltage = ADC_getResults(ADC_BASE);
+    unsigned int adcResult = ADC_getResults(ADC_BASE);
 
-    // TODO
-    // Voltage is 90% of reference of xxV
-    bool result = (voltage < 0x80);
+    // To calculate DVCC, the following equation is used
+    // DVCC = (1023 * 1.5) / adcResult
+    // The following equation is modified to use only integers instead
+    // of using float. All results needs to be divided by 100 to obtain
+    // the final value.
+    // DVCC = (1023 * 150) / adcResult
+    unsigned long dvccValue = ((unsigned long) MaxADCRead * (unsigned long) 150)
+            / (unsigned long) (adcResult);
+
+    // Voltage is > 3.4V
+    bool result = (dvccValue > 340);
     return result;
     return true;
 }
@@ -53,6 +73,23 @@ bool ADC::isSolarCellDark() {
     bool result = (voltage < 0x80);
     return result;
 }
+
+
+
+
+
+/*
+ * Private configuration routines
+ */
+
+
+void ADC::configureVoltageBandgapReference() {
+    PMM_enableInternalReference();
+
+    // spin
+    while (not PMM_getVariableReferenceVoltageStatus == PMM_REFGEN_READY) ;
+}
+
 
 void ADC::configureCommon() {
     //Initialize the ADC Module
@@ -90,12 +127,15 @@ void ADC::configureCommon() {
 //ADC_INPUT_DVSS
 
 void ADC::configureForVccMeasure() {
+    configureVoltageBandgapReference();
+
     configureCommon();
 
     /*
      * To measure vcc,
-     * sample the 1.5V reference from the PMM
-     * with DVCC as input reference
+     * sample the 1.5V bandgap reference from the PMM
+     * with DVCC as input reference.
+     * The sampled bandgap varies in proportion to vcc.
      */
     ADC_configureMemory(ADC_BASE,
                 ADC_INPUT_REFVOLTAGE,              // <<<<<<<<
