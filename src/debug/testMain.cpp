@@ -7,7 +7,7 @@
 
 #include <msp430.h>
 
-#include "PMM/powerMgtModule.h"
+#include "../PMM/powerMgtModule.h"
 
 
 bool TestMain::isResetAwakeFromSleep() {

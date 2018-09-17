@@ -3,12 +3,12 @@
 
 #include "PMM/powerMgtModule.h"
 #include "duty.h"
-#include "app.h"
 #include "mcuSleep.h"
 
-#include "testMain.h"
+#include "app/app.h"
 
-#include "myAssert.h"
+#include "debug/testMain.h"
+#include "debug/myAssert.h"
 
 
 void DutyMain::onColdReset() {

@@ -1,13 +1,12 @@
 #include <msp430.h>
 
-#include "myAssert.h"
-
 #include "mainObject.h"
 #include "mcuSleep.h"
 #include "PMM/powerMgtModule.h"
 #include "MCU/mcu.h"
 
-#include "testMain.h"
+#include "debug/myAssert.h"
+#include "debug/testMain.h"
 ///#include "debug.h"
 
 

@@ -3,12 +3,14 @@
 #include <src/mainObject.h>
 
 
-#include "testMain.h"
+
 #include "dutyMain.h"
 
 
 #include "PMM/powerMgtModule.h"
 #include "mcuSleep.h"
+
+#include "debug/testMain.h"
 
 /// #include "myAssert.h"
 

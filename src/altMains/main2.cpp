@@ -1,7 +1,7 @@
 
 #include "../duty.h"
 #include "../mcuSleep.h"
-#include "../app.h"
+#include "../app/app.h"
 
 #include "../PMM/powerMgtModule.h"   // stopWatchdog
 

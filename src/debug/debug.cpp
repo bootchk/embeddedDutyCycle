@@ -1,7 +1,7 @@
 
 #include "debug.h"
 
-#include "MCU/mcu.h"
+#include "../MCU/mcu.h"
 /*
  * Not a trail, just the last mark.
  */

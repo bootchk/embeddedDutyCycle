@@ -3,9 +3,8 @@
 
 #include <msp430.h>
 
-#include "testMain.h"
-
-#include "myAssert.h"
+#include "debug/testMain.h"
+#include "debug/myAssert.h"
 
 
 /*
