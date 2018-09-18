@@ -18,7 +18,7 @@
 #define APP_LED2_PIN      GPIO_PIN1
 
 
-void LED::configure() {
+void LED::configureGPIO() {
 	GPIO_setAsOutputPin(APP_LED1_PORT,    APP_LED1_PIN);
 	GPIO_setAsOutputPin(APP_LED2_PORT,    APP_LED2_PIN);
 

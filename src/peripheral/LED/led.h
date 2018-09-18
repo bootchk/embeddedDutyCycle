@@ -5,7 +5,8 @@
 
 class LED {
 public:
-	static void configure();
+	static void configureGPIO();
+
 	static void turnOn();
 	static void turnOff();
 	static void toggle();

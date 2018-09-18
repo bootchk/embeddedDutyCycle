@@ -1,7 +1,7 @@
 
 #include "adc.h"
 
-#include "../board.h"
+#include "../../board.h"
 
 // DriverLib
 #include <gpio.h>

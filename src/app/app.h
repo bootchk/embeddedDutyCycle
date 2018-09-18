@@ -1,6 +1,6 @@
 
 /*
- * The useful stuff the app does.
+ * API between DutyCycle framework and an app that does useful stuff.
  * Called from main at apropos events of duty cycle.
  * An alternative is to register callbacks with the duty cycling framework?
  */

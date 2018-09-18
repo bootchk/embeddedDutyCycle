@@ -1,7 +1,8 @@
 
 #include "app.h"
 
-#include "../LED/led.h"
+#include "../blinkerApp/blinker.h"
+#include "../OS/taskScheduler.h"
 
 
 
@@ -12,31 +13,37 @@ void App::onPowerOnReset() {
 	// assert app's pins (LED) configured
 
 	// initialize state
-	LED::turnOn();
-
-	// decide first alarm duration
+	Blinker::init();
 }
 
 void App::onWakeForAlarm() {
 	// require app's persistent GPIO still configured (LED)
 
-	// app state transition
+	/*
+	 * app state transition
+	 *
+	 * In general design, there can be many tasks, using scheduler.
+	 * For a design with only one task, do it now.
+	 */
+    /*
+     * Execute ready task, and usually schedule more tasks.
+     */
+    TaskScheduler::onAlarm();
 
-	///LED::toggle();
-    LED::blink();
-
-
-	// TODO decide next alarm duration
+    /// Blinker::onAlarm();
 }
 
 
 unsigned int App::durationOfSleep() {
-	// TODO later, app get from state
-	return 10;
+	/*
+	 * In general design, duration til next task.
+	 * For a design with only one task, could be a constant.
+	 */
+	return TaskScheduler::durationTilNextTask();
 }
 
 
 void App::configureSleepingGPIO() {
 	// App uses an LED during sleep
-	LED::configure();
+	Blinker::configureGPIO();
 }
