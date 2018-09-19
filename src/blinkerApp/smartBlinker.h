@@ -17,14 +17,26 @@ public:
      * Scheduled tasks
      */
     static void checkSunriseTask();
+    static void checkSunsetTask();
+    static void blinkTask();
 
     /*
      * Events
      * Determined by tasks, from external events.
      */
     static void onSunriseDetected();
+    static void onSunsetDetected();
+    static void onPowerLevelGood();
+    static void onEveningBlinkPeriodOver();
 
 
+    /*
+     * Scheduling
+     */
     static void scheduleBlinkTask();
     static void scheduleCheckSunriseTask();
+    static void scheduleCheckSunsetTask();
+    ///static void scheduleLaggedCheckSunsetTask();
+    static void scheduleFirstEveningBlinkTask();
+    static void scheduleFirstMorningBlinkTask();
 };

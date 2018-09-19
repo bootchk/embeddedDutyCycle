@@ -1,7 +1,10 @@
 
 #include "app.h"
 
-#include "../blinkerApp/blinker.h"
+/// simple
+///#include "../blinkerApp/blinker.h"
+#include "../blinkerApp/smartBlinker.h"
+
 #include "../OS/taskScheduler.h"
 
 
@@ -13,7 +16,9 @@ void App::onPowerOnReset() {
 	// assert app's pins (LED) configured
 
 	// initialize state
-	Blinker::init();
+
+	///Blinker::init();
+	SmartBlinker::init();
 }
 
 void App::onWakeForAlarm() {
@@ -34,16 +39,23 @@ void App::onWakeForAlarm() {
 }
 
 
-unsigned int App::durationOfSleep() {
+Duration App::durationOfSleep() {
 	/*
-	 * In general design, duration til next task.
 	 * For a design with only one task, could be a constant.
 	 */
-	return TaskScheduler::durationTilNextTask();
+	return Duration::TenSeconds;
 }
 
 
+EpochTime App::timeToWake() {
+    /*
+     * A general design:
+     * set alarm with a time from scheduler
+     */
+    return TaskScheduler::timeOfNextTask();
+}
+
 void App::configureSleepingGPIO() {
 	// App uses an LED during sleep
-	Blinker::configureGPIO();
+	SmartBlinker::configureGPIO();
 }

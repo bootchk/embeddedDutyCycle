@@ -28,39 +28,36 @@ static unsigned int readyTaskIndex;
 
 
 void TaskScheduler::onAlarm() {
-#ifdef OLD
-    ScheduledTask currentTask = tasks[readyTaskIndex].task;
-
-    // Remove executed task from schedule
-    // tasks[readyTaskIndex] = nullptr;
-
-    currentTask->execute();
-#endif
+    /*
+     * Ready task in schedule container might be overwritten after this,
+     * since a task can schedule other tasks.
+     */
     tasks[readyTaskIndex].execute();
 
-    /*
-     * Executed task may schedule new tasks.
-     * readyTaskIndex is invalid.
-     */
+    readyTaskIndex = 666;   // invalidate
 }
 
 
-unsigned int TaskScheduler::durationTilNextTask() {
+EpochTime TaskScheduler::timeOfNextTask() {
+    EpochTime result;
+
     if (taskIsEmpty[0]) {
         // only task 1
         readyTaskIndex = 1;
-        return tasks[1].scheduledTime;
+        result = tasks[1].scheduledTime;
     }
     else if (taskIsEmpty[1]) {
-        // only task 2
-        // TODO
+        // only task 0
+        readyTaskIndex = 0;
+        result = tasks[0].scheduledTime;
     }
     else {
         // choose task with soonest time
         // TODO
+        result = 10;
     }
     // assert readyTaskIndex indicates next task
-    return 10;
+    return result;
 }
 
 

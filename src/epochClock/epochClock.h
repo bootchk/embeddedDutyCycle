@@ -1,4 +1,5 @@
 
+#include "../alarm/alarmTypes.h"    // Duration\
 
 /*
  * EpochTime implemented on RTC.

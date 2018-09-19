@@ -1,4 +1,5 @@
 
+#include "alarm/alarmTypes.h"
 
 /*
  * Duty cycle the mcu (sleep, wake on alarm from rtc.)
@@ -65,7 +66,7 @@ public:
 	 * As currently coded, will not work if the duration has expired
 	 * before sleep.
 	 */
-	static void setAlarmOrReset(unsigned int);
+	static void setAlarmOrReset(Duration);
 
 	/*
 	 * Clear alarm interrupt.

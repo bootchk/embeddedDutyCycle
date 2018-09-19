@@ -67,7 +67,7 @@ bool RTC::setAlarmInSeconds(Duration duration) {
 	else {
 
 		// calculate time of alarm
-		EpochTime alarmEpochTime = nowTime + duration;
+		EpochTime alarmEpochTime = nowTime + static_cast<unsigned int> (duration);
 
 		// Reverse conversions
 		CalendarTime alarmCalendarTime = TimeConverter::convertEpochTimeToCalendarTime(alarmEpochTime);

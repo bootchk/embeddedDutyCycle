@@ -51,7 +51,7 @@ void Duty::onWakeForAlarm() {
 }
 
 
-void Duty::setAlarmOrReset(unsigned int duration) {
+void Duty::setAlarmOrReset(Duration duration) {
 	/*
 	 * Fail means system might sleep forever, so only adequate response is reset mcu
 	 */

@@ -1,4 +1,7 @@
 
+#include "../alarm/alarmTypes.h"    // Duration
+#include "../RTC/timeTypes.h"   // EpochTime
+
 /*
  * API between DutyCycle framework and an app that does useful stuff.
  * Called from main at apropos events of duty cycle.
@@ -21,7 +24,12 @@ public:
 	 * About to low power sleep in duty cycle.
 	 * Result depends on state of app.
 	 */
-	static unsigned int durationOfSleep();
+	static Duration durationOfSleep();
+
+	/*
+	 * Time we should wake.
+	 */
+	static EpochTime timeToWake();
 
 	/*
 	 * Configure GPIO that persists through sleep.
