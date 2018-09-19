@@ -19,6 +19,9 @@ void App::onPowerOnReset() {
 
 	///Blinker::init();
 	SmartBlinker::init();
+
+	/// For dev
+	SmartBlinker::testTasks();
 }
 
 void App::onWakeForAlarm() {
@@ -38,13 +41,14 @@ void App::onWakeForAlarm() {
     /// Blinker::onAlarm();
 }
 
-
+#ifdef TESTSIMPLE
 Duration App::durationOfSleep() {
 	/*
 	 * For a design with only one task, could be a constant.
 	 */
 	return Duration::TenSeconds;
 }
+#endif
 
 
 EpochTime App::timeToWake() {

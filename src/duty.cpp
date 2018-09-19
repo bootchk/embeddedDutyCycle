@@ -60,6 +60,15 @@ void Duty::setAlarmOrReset(Duration duration) {
 	}
 }
 
+void Duty::setAlarmOrReset(EpochTime time) {
+    /*
+     * Fail means system might sleep forever, so only adequate response is reset mcu
+     */
+    if (!Alarm::setAlarmToTime(time)) {
+        PMM::triggerSoftwareBORReset();
+    }
+}
+
 /*
  * Three simple delegations.
  */

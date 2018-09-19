@@ -27,8 +27,12 @@ void SmartBlinker::scheduleFirstEveningBlinkTask() {
 
 void SmartBlinker::scheduleFirstMorningBlinkTask() {
     TaskScheduler::scheduleTask(
-            0, blinkTask, Day::timeTwoHoursBeforeSunrise());
+            0, blinkTask, Day::timeTwoHoursBeforeSunriseTime());
 }
+
+
+
+
 
 
 

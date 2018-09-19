@@ -21,6 +21,11 @@ public:
     static void blinkTask();
 
     /*
+     * Test harness to call all tasks to find unresolved symbols.
+     */
+    static void testTasks();
+
+    /*
      * Events
      * Determined by tasks, from external events.
      */

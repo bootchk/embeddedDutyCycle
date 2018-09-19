@@ -1,5 +1,9 @@
 
+#include "timeTypes.h"
 #include "../alarm/alarmTypes.h"	// Duration
+
+// Implementation specific, unfortunately
+#include "../AB08xx/rtcTime.h"  // RTCTime
 
 
 /*
@@ -53,6 +57,10 @@ public:
 	 * This code has no special consideration for the race.
 	 */
 	static bool setAlarmInSeconds(Duration);
+
+	static bool setAlarmTime(EpochTime);
+
+	static bool verifyAlarmTime(const RTCTime*);
 
 	/*
 	 * Configure RTC so that match(counter, alarm) generates AIRQ signal.

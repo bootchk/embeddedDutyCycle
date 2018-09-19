@@ -1,14 +1,17 @@
 
 #include "smartBlinker.h"
 
-
+// modules of app
 #include "blinkPeriod.h"
+#include "day.h"
+
 
 // implementation
 #include "../peripheral/ADC/adc.h"
 #include "../peripheral/LED/led.h"
 
 #include "../blinkerApp/blinker.h"
+
 
 
 
@@ -19,15 +22,29 @@ void SmartBlinker::configureGPIO() {
 void SmartBlinker::init() {
     /*
      * Power on reset.
-     * Assume it is day.
+     */
+
+    // Show ignorance of actual day.
+    Day::init();
+
+    /*
+     * Assume it is daylight.
      * Start detecting sunset.
-     * If it is already night, the first check sunset will immediately start checking for sunrise.
-     * and start blinking????
+     *
+     * Case 1: is already night, the first check sunset will immediately start checking for sunrise.
+     * and possibly start blinking.
+     *
+     * Case 2: is daylight.  Check and continue checking for sunset.
      */
     scheduleCheckSunsetTask();
 }
 
 
+void SmartBlinker::testTasks() {
+    checkSunriseTask();
+    checkSunsetTask();
+    blinkTask();
+}
 
 /*
  * Tasks
@@ -59,8 +76,9 @@ void SmartBlinker::blinkTask() {
     // blink LED
     Blinker::onAlarm();
 
+    BlinkPeriod::advance();
+
     // check for blink period over
-    BlinkPeriod::blink();
     if (BlinkPeriod::isOver()) {
         if (BlinkPeriod::isEvening()) {
             onEveningBlinkPeriodOver();

@@ -19,7 +19,24 @@ struct RTCTime {
 	unsigned char DayOfMonth;
 	unsigned char Month;
 	unsigned char YearOfCentury;
+
+	// C++ does not provide == operator for structs
+	bool operator==(const RTCTime* rhs) const
+	{
+	    return (this->Hundredth == rhs->Hundredth
+	            and this->Second == rhs->Second
+	            and this->Minute == rhs->Minute
+	            and this->Hour24 == rhs->Hour24
+	            and this->DayOfMonth == rhs->DayOfMonth
+	            and this->Month == rhs->Month
+	            and this->YearOfCentury == rhs->YearOfCentury
+	            ) ;
+	}
 }  ;
+
+
+
+
 
 
 /*

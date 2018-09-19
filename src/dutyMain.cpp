@@ -67,10 +67,15 @@ void DutyMain::onResetPostlude() {
      */
 
     // Resets if fail to set alarm
-#define SETALARM 1
+///#define TESTSIMPLE 1
+#define TESTSMARTBLINKER
 #ifdef SETALARM // test 2
     Duty::setAlarmOrReset(App::durationOfSleep());
 #endif
+#ifdef TESTSMARTBLINKER
+    Duty::setAlarmOrReset(App::timeToWake());
+#endif
+
 
     Duty::lowerMCUToPresleepConfiguration();
     // GPIO configuration: sleep:all

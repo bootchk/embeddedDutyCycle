@@ -1,6 +1,7 @@
 
 
 #include "alarmTypes.h"
+#include "../RTC/timeTypes.h"
 
 /*
  * Provides an alarm from a remote RTC.
@@ -187,6 +188,11 @@ public:
 	 * - library state errors (see algebra)
 	 */
 	static bool setAlarmInSeconds(Duration);
+
+	/*
+	 *
+	 */
+	static bool setAlarmToTime(EpochTime);
 
 	/*
 	 * Clear alarm on both sides of interface.

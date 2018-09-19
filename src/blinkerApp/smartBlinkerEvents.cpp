@@ -14,7 +14,7 @@
  */
 
 void SmartBlinker::onSunriseDetected() {
-    Day::setSunrise();
+    Day::setSunriseTime();
 
     scheduleCheckSunsetTask();
     /// Optional optimization of power:
@@ -43,14 +43,24 @@ void SmartBlinker::onSunsetDetected() {
 
 
 
+
+
 void SmartBlinker::onPowerLevelGood() {
     BlinkPeriod::initForEveningBlinking();
     scheduleFirstEveningBlinkTask();
 }
 
+/*
+ * We schedule evening blinking from a detected sunset.
+ * We can only schedule morning blinking if there exists a prior detected sunrise.
+ * On startup, might not exist.
+ */
 
 void SmartBlinker::onEveningBlinkPeriodOver() {
-    BlinkPeriod::initForMorningBlinking();
-    scheduleFirstMorningBlinkTask();
+    if (Day::isSunriseTimeValid()) {
+        BlinkPeriod::initForMorningBlinking();
+        scheduleFirstMorningBlinkTask();
+    }
+    // else omit morning blinking.
 }
 

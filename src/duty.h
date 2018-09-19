@@ -1,5 +1,6 @@
 
 #include "alarm/alarmTypes.h"
+#include "RTC/timeTypes.h"  // EpochTime
 
 /*
  * Duty cycle the mcu (sleep, wake on alarm from rtc.)
@@ -63,10 +64,16 @@ public:
 	 * - sleep
 	 *
 	 * Duration must be long enough for the above.
-	 * As currently coded, will not work if the duration has expired
-	 * before sleep.
+	 * As currently coded, will not work if the duration has expired before sleep.
 	 */
 	static void setAlarmOrReset(Duration);
+
+	/*
+	 * Overloaded.
+	 *
+	 * Time must be beyond now time else sleep forever.
+	 */
+	static void setAlarmOrReset(EpochTime);
 
 	/*
 	 * Clear alarm interrupt.

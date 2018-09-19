@@ -3,13 +3,37 @@
 /*
  * Knows count of blinks in blink periods.
  *
- * We schedule the blinking task, not and end of period task.
+ * We schedule the blinking task, not an end of period task.
+ *
+ * Blink period comprises two subperiods, evening and morning, separated by time.
+ *
+ * Sequence of calls is:
+ * initForEveningBlinking,
+ * advance, isOver, ..., advance, isOver=>true,
+ * isEvening()=>false
+ * initForMorningBlinking
+ * advance, isOver, ..., advance, isOver=>true,
  */
 
 
+namespace {
+
+/*
+ * Blink period must persist through low power sleep
+ */
+#pragma PERSISTENT
+static int counter;
+
+// State variable, evening and morning blink subperiods
+#pragma PERSISTENT
+static bool _isEvening;
+
+}
+
+
+
 class BlinkPeriod {
-    static int counter;
-    static bool _isEvening;
+
 
 public:
     static void initForEveningBlinking() {
@@ -28,5 +52,5 @@ public:
 
     static bool isEvening() { return _isEvening; }
 
-    static bool blink() { counter--; }
+    static bool advance() { counter--; }
 };

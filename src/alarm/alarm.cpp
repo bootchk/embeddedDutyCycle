@@ -220,3 +220,19 @@ bool Alarm::setAlarmInSeconds(Duration duration) {
 	// ensure alarm is set or result is false
 	return result;
 }
+
+
+bool Alarm::setAlarmToTime(EpochTime time) {
+    bool result;
+
+    assert(isConfiguredForAlarming());
+
+    // delegate to RTC
+    result = RTC::setAlarmTime(time);
+
+    // ensure alarm is set or result is false
+    return result;
+}
+
+
+

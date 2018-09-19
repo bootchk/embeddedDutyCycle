@@ -65,31 +65,44 @@ bool RTC::setAlarmInSeconds(Duration duration) {
 		result = false;
 	}
 	else {
-
 		// calculate time of alarm
 		EpochTime alarmEpochTime = nowTime + static_cast<unsigned int> (duration);
 
-		// Reverse conversions
-		CalendarTime alarmCalendarTime = TimeConverter::convertEpochTimeToCalendarTime(alarmEpochTime);
-		RTCTime alarmRTCTime = TimeConverter::convertCalendarTimeToRTCTime(alarmCalendarTime);
-
-		Bridge::writeAlarm(alarmRTCTime);
-
-		// TODO later
-		/*
-		 * Verify alarm is properly set by reading and compare
-		 * If it is not set properly, the system may sleep a very long time.
-		 * Also verify that now time is not zero.
-		 */
-		RTCTime readAlarmRTCTime;
-		Bridge::readAlarm(&readAlarmRTCTime);
-		// assert(readAlarmRTCTime == alarmRTCTime);
-
-		result = true;
+		result = setAlarmTime(alarmEpochTime);
 	}
 
 	return result;
 }
 
 
+bool RTC::setAlarmTime(EpochTime alarmEpochTime) {
+    bool result;
 
+    // Convert EpochTime to RTCTime
+    CalendarTime alarmCalendarTime =
+            TimeConverter::convertEpochTimeToCalendarTime(alarmEpochTime);
+    RTCTime alarmRTCTime = TimeConverter::convertCalendarTimeToRTCTime(
+            alarmCalendarTime);
+
+    Bridge::writeAlarm(alarmRTCTime);
+
+    return verifyAlarmTime(&alarmRTCTime);
+}
+
+
+
+
+bool RTC::verifyAlarmTime(const RTCTime* writtenTime) {
+    RTCTime readAlarmRTCTime;
+
+    /*
+     * Verify alarm is properly set by reading and compare to what
+     * If it is not set properly, the system may sleep a very long time.
+     * Also verify that now time is not zero????
+     *
+     * Note the alarm register is not ticking.
+     */
+
+    Bridge::readAlarm(&readAlarmRTCTime);
+    return(readAlarmRTCTime == writtenTime);
+}

@@ -7,14 +7,20 @@
 
 
 
+namespace {
 
 /*
  * Owns container, here a simple array.
  * Two types of task can be scheduled.
+ *
+ * Must be persistent through low power sleep.
  */
+#pragma PERSISTENT
 static ScheduledTask tasks[2];
+#pragma PERSISTENT
 static bool taskIsEmpty[2];
 
+}
 
 
 
