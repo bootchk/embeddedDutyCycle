@@ -22,11 +22,11 @@ namespace {
  * Blink period must persist through low power sleep
  */
 #pragma PERSISTENT
-static int counter;
+static int counter = 0;
 
 // State variable, evening and morning blink subperiods
 #pragma PERSISTENT
-static bool _isEvening;
+static bool _isEvening = false;
 
 }
 
@@ -52,5 +52,5 @@ public:
 
     static bool isEvening() { return _isEvening; }
 
-    static bool advance() { counter--; }
+    static void advance() { counter--; }
 };

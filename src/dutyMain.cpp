@@ -20,6 +20,7 @@ void DutyMain::onColdReset() {
         PMM::unlockLPM5();
         myAssert(not PMM::isLockedLPM5());
         // assert Duty is ready for setAlarm
+#define APPPOR
 #ifdef APPPOR // test 1c
         App::onPowerOnReset();
         // assert app in initial state

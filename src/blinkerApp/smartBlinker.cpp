@@ -5,6 +5,7 @@
 #include "blinkPeriod.h"
 #include "day.h"
 
+#include "../OS/taskScheduler.h"
 
 // implementation
 #include "../peripheral/ADC/adc.h"
@@ -26,6 +27,9 @@ void SmartBlinker::init() {
 
     // Show ignorance of actual day.
     Day::init();
+
+    // No tasks schedule
+    TaskScheduler::init();
 
     /*
      * Assume it is daylight.
@@ -84,7 +88,7 @@ void SmartBlinker::blinkTask() {
             onEveningBlinkPeriodOver();
             // first blink task of morning is scheduled
         }
-        // else morning blink period over, no blinkTask scheduled
+        // else morning blink subperiod over,  blink period over, no blinkTask scheduled
     }
     else {
         scheduleBlinkTask();

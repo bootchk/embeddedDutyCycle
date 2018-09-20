@@ -38,6 +38,32 @@ bool timeIsMonotonic(EpochTime nowTime) {
 
 
 
+EpochTime RTC::timeNow() {
+    RTCTime now;
+    EpochTime result;
+
+
+    Bridge::readTime(&now);
+
+    /*
+     * If RTC has failed, Bridge reads time as all zeroes.
+     */
+    if (not TimeConverter::isValidRTCTime(now)) {
+        result = 0;
+    }
+    else
+    {
+        // 2 step conversion from RTCTime to epoch time
+        CalendarTime calendarTime = TimeConverter::convertRTCTimeToCalendarTime(
+                now);
+        result = TimeConverter::convertCalendarTimeToEpochTime(calendarTime);
+    }
+    return result;
+}
+
+
+
+
 /*
  * Implementation is largely converting type (RTCTime) that RTC delivers
  * to type EpochTime (seconds since epoch) so we can use simple math to add Duration
@@ -49,19 +75,11 @@ bool RTC::setAlarmInSeconds(Duration duration) {
 	// TODO later, check preconditions for setting alarm
 	// duration is great enough
 
-	RTCTime now;
-	Bridge::readTime(&now);
+	EpochTime nowTime = timeNow();
+	// could be zero when RTC chip fails
 
-	/*
-	 * If RTC has failed, Bridge reads time as all zeroes.
-	 */
-	if ( not TimeConverter::isValidRTCTime(now) ) return false;
-
-	// 2 step conversion from RTCTime to epoch time
-	CalendarTime calendarTime = TimeConverter::convertRTCTimeToCalendarTime(now);
-	EpochTime nowTime = TimeConverter::convertCalendarTimeToEpochTime(calendarTime);
-
-	if ( not timeIsMonotonic(nowTime)) {
+	//if ( not timeIsMonotonic(nowTime)) {
+	if ( nowTime == 0 ) {
 		result = false;
 	}
 	else {
@@ -76,7 +94,6 @@ bool RTC::setAlarmInSeconds(Duration duration) {
 
 
 bool RTC::setAlarmTime(EpochTime alarmEpochTime) {
-    bool result;
 
     // Convert EpochTime to RTCTime
     CalendarTime alarmCalendarTime =

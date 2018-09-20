@@ -16,21 +16,31 @@ namespace {
  * Must be persistent through low power sleep.
  */
 #pragma PERSISTENT
-static ScheduledTask tasks[2];
-#pragma PERSISTENT
-static bool taskIsEmpty[2];
-
-}
+static ScheduledTaskSlot tasks[2];
 
 
 
 /*
  * Some task must be scheduled.
  * Some task must always be ready, except temporarily while the ready task is executing.
+ *
+ * Must be persistent.
+ * We decide this when we set the alarm.
+ * Then we sleep, the decision must persist through sleep.
  */
-static unsigned int readyTaskIndex;
+#pragma PERSISTENT
+static unsigned int readyTaskIndex = 666;
+
+}
 
 
+void TaskScheduler::init() {
+    // No tasks scheduled
+    tasks[0].isEmpty = true;
+    tasks[1].isEmpty = true;
+
+    // readyTaskIndex will not be accessed until scheduling alarm makes it valid
+}
 
 
 void TaskScheduler::onAlarm() {
@@ -39,6 +49,9 @@ void TaskScheduler::onAlarm() {
      * since a task can schedule other tasks.
      */
     tasks[readyTaskIndex].execute();
+    /*
+     * Executing it frees slot for reuse.
+     */
 
     readyTaskIndex = 666;   // invalidate
 }
@@ -47,20 +60,29 @@ void TaskScheduler::onAlarm() {
 EpochTime TaskScheduler::timeOfNextTask() {
     EpochTime result;
 
-    if (taskIsEmpty[0]) {
+    // At least one task slot is not empty
+    // At most two task slots are not empty
+
+    if (tasks[0].isEmpty) {
         // only task 1
         readyTaskIndex = 1;
         result = tasks[1].scheduledTime;
     }
-    else if (taskIsEmpty[1]) {
+    else if (tasks[1].isEmpty) {
         // only task 0
         readyTaskIndex = 0;
         result = tasks[0].scheduledTime;
     }
     else {
         // choose task with soonest time
-        // TODO
-        result = 10;
+
+        if (tasks[0].scheduledTime < tasks[1].scheduledTime) {
+            readyTaskIndex = 0;
+        }
+        else {
+            readyTaskIndex = 1;
+        }
+        result = tasks[readyTaskIndex].scheduledTime;
     }
     // assert readyTaskIndex indicates next task
     return result;
@@ -73,6 +95,7 @@ void TaskScheduler::scheduleTask(
         EpochTime epochTime) {
     tasks[kind].taskMethodPtr = method;
     tasks[kind].scheduledTime = epochTime;
+    tasks[kind].isEmpty = false;
 }
 
 

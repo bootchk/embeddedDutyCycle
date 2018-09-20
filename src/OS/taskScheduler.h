@@ -19,6 +19,8 @@
 
 class TaskScheduler {
 public:
+    static void init();
+
     /*
      * Alarm has fired for next task.
      */

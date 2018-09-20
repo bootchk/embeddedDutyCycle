@@ -41,6 +41,11 @@ public:
 	static void clearIRQInterrupt();
 
 
+	/*
+	 * Return time from clock or zero if clock has failed.
+	 */
+	static EpochTime timeNow();
+
 
 	/*
 	 * Return true if alarm is set.

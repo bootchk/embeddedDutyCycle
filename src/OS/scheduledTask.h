@@ -5,15 +5,22 @@
 #include "task.h"
 
 
+/*
+ * Knows a scheduled task.
+ *
+ * Many instances, in a container.
+ */
 
-
-class ScheduledTask {
+class ScheduledTaskSlot {
 public:
     EpochTime scheduledTime;
     TaskMethodPtr taskMethodPtr;
+    bool isEmpty = true;
 
     void execute() {
-        //_isReady = false;
+        // Can reuse slot
+        // Do this before executing, so executed task can reuse slot
+        isEmpty = true;
 
         // Dereference function pointer and call function
         (*taskMethodPtr)();
