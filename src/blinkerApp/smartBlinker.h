@@ -8,6 +8,9 @@
  */
 
 class SmartBlinker {
+private:
+    static void scheduleInitialTask();
+
 public:
     static void init();
     static void onAlarm(void);
@@ -41,7 +44,9 @@ public:
     static void scheduleBlinkTask();
     static void scheduleCheckSunriseTask();
     static void scheduleCheckSunsetTask();
-    ///static void scheduleLaggedCheckSunsetTask();
+
     static void scheduleFirstEveningBlinkTask();
     static void scheduleFirstMorningBlinkTask();
+
+    ///static void scheduleLaggedCheckSunsetTask();
 };

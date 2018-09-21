@@ -20,17 +20,17 @@ void SmartBlinker::configureGPIO() {
     LED::configureGPIO();
 }
 
-void SmartBlinker::init() {
+
+void SmartBlinker::scheduleInitialTask() {
+#ifdef BLINK_ONLY
     /*
-     * Power on reset.
+     * For integration testing, only blink
      */
-
-    // Show ignorance of actual day.
-    Day::init();
-
-    // No tasks schedule
-    TaskScheduler::init();
-
+    scheduleBlinkTask();
+#else
+    /*
+     * Schedule sun detection
+     */
     /*
      * Assume it is daylight.
      * Start detecting sunset.
@@ -41,6 +41,23 @@ void SmartBlinker::init() {
      * Case 2: is daylight.  Check and continue checking for sunset.
      */
     scheduleCheckSunsetTask();
+#endif
+
+}
+
+
+void SmartBlinker::init() {
+    /*
+     * Power on reset.
+     */
+
+    // Show ignorance of actual day.
+    Day::init();
+
+    TaskScheduler::init();
+    // Assert no tasks schedule, ready to schedule
+
+    scheduleInitialTask();
 }
 
 
@@ -79,6 +96,8 @@ void SmartBlinker::checkSunsetTask() {
 void SmartBlinker::blinkTask() {
     // blink LED
     Blinker::onAlarm();
+
+    myAssert(BlinkPeriod::isActive());
 
     BlinkPeriod::advance();
 

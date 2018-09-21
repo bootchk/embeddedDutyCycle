@@ -10,9 +10,28 @@
 #include "../PMM/powerMgtModule.h"
 
 
+/*
+ * Various hacks: temporary for testing alternative implementations.
+ */
+
 bool TestMain::isResetAwakeFromSleep() {
     return (SYSRSTIV == SYSRSTIV_LPM5WU);
 }
+
+
+void TestMain::delayBriefly() {
+    __delay_cycles(500);
+    // 50000 works
+    // 50 fails another way
+    // 0 fails with NMI VMA
+}
+
+
+
+/*
+ * These routines mock what a real app should do.
+ */
+
 
 void TestMain::initAllGpioOutLow()
 {
@@ -105,6 +124,12 @@ void TestMain::blinkForcedGreenLED(unsigned int count) {
 
 
 
+
+
+/*
+ * Terminal routines: never return.  To indicate faults.
+ */
+
 void TestMain::warbleRedLEDForever() {
     ensureRedLEDLightable();
 
@@ -144,9 +169,7 @@ void TestMain::ensureRedLEDLightable() {
 
 
 
-void TestMain::delayBriefly() {
-    __delay_cycles(500);
-    // 50000 works
-    // 50 fails another way
-    // 0 fails with NMI VMA
-}
+
+
+
+

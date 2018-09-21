@@ -21,8 +21,9 @@ void App::onPowerOnReset() {
 	SmartBlinker::init();
 
 	/// For dev
-	SmartBlinker::testTasks();
+	/// SmartBlinker::testTasks();
 }
+
 
 void App::onWakeForAlarm() {
 	// require app's persistent GPIO still configured (LED)
@@ -49,6 +50,8 @@ Duration App::durationOfSleep() {
 	return Duration::TenSeconds;
 }
 #endif
+
+
 
 
 EpochTime App::timeToWake() {

@@ -1,3 +1,12 @@
+
+
+/*
+ * Routines for testing
+ *
+ * Some can be made impotent at compile time.
+ */
+
+
 class TestMain {
 private:
     /*
@@ -13,10 +22,10 @@ public:
 
     static void configureButtonWakeupSource();
 
+
     static void blinkRedLED();
     static void blinkGreenLED(unsigned int);\
     static void blinkRedLED(unsigned int);
-
 
     static void lightGreenLED();
 

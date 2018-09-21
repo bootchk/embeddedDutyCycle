@@ -68,6 +68,10 @@ void DutyMain::onResetPostlude() {
      */
 
     // Resets if fail to set alarm
+
+    /*
+     * Alternatives, depending on whether app schedules in terms of type Duration or EpochTime
+     */
 ///#define TESTSIMPLE 1
 #define TESTSMARTBLINKER
 #ifdef SETALARM // test 2
