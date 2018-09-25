@@ -1,9 +1,13 @@
 
 // function or method that is the task
-typedef void TaskMethod(void);
+///typedef void TaskMethod(void);
 
 // Pointer to it
-typedef TaskMethod* TaskMethodPtr;
+///typedef TaskMethod* TaskMethodPtr;
+
+// Alternative:
+typedef void (*TaskMethodPtr) (void);
+
 
 
 #ifdef OLD

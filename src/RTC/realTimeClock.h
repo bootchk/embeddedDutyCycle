@@ -63,7 +63,7 @@ public:
 	 */
 	static bool setAlarmInSeconds(Duration);
 
-	static bool setAlarmTime(EpochTime);
+	static bool setAlarmTime(EpochTime&);
 
 	static bool verifyAlarmTime(const RTCTime*);
 

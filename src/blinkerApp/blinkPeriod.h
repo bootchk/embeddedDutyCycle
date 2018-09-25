@@ -28,6 +28,9 @@ static int counter = 0;
 #pragma PERSISTENT
 static bool _isEvening = false;
 
+#pragma PERSISTENT
+static bool _isActive = false;
+
 }
 
 
@@ -40,15 +43,25 @@ public:
         // Evening blink for 4 hours every 10 seconds
         counter = 6 * 60 * 4;
         _isEvening = true;
+        _isActive = true;
     }
 
     static void initForMorningBlinking() {
             // Evening blink for 2 hours every 10 seconds
             counter = 6 * 60 * 2;
             _isEvening = false;
+            _isActive = true;
         }
 
-    static bool isOver() { return counter <= 0; }
+    static bool isActive() { return _isActive; }
+
+    static bool isOver() {
+        bool result;
+        result = (counter <= 0);
+        // active if not over
+        _isActive = not result;
+        return result;
+    }
 
     static bool isEvening() { return _isEvening; }
 

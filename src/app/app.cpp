@@ -7,6 +7,8 @@
 
 #include "../OS/taskScheduler.h"
 
+// Test
+#include "../debug/testMain.h"
 
 
 
@@ -34,6 +36,8 @@ void App::onWakeForAlarm() {
 	 * In general design, there can be many tasks, using scheduler.
 	 * For a design with only one task, do it now.
 	 */
+    ///TestMain::blinkForcedGreenLED(4);
+
     /*
      * Execute ready task, and usually schedule more tasks.
      */

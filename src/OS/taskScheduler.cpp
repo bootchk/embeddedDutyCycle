@@ -1,8 +1,8 @@
 
-#include <src/OS/scheduledTask.h>
+#include <src/OS/scheduledTaskSlot.h>
 #include "taskScheduler.h"
 
-
+#include "../debug/myAssert.h"
 
 
 
@@ -44,6 +44,8 @@ void TaskScheduler::init() {
 
 
 void TaskScheduler::onAlarm() {
+    // is valid
+    myAssert( readyTaskIndex == 0 or readyTaskIndex == 1 );
     /*
      * Ready task in schedule container might be overwritten after this,
      * since a task can schedule other tasks.
@@ -57,35 +59,42 @@ void TaskScheduler::onAlarm() {
 }
 
 
+EpochTime TaskScheduler::readyATask(unsigned int taskIndex) {
+    myAssert( not tasks[taskIndex].isEmpty );
+
+    readyTaskIndex = taskIndex;
+    return tasks[taskIndex].scheduledTime;
+}
+
+
 EpochTime TaskScheduler::timeOfNextTask() {
-    EpochTime result;
+    myAssert(isTaskScheduled());
+
+    unsigned int theReadyTaskIndex;
 
     // At least one task slot is not empty
     // At most two task slots are not empty
 
     if (tasks[0].isEmpty) {
         // only task 1
-        readyTaskIndex = 1;
-        result = tasks[1].scheduledTime;
+        theReadyTaskIndex = 1;
     }
     else if (tasks[1].isEmpty) {
         // only task 0
-        readyTaskIndex = 0;
-        result = tasks[0].scheduledTime;
+        theReadyTaskIndex = 0;
     }
     else {
+        // both slots non-empty
         // choose task with soonest time
 
         if (tasks[0].scheduledTime < tasks[1].scheduledTime) {
-            readyTaskIndex = 0;
+            theReadyTaskIndex = 0;
         }
         else {
-            readyTaskIndex = 1;
+            theReadyTaskIndex = 1;
         }
-        result = tasks[readyTaskIndex].scheduledTime;
     }
-    // assert readyTaskIndex indicates next task
-    return result;
+    return readyATask(theReadyTaskIndex);
 }
 
 
@@ -93,11 +102,20 @@ void TaskScheduler::scheduleTask(
         unsigned int kind,
         TaskMethodPtr method,
         EpochTime epochTime) {
+
+    // slot must be empty, to reuse it
+    myAssert( tasks[kind].isEmpty );
+
     tasks[kind].taskMethodPtr = method;
     tasks[kind].scheduledTime = epochTime;
     tasks[kind].isEmpty = false;
 }
 
+
+
+bool TaskScheduler::isTaskScheduled() {
+    return (not (tasks[0].isEmpty and tasks[1].isEmpty ));
+}
 
 
 #ifdef OLD

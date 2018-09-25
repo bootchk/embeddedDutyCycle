@@ -13,6 +13,9 @@
 
 #include "../blinkerApp/blinker.h"
 
+#include "../debug/myAssert.h"
+#include "../debug/testMain.h"
+
 
 
 
@@ -22,11 +25,16 @@ void SmartBlinker::configureGPIO() {
 
 
 void SmartBlinker::scheduleInitialTask() {
+#define BLINK_ONLY
 #ifdef BLINK_ONLY
     /*
-     * For integration testing, only blink
+     * For integration testing, only blink task, in a blink period
      */
-    scheduleBlinkTask();
+    BlinkPeriod::initForEveningBlinking();
+
+    ///  test blink task by calling it to schedule self
+    blinkTask();
+    ///scheduleBlinkTask();
 #else
     /*
      * Schedule sun detection
@@ -95,7 +103,9 @@ void SmartBlinker::checkSunsetTask() {
 
 void SmartBlinker::blinkTask() {
     // blink LED
-    Blinker::onAlarm();
+    ///Blinker::onAlarm();
+
+    TestMain::blinkForcedGreenLED(5);
 
     myAssert(BlinkPeriod::isActive());
 
@@ -115,7 +125,6 @@ void SmartBlinker::blinkTask() {
     }
     // assert blinkTask or no blinking related task is scheduled
 }
-
 
 
 

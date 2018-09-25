@@ -49,52 +49,63 @@ return 0;
  * These fields are not used in reverse conversion (see makeTime() source code)
  */
 
-CalendarTime TimeConverter::convertRTCTimeToCalendarTime(RTCTime& rtcTime) {
-	CalendarTime calendarTime;
-
+void TimeConverter::convertRTCTimeToCalendarTime(const RTCTime& rtcTime, CalendarTime& calendarTime) {
 	calendarTime.Year = bcd2bin(rtcTime.YearOfCentury); // Not used: CalendarYrToTm(); // /*+ (buf.weekdays.GP * 100)*/) + 2000;
 	calendarTime.Month = bcd2bin(rtcTime.Month);
 	calendarTime.Day = bcd2bin(rtcTime.DayOfMonth);
 	calendarTime.Hour = bcd2bin(rtcTime.Hour24);
 	calendarTime.Minute = bcd2bin(rtcTime.Minute);
 	calendarTime.Second = bcd2bin(rtcTime.Second);
-
-	return calendarTime;
 }
 
 
-RTCTime TimeConverter::convertCalendarTimeToRTCTime(CalendarTime& calendarTime) {
-	RTCTime rtcTime;
-
+void TimeConverter::convertCalendarTimeToRTCTime(const CalendarTime& calendarTime, RTCTime& rtcTime ) {
 	rtcTime.YearOfCentury = bin2bcd(calendarTime.Year);
 	rtcTime.Month         = bin2bcd(calendarTime.Month);
 	rtcTime.DayOfMonth    = bin2bcd(calendarTime.Day);
 	rtcTime.Hour24        = bin2bcd(calendarTime.Hour);
 	rtcTime.Minute        = bin2bcd(calendarTime.Minute);
 	rtcTime.Second        = bin2bcd(calendarTime.Second);
-
-	return rtcTime;
 }
 
 
 
 
 
-EpochTime TimeConverter::convertCalendarTimeToEpochTime(CalendarTime& calendarTime) {
-	EpochTime epochTime  = 0 ;
+EpochTime TimeConverter::convertCalendarTimeToEpochTime(const CalendarTime& calendarTime ) {
 	// Equivalent to Unix mktime()
-	epochTime = makeTime( calendarTime) ;
-	return epochTime;
-
+	return makeTime( calendarTime) ;
 }
 
-CalendarTime  TimeConverter::convertEpochTimeToCalendarTime( EpochTime epochTime) {
-	CalendarTime calendarTime ;
+
+void TimeConverter::convertEpochTimeToCalendarTime( const EpochTime& epochTime, CalendarTime& calendarTime) {
 	// Equivalent to Unix localtime()
 	breakTime( epochTime, calendarTime ) ;
-	return calendarTime;
-
 }
+
+
+
+/*
+ * public
+ */
+
+void TimeConverter::convertEpochTimeToRTCTime(const EpochTime& aEpochTime, RTCTime& aRTCTime) {
+    CalendarTime aCalendarTime;
+
+    TimeConverter::convertEpochTimeToCalendarTime(aEpochTime, aCalendarTime);
+
+    TimeConverter::convertCalendarTimeToRTCTime(aCalendarTime, aRTCTime);
+}
+
+
+EpochTime TimeConverter::convertRTCTimeToEpochTime(const RTCTime& aRTCTime) {
+    CalendarTime aCalendarTime;
+
+    TimeConverter::convertRTCTimeToCalendarTime(aRTCTime, aCalendarTime);
+    return TimeConverter::convertCalendarTimeToEpochTime(aCalendarTime);
+}
+
+
 
 bool TimeConverter::isValidRTCTime(RTCTime & time) {
 	/*

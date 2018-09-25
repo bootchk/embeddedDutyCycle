@@ -53,10 +53,7 @@ EpochTime RTC::timeNow() {
     }
     else
     {
-        // 2 step conversion from RTCTime to epoch time
-        CalendarTime calendarTime = TimeConverter::convertRTCTimeToCalendarTime(
-                now);
-        result = TimeConverter::convertCalendarTimeToEpochTime(calendarTime);
+        result = TimeConverter::convertRTCTimeToEpochTime(now);
     }
     return result;
 }
@@ -93,17 +90,15 @@ bool RTC::setAlarmInSeconds(Duration duration) {
 }
 
 
-bool RTC::setAlarmTime(EpochTime alarmEpochTime) {
+bool RTC::setAlarmTime(EpochTime& alarmEpochTime) {
+    RTCTime alarmRTCTime;
 
-    // Convert EpochTime to RTCTime
-    CalendarTime alarmCalendarTime =
-            TimeConverter::convertEpochTimeToCalendarTime(alarmEpochTime);
-    RTCTime alarmRTCTime = TimeConverter::convertCalendarTimeToRTCTime(
-            alarmCalendarTime);
-
+    TimeConverter::convertEpochTimeToRTCTime(alarmEpochTime, alarmRTCTime);
     Bridge::writeAlarm(alarmRTCTime);
 
-    return verifyAlarmTime(&alarmRTCTime);
+    return true;
+    // TODO ? implementation correct
+    ///return verifyAlarmTime(&alarmRTCTime);
 }
 
 
@@ -123,3 +118,4 @@ bool RTC::verifyAlarmTime(const RTCTime* writtenTime) {
     Bridge::readAlarm(&readAlarmRTCTime);
     return(readAlarmRTCTime == writtenTime);
 }
+

@@ -23,7 +23,7 @@ static const uint8_t monthDays[]={31,28,31,30,31,30,31,31,30,31,30,31};
 
 
 
-void breakTime(EpochTime timeIn, CalendarTime &timeOut){
+void breakTime(const EpochTime& timeIn, CalendarTime &timeOut){
 // break the given EpochTime into time components
 // this is a more compact version of the C library localtime function
 // note that year is offset from 1970 !!!
@@ -86,7 +86,8 @@ EpochTime makeTime(const CalendarTime &tm){
 // previous version used full four digit year (or digits since 2000),i.e. 2009 was 2009 or 9
 
   int i;
-  uint32_t seconds;
+  // uint32_t seconds;
+  EpochTime seconds;
 
   // seconds from 1970 till 1 jan 00:00:00 of the given year
   seconds= tm.Year*(SECS_PER_DAY * 365);
@@ -108,5 +109,5 @@ EpochTime makeTime(const CalendarTime &tm){
   seconds+= tm.Hour * SECS_PER_HOUR;
   seconds+= tm.Minute * SECS_PER_MIN;
   seconds+= tm.Second;
-  return (EpochTime)seconds;
+  return seconds;
 }

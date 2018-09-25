@@ -1,7 +1,7 @@
 
 
-#include "scheduledTask.h"
 #include "../alarm/alarmTypes.h"
+#include "scheduledTaskSlot.h"
 
 
 
@@ -18,6 +18,9 @@
  */
 
 class TaskScheduler {
+private:
+    static EpochTime readyATask(unsigned int);
+
 public:
     static void init();
 
@@ -38,4 +41,6 @@ public:
     static void scheduleTask(unsigned int kind,
         TaskMethodPtr method,
         EpochTime epochTime);
+
+    static bool isTaskScheduled();
 };

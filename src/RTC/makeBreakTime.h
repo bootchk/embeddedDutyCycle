@@ -7,5 +7,5 @@
 
 
 
-extern void breakTime(EpochTime timeIn, CalendarTime &timeOut);
+extern void breakTime(const EpochTime& timeIn, CalendarTime &timeOut);
 extern EpochTime makeTime(const CalendarTime &);

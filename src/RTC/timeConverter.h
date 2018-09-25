@@ -22,19 +22,25 @@
 
 
 class TimeConverter {
-public:
+private:
 	/*
 	 * Convert BCD encoded calendar into int encoded calendar.
 	 * and vice versa
 	 */
-	static CalendarTime convertRTCTimeToCalendarTime(RTCTime&);
-	static RTCTime convertCalendarTimeToRTCTime(CalendarTime&);
+	static void convertRTCTimeToCalendarTime(const RTCTime&, CalendarTime& );
+	static void convertCalendarTimeToRTCTime(const CalendarTime&, RTCTime& );
 
 	/*
 	 * Convert calendar time to epoch time and vice versa
 	 */
-	static EpochTime convertCalendarTimeToEpochTime(CalendarTime&);
-	static CalendarTime convertEpochTimeToCalendarTime(EpochTime);
+	static EpochTime convertCalendarTimeToEpochTime(const CalendarTime&);
+	static void convertEpochTimeToCalendarTime(const EpochTime&, CalendarTime&);
+
+public:
+
+	static void convertEpochTimeToRTCTime(const EpochTime&, RTCTime&);
+	static EpochTime convertRTCTimeToEpochTime(const RTCTime&);
+
 
 	static bool isValidRTCTime(RTCTime&);
 };
