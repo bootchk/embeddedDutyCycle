@@ -116,5 +116,4 @@ bool TimeConverter::isValidRTCTime(RTCTime & time) {
 	 * A valid day of month as read from RTC is [1,31]
 	 */
 	return (time.DayOfMonth > 0 );
-
 }

@@ -1,7 +1,12 @@
 
-#include "day.h"
-
+#include <src/blinkerAppTasked/day.h>
 #include "../epochClock/epochClock.h"
+
+#include "../debug/myAssert.h"
+
+
+
+
 
 namespace {
 /*
@@ -39,5 +44,6 @@ EpochTime Day::timeTwoHoursBeforeSunriseTime() {
     /*
      * Next sunrise is previous + 24 hours.
      */
-    return previousSunrise + static_cast<unsigned int>(Duration::TwentyTwoHours);
+    myAssert(isSunriseTimeValid());
+    return EpochClock::timeDurationFromTime(previousSunrise, Duration::TwentyTwoHours);
 }

@@ -42,5 +42,14 @@ public:
         TaskMethodPtr method,
         EpochTime epochTime);
 
+    /*
+     * Is some task scheduled?
+     * Task may not be ready yet (until timeOfNextTask() is called.)
+     */
     static bool isTaskScheduled();
+
+    /*
+     * Is some task ready, i.e. after alarm was set and until after alarm fires and ready task is executed.
+     */
+    static bool isTaskReady();
 };

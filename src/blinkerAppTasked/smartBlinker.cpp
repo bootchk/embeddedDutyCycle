@@ -1,17 +1,13 @@
 
-#include "smartBlinker.h"
-
-// modules of app
-#include "blinkPeriod.h"
-#include "day.h"
-
+#include <src/blinkerAppTasked/blinkPeriod.h>
+#include <src/blinkerAppTasked/day.h>
+#include <src/blinkerAppTasked/smartBlinker.h>
 #include "../OS/taskScheduler.h"
 
 // implementation
 #include "../peripheral/ADC/adc.h"
 #include "../peripheral/LED/led.h"
 
-#include "../blinkerApp/blinker.h"
 
 #include "../debug/myAssert.h"
 #include "../debug/testMain.h"
@@ -51,6 +47,8 @@ void SmartBlinker::scheduleInitialTask() {
     scheduleCheckSunsetTask();
 #endif
 
+    // Some task is scheduled
+    myAssert(TaskScheduler::isTaskScheduled());
 }
 
 
@@ -67,6 +65,17 @@ void SmartBlinker::init() {
 
     scheduleInitialTask();
 }
+
+
+void SmartBlinker::onAlarm() {
+    // Schedule ready task
+    TaskScheduler::onAlarm();
+}
+
+EpochTime SmartBlinker::timeToWake() {
+    return TaskScheduler::timeOfNextTask();
+}
+
 
 
 void SmartBlinker::testTasks() {
@@ -102,10 +111,9 @@ void SmartBlinker::checkSunsetTask() {
 
 
 void SmartBlinker::blinkTask() {
-    // blink LED
-    ///Blinker::onAlarm();
+    LED::blink();
 
-    TestMain::blinkForcedGreenLED(5);
+    ///TestMain::blinkForcedGreenLED(5);
 
     myAssert(BlinkPeriod::isActive());
 

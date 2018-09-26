@@ -41,9 +41,10 @@ public:
 	/*
 	 * Alternatives, depend on simple vs task scheduled
 	 */
-	// Duration we should sleep
-	static Duration durationOfSleep();
+	// Duty at constant intervals
+	static Duration constantDurationOfSleep();
 
+	// Duty at variable intervals, using task scheduler
 	// Time we should wake.
 	static EpochTime timeToWake();
 

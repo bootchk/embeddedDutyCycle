@@ -152,11 +152,11 @@ unsigned char Bridge::read(Address address) {
 
 
 
-void Bridge::writeAlarm(RTCTime alarm) {
+void Bridge::writeAlarm(const RTCTime* alarm) {
 
 	SPIPins::selectSPISlave();
 	Serial::transfer(mangleWriteAddress(Address::Alarm));
-	writeBuffer((unsigned char*) &alarm, sizeof(alarm));
+	writeBuffer((unsigned char*) alarm, sizeof(RTCTime));
 	SPIPins::deselectSPISlave();
 
 	// assert alarm parameter is unchanged.

@@ -24,10 +24,13 @@ public:
         // Do this before executing, so executed task can reuse slot
         isEmpty = true;
 
-        TestMain::blinkForcedGreenLED(4);
+        //TestMain::blinkForcedGreenLED(4);
 
         // Dereference function pointer and call function
+        // C allows either syntax *fp() of fp()
         /// OLD (*taskMethodPtr)();
         taskMethodPtr();
+
+        TestMain::blinkForcedGreenLED(6);
     }
 };

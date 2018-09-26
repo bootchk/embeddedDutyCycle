@@ -11,6 +11,6 @@
 class EpochClock {
 public:
     static EpochTime timeNow();
-
     static EpochTime timeDurationFromNow(Duration);
+    static EpochTime timeDurationFromTime(EpochTime, Duration);
 };

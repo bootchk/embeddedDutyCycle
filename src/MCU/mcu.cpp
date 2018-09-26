@@ -31,8 +31,9 @@ void MCU::enableGlobalInterrupts() {
 
 void MCU::enableBSLOffAndVacantMemoryNMI() {
 
-    // Clear NMI flag so we don't get an immediate interrupt if one has already occurred.
-    SFRIFG1 &= ~NMIIFG;
+    // Clear NMI and VMA flags
+    // so we don't get an immediate interrupt if one has already occurred.
+    SFRIFG1 &= ~(NMIIFG | VMAIFG);
 
     // vacant memory generate interrupt as well as read and execute funny
     // bit set

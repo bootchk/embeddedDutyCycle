@@ -36,6 +36,16 @@ unsigned int bslSignature2=0x5555;
 #endif
 
 
+/*
+ * For debugging.
+ * Without this, the debugging probe makes the app always think it is wake from sleep?
+ */
+#pragma PERSISTENT
+bool didColdstart = false;
+
+
+
+
 
 int main(void)
 {
@@ -60,7 +70,7 @@ int main(void)
      */
 
     // Dispatch on reset reason: reset is wake out of an LPMx.5 OR any other (typically cold start.)
-    if ( Main::isResetAwakeFromSleep()) {
+    if ( Main::isResetAwakeFromSleep() and didColdstart ) {
 
 #ifdef TRAP_WAKE
         // Trap to allow debugger to synch when using "Free Run" ?
@@ -77,6 +87,8 @@ int main(void)
         TestMain::blinkRedLED(5);
     }
     else {
+        didColdstart = true;
+
         // Device powered up from a cold start or other reset reason
         // assert(not PMM::isLockedLPM5());
         // LPM5 might be locked if reset reason is not a cold start

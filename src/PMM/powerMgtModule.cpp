@@ -66,6 +66,19 @@ void PMM::clearAllResetInterruptFlags() {
 }
 
 
+/*
+ * Faults.
+ *
+ * In production, replace with BORReset
+ *
+ * The assert writes line number to FRAM.
+ * Multiple routines so we can debug by line number.
+ */
+void PMM::failSetAlarm() {myAssert(false);}
+
+void PMM::failClearAlarm() {myAssert(false);}
+
+void PMM::failReadTime(){myAssert(false);}
 
 
 void PMM::triggerSoftwareBORReset() {

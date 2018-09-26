@@ -8,7 +8,10 @@
 #include "../AB08xx/bridge.h"
 #include "realTimeClock.h"
 #include "timeConverter.h"
+#include "../PMM/powerMgtModule.h"
 
+// TODO circular includes
+#include "../epochClock/epochClock.h"
 
 
 
@@ -38,10 +41,8 @@ bool timeIsMonotonic(EpochTime nowTime) {
 
 
 
-EpochTime RTC::timeNow() {
+EpochTime RTC::timeNowOrReset() {
     RTCTime now;
-    EpochTime result;
-
 
     Bridge::readTime(&now);
 
@@ -49,13 +50,10 @@ EpochTime RTC::timeNow() {
      * If RTC has failed, Bridge reads time as all zeroes.
      */
     if (not TimeConverter::isValidRTCTime(now)) {
-        result = 0;
+        PMM::failReadTime();
     }
-    else
-    {
-        result = TimeConverter::convertRTCTimeToEpochTime(now);
-    }
-    return result;
+
+    return TimeConverter::convertRTCTimeToEpochTime(now);
 }
 
 
@@ -72,29 +70,25 @@ bool RTC::setAlarmInSeconds(Duration duration) {
 	// TODO later, check preconditions for setting alarm
 	// duration is great enough
 
-	EpochTime nowTime = timeNow();
-	// could be zero when RTC chip fails
+	// resets if RTC chip fails
+	EpochTime alarmEpochTime;
 
-	//if ( not timeIsMonotonic(nowTime)) {
-	if ( nowTime == 0 ) {
-		result = false;
-	}
-	else {
-		// calculate time of alarm
-		EpochTime alarmEpochTime = nowTime + static_cast<unsigned int> (duration);
+	alarmEpochTime = EpochClock::timeDurationFromNow(duration);
 
-		result = setAlarmTime(alarmEpochTime);
-	}
+    // Fails if alarm not written to remote device
+    result = setAlarmTime(alarmEpochTime);
 
 	return result;
 }
 
 
-bool RTC::setAlarmTime(EpochTime& alarmEpochTime) {
+bool RTC::setAlarmTime(EpochTime alarmEpochTime) {
     RTCTime alarmRTCTime;
 
+    // takes reference to alarmRTCTime
     TimeConverter::convertEpochTimeToRTCTime(alarmEpochTime, alarmRTCTime);
-    Bridge::writeAlarm(alarmRTCTime);
+    // Takes a pointer, not a reference
+    Bridge::writeAlarm(&alarmRTCTime);
 
     return true;
     // TODO ? implementation correct

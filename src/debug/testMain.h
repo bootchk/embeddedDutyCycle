@@ -10,13 +10,7 @@
 
 
 class TestMain {
-private:
-    /*
-     * Ensure green LED change to OUT will be visible.
-     * !!! Regardless of cpu LOCKLPM5 state and prior GPIO configuration
-     */
-    static void ensureGreenLEDLightable();
-    static void ensureRedLEDLightable();
+
 
 public:
     static bool isResetAwakeFromSleep();
@@ -31,10 +25,7 @@ public:
 
     static void lightGreenLED();
 
-    /*
-     * Light green LED.  Does not return.
-     */
-    static void abortGreenLED();
+
 
     /*
      * Blink green LED.
@@ -42,11 +33,7 @@ public:
      */
     static void blinkForcedGreenLED(unsigned int);
 
-    /*
-     * Warble LED.  Does not return.
-     */
-    static void warbleGreenLEDForever();
-    static void warbleRedLEDForever();
+
 
 
     static void delayBriefly();

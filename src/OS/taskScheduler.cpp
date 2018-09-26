@@ -14,9 +14,11 @@ namespace {
  * Two types of task can be scheduled.
  *
  * Must be persistent through low power sleep.
+ *
+ * !!! Must be initialized, else CCS compiler puts them in .bss RAM.  Compile time initial value is moot.
  */
 #pragma PERSISTENT
-static ScheduledTaskSlot tasks[2];
+static ScheduledTaskSlot tasks[2] = {0,0};
 
 
 
@@ -29,7 +31,7 @@ static ScheduledTaskSlot tasks[2];
  * Then we sleep, the decision must persist through sleep.
  */
 #pragma PERSISTENT
-static unsigned int readyTaskIndex = 666;
+unsigned int readyTaskIndex = 666;
 
 }
 
@@ -44,8 +46,8 @@ void TaskScheduler::init() {
 
 
 void TaskScheduler::onAlarm() {
-    // is valid
-    myAssert( readyTaskIndex == 0 or readyTaskIndex == 1 );
+    myAssert( isTaskReady() );
+
     /*
      * Ready task in schedule container might be overwritten after this,
      * since a task can schedule other tasks.
@@ -55,6 +57,9 @@ void TaskScheduler::onAlarm() {
      * Executing it frees slot for reuse.
      */
 
+    /*
+     * No task is ready until next call to timeOfNextTask()
+     */
     readyTaskIndex = 666;   // invalidate
 }
 
@@ -77,10 +82,12 @@ EpochTime TaskScheduler::timeOfNextTask() {
 
     if (tasks[0].isEmpty) {
         // only task 1
+        myAssert(not tasks[1].isEmpty);
         theReadyTaskIndex = 1;
     }
     else if (tasks[1].isEmpty) {
         // only task 0
+        myAssert(not tasks[0].isEmpty);
         theReadyTaskIndex = 0;
     }
     else {
@@ -116,6 +123,12 @@ void TaskScheduler::scheduleTask(
 bool TaskScheduler::isTaskScheduled() {
     return (not (tasks[0].isEmpty and tasks[1].isEmpty ));
 }
+
+
+bool TaskScheduler::isTaskReady() {
+    return (readyTaskIndex == 0 or readyTaskIndex == 1);
+}
+
 
 
 #ifdef OLD

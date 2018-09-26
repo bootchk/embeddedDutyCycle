@@ -92,13 +92,14 @@ bool Alarm::isSPIReady() {
 	return (Alarm::isAlarmInterruptSignalHigh());
 }
 
-
+#ifdef NOT_USED
 void Alarm::resetIfSPINotReady() {
 	if (!Alarm::isSPIReady()) {
 		 // System is in invalid state (mcu not POR, but rtc is POR)
 		 PMM::triggerSoftwareBORReset();
 	 }
 }
+
 
 
 
@@ -120,7 +121,7 @@ void Alarm::waitSPIReadyOrReset() {
 		}
 	}
 }
-
+#endif
 
 
 bool Alarm::clearAlarmOnRTC() {
@@ -144,7 +145,7 @@ bool Alarm::clearAlarmOnRTC() {
 void Alarm::clearAlarmOnRTCOrReset() {
 	if (!Alarm::clearAlarmOnRTC())  {
 		// RTC may be continuing to generate interrupt signal on Fout/nIRQ
-		PMM::triggerSoftwareBORReset();
+		PMM::failClearAlarm();
 	}
 	// ensure RTC interrupt flag is clear
 	// ensure interrupt signal net is high

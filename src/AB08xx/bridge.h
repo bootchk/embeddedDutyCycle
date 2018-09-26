@@ -77,8 +77,8 @@ public:
 	 *
 	 * For both, RTCTime is raw, i.e. still BCD encoded for AB08xx
 	 */
-	static void writeAlarm(RTCTime);
+	static void writeAlarm(const RTCTime*);
 	static void readAlarm(RTCTime*);
 
-	static void readTime(RTCTime* time);
+	static void readTime(RTCTime*);
 };

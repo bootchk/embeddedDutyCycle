@@ -7,12 +7,16 @@
 
 
 EpochTime EpochClock::timeNow() {
-    return RTC::timeNow();
+    return RTC::timeNowOrReset();
 }
 
 
 
 EpochTime EpochClock::timeDurationFromNow(Duration duration) {
-    // TODO hack, should implement operator+
-    return timeNow() + static_cast<unsigned int> (duration);
+    return timeDurationFromTime(timeNow(), duration);
 }
+
+EpochTime EpochClock::timeDurationFromTime(EpochTime time, Duration duration) {
+    return time + static_cast<unsigned int> (duration);
+}
+

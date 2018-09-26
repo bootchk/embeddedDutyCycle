@@ -1,11 +1,15 @@
 
 #include "app.h"
 
-/// simple
-///#include "../blinkerApp/blinker.h"
-#include "../blinkerApp/smartBlinker.h"
 
-#include "../OS/taskScheduler.h"
+// Alternate apps: constant duty cycle, or task scheduled duty cycle
+///#define CONSTANT_DUTY
+
+#ifdef CONSTANT_DUTY
+#include "../blinkerAppFixed/blinker.h"
+#else
+#include <src/blinkerAppTasked/smartBlinker.h>
+#endif
 
 // Test
 #include "../debug/testMain.h"
@@ -19,11 +23,11 @@ void App::onPowerOnReset() {
 
 	// initialize state
 
-	///Blinker::init();
+#ifdef CONSTANT_DUTY
+	Blinker::init();
+#else
 	SmartBlinker::init();
-
-	/// For dev
-	/// SmartBlinker::testTasks();
+#endif
 }
 
 
@@ -41,32 +45,43 @@ void App::onWakeForAlarm() {
     /*
      * Execute ready task, and usually schedule more tasks.
      */
-    TaskScheduler::onAlarm();
-
-    /// Blinker::onAlarm();
+#ifdef CONSTANT_DUTY
+    Blinker::onAlarm();
+#else
+    SmartBlinker::onAlarm();
+#endif
 }
 
-#ifdef TESTSIMPLE
-Duration App::durationOfSleep() {
-	/*
-	 * For a design with only one task, could be a constant.
-	 */
+
+
+
+Duration App::constantDurationOfSleep() {
 	return Duration::TenSeconds;
 }
-#endif
 
 
 
 
 EpochTime App::timeToWake() {
+
+#ifdef CONSTANT_DUTY
+    return Blinker::timeToWake();
+#else
     /*
      * A general design:
      * set alarm with a time from scheduler
      */
-    return TaskScheduler::timeOfNextTask();
+    return SmartBlinker::timeToWake();
+#endif
 }
+
+
 
 void App::configureSleepingGPIO() {
 	// App uses an LED during sleep
+#ifdef CONSTANT_DUTY
+    Blinker::configureGPIO();
+#else
 	SmartBlinker::configureGPIO();
+#endif
 }

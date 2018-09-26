@@ -7,6 +7,14 @@
  * See User's Guide: 1.4.3 "Low-Power Modes...LPMx.5"
  */
 class PMM {
+    /*
+     * Private.  Called only from other routines that provide more context for debugging.
+     *
+     * !!! BOR is a named event in mcu state diagram, different from power-on reset
+     */
+    static void triggerSoftwareBORReset();
+
+
 public:
 	/*
 	 * Watchdog is enabled on reset.
@@ -19,10 +27,7 @@ public:
 	 */
 	static void configureOff();
 
-	/*
-	 * BOR is a named event in mcu state diagram.
-	 */
-	static void triggerSoftwareBORReset();
+
 
 	/*
 	 * Take mcu from awakeLPM5 to active state, with GPIO pins unlocked, and any prior
@@ -44,4 +49,12 @@ public:
 	 * Clear all flags for any reset reasons.
 	 */
 	static void clearAllResetInterruptFlags();
+
+
+	/*
+	 * Fatal exceptions requiring software BOR.
+	 */
+	static void failSetAlarm();
+	static void failClearAlarm();
+	static void failReadTime();
 };

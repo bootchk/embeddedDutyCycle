@@ -1,10 +1,8 @@
 
-#include "smartBlinker.h"
-
-// modules of app
-#include "day.h"
-#include "powerMgr.h"
-#include "blinkPeriod.h"
+#include <src/blinkerAppTasked/blinkPeriod.h>
+#include <src/blinkerAppTasked/day.h>
+#include <src/blinkerAppTasked/powerMgr.h>
+#include <src/blinkerAppTasked/smartBlinker.h>
 
 
 

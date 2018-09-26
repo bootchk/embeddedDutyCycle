@@ -72,13 +72,12 @@ void DutyMain::onResetPostlude() {
     /*
      * Alternatives, depending on whether app schedules in terms of type Duration or EpochTime
      */
-///#define TESTSIMPLE 1
+
 #define TESTSMARTBLINKER
-#ifdef SETALARM // test 2
-    Duty::setAlarmOrReset(App::durationOfSleep());
-#endif
 #ifdef TESTSMARTBLINKER
     Duty::setAlarmOrReset(App::timeToWake());
+#else
+    Duty::setAlarmOrReset(App::constantDurationOfSleep());
 #endif
 
 

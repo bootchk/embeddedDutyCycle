@@ -12,9 +12,13 @@ private:
     static void scheduleInitialTask();
 
 public:
+    /*
+     * API of generic app
+     */
     static void init();
     static void onAlarm(void);
     static void configureGPIO();
+    static EpochTime timeToWake();
 
     /*
      * Scheduled tasks

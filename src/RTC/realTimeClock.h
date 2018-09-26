@@ -42,9 +42,10 @@ public:
 
 
 	/*
-	 * Return time from clock or zero if clock has failed.
+	 * Return time from clock,
+	 * or rest system if clock has failed.
 	 */
-	static EpochTime timeNow();
+	static EpochTime timeNowOrReset();
 
 
 	/*
@@ -63,7 +64,7 @@ public:
 	 */
 	static bool setAlarmInSeconds(Duration);
 
-	static bool setAlarmTime(EpochTime&);
+	static bool setAlarmTime(EpochTime);
 
 	static bool verifyAlarmTime(const RTCTime*);
 

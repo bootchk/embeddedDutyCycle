@@ -1,6 +1,6 @@
 
 /*
- *
+ * Conversions between time types
  */
 
 #include "timeTypes.h"

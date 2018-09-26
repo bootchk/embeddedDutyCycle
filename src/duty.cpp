@@ -56,7 +56,7 @@ void Duty::setAlarmOrReset(Duration duration) {
 	 * Fail means system might sleep forever, so only adequate response is reset mcu
 	 */
 	if (!Alarm::setAlarmInSeconds(duration)) {
-		PMM::triggerSoftwareBORReset();
+		PMM::failSetAlarm();
 	}
 }
 
@@ -65,7 +65,7 @@ void Duty::setAlarmOrReset(EpochTime time) {
      * Fail means system might sleep forever, so only adequate response is reset mcu
      */
     if (!Alarm::setAlarmToTime(time)) {
-        PMM::triggerSoftwareBORReset();
+        PMM::failSetAlarm();
     }
 }
 

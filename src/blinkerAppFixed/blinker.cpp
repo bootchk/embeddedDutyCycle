@@ -1,7 +1,7 @@
 
-#include "blinker.h"
-
+#include <src/blinkerAppFixed/blinker.h>
 #include "../peripheral/LED/led.h"
+#include "../epochClock/epochClock.h"
 
 
 /*
@@ -18,4 +18,9 @@ void Blinker::onAlarm() {
 
 void Blinker::configureGPIO() {
     LED::configureGPIO();
+}
+
+
+EpochTime Blinker::timeToWake() {
+    return EpochClock::timeDurationFromNow(Duration::TenSeconds);
 }

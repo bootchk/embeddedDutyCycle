@@ -7,7 +7,7 @@
 
 #include <msp430.h>
 
-#include "../PMM/powerMgtModule.h"
+#include "fatal.h"
 
 
 /*
@@ -92,6 +92,10 @@ void TestMain::blinkRedLED(unsigned int count) {}
 #endif
 
 
+
+
+
+
 void TestMain::lightGreenLED() {
     // require direction OUT
     P1OUT |= BIT1;
@@ -108,64 +112,30 @@ void TestMain::configureButtonWakeupSource() {
 }
 
 
-void TestMain::abortGreenLED() {
-    ensureGreenLEDLightable();
-    TestMain::lightGreenLED();
-    // spin
-    while(true) ;
-}
-
-
-
-void TestMain::blinkForcedGreenLED(unsigned int count) {
-    ensureGreenLEDLightable();
-    blinkGreenLED(count);
-}
-
-
-
 
 
 /*
- * Terminal routines: never return.  To indicate faults.
+ * Uncomment this to see blink counts at various stages of main.
  */
-
-void TestMain::warbleRedLEDForever() {
-    ensureRedLEDLightable();
-
-    // warble
-    while(true) {
-        P1OUT ^= BIT0;                      // toggle P1.0
-        __delay_cycles(50000);
-    }
+///#define TESTBLINKGREEN 1
+#ifdef TESTBLINKGREEN
+void TestMain::blinkForcedGreenLED(unsigned int count) {
+    // Should be considered fatal, since it unlocks GPIO config
+    Fatal::ensureGreenLEDLightable();
+    blinkGreenLED(count);
 }
-
-void TestMain::warbleGreenLEDForever() {
-    ensureGreenLEDLightable();
-
-    // warble
-    while(true) {
-        P1OUT ^= BIT1;                      // toggle P1.1
-        __delay_cycles(50000);
-    }
+#else
+// impotent
+void TestMain::blinkForcedGreenLED(unsigned int count) {
+    (void) count;
 }
+#endif
 
 
-void TestMain::ensureGreenLEDLightable() {
-    // Ensure GPIO config will have effect
-    PMM::unlockLPM5();
 
-    // GPIO configured out
-    P1DIR |= BIT1;
-}
 
-void TestMain::ensureRedLEDLightable() {
-    // Ensure GPIO config will have effect
-    PMM::unlockLPM5();
 
-    // GPIO configured out
-    P1DIR |= BIT0;
-}
+
 
 
 
