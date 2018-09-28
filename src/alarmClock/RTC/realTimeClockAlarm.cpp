@@ -8,7 +8,7 @@
 #include "../AB08xx/bridge.h"
 #include "realTimeClock.h"
 #include "timeConverter.h"
-#include "../PMM/powerMgtModule.h"
+#include "../../PMM/powerMgtModule.h"
 
 // TODO circular includes
 #include "../epochClock/epochClock.h"

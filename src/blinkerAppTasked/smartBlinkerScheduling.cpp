@@ -4,7 +4,7 @@
 #include <src/blinkerAppTasked/day.h>
 #include <src/blinkerAppTasked/smartBlinker.h>
 #include "../OS/taskScheduler.h"
-#include "../epochClock/epochClock.h"
+#include "../alarmClock/epochClock/epochClock.h"
 
 
 

@@ -1,7 +1,7 @@
 
 
 #include "alarmTypes.h"
-#include "../RTC/timeTypes.h"
+#include "../alarmClock/RTC/timeTypes.h"
 
 /*
  * Provides an alarm from a remote RTC.

@@ -1,6 +1,6 @@
 
 #include "../alarm/alarmTypes.h"    // Duration
-#include "../RTC/timeTypes.h"   // EpochTime
+#include "../alarmClock/RTC/timeTypes.h"   // EpochTime
 
 /*
  * API between DutyCycle framework and an app that does useful stuff.

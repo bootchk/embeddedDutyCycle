@@ -31,10 +31,10 @@
 
 #include "gpio.h"
 
-#include "../pinFunction/spiPins.h"
-#include "../board.h"
+#include "../../pinFunction/spiPins.h"
+#include "../../board.h"
 
-#include "../debug/myAssert.h"
+#include "../../debug/myAssert.h"
 
 
 

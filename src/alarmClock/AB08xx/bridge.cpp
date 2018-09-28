@@ -1,10 +1,10 @@
 
 #include "bridge.h"
 
-#include "../pinFunction/spiPins.h"
+#include "../../pinFunction/spiPins.h"
 #include "../SPI/serial.h"
 
-#include "../debug/myAssert.h"
+#include "../../debug/myAssert.h"
 
 /*
  * Uses a Serial channel, typically  SPI or I2C

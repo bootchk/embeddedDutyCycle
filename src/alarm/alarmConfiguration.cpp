@@ -2,9 +2,10 @@
 #include "alarm.h"
 
 #include "../PMM/powerMgtModule.h"
-#include "../RTC/realTimeClock.h"  // Avoid clash with rtc.h"
+#include "../alarmClock/RTC/realTimeClock.h"  // Avoid clash with rtc.h"
+#include "../alarmClock/AB08xx/bridge.h"       //  hides SPI
 #include "../pinFunction/pinFunction.h"    // hides GPIO functions
-#include "../AB08xx/bridge.h"       //  hides SPI
+
 
 #include <src/debug/myAssert.h>
 #include <src/debug/test.h>

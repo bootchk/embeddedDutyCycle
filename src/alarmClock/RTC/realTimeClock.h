@@ -1,6 +1,6 @@
 
 #include "timeTypes.h"
-#include "../alarm/alarmTypes.h"	// Duration
+#include "../../alarm/alarmTypes.h"	// Duration
 
 // Implementation specific, unfortunately
 #include "../AB08xx/rtcTime.h"  // RTCTime
@@ -9,7 +9,7 @@
 /*
  * Abstracts RTC methods.
  *
- * Implementation is via writes and reads to registers of external device rtc.
+ * Implementation via read/write to registers of external device rtc via serial interface.
  * This hides:
  *  - registers and values
  *  - combinations of values required for certain actions

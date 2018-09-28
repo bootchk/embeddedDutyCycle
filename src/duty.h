@@ -1,6 +1,6 @@
 
 #include "alarm/alarmTypes.h"
-#include "RTC/timeTypes.h"  // EpochTime
+#include "alarmClock/RTC/timeTypes.h"  // EpochTime
 
 /*
  * Duty cycle the mcu (sleep, wake on alarm from rtc.)

@@ -1,7 +1,7 @@
 
 #include <src/blinkerAppFixed/blinker.h>
 #include "../peripheral/LED/led.h"
-#include "../epochClock/epochClock.h"
+#include "../alarmClock/epochClock/epochClock.h"
 
 
 /*
