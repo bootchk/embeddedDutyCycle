@@ -55,7 +55,12 @@ int main(void)
 
     MCU::enableBSLOffAndVacantMemoryNMI();
 
-    Test::blinkForcedGreenLED(1);
+    /*
+     * When I remove the blinkForced, fails assert RTC::isReadable in alarmConfigure
+     * !!! This delay, determined experimentally, seems necessary, for unknown reasons.
+     */
+    ///Test::blinkForcedGreenLED(1);
+    Test::delayHalfMillionCycles();
 
     // Prevent NMI on FRAM writes
     MCU::disableFRAMWriteProtect();

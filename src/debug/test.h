@@ -35,6 +35,6 @@ public:
 
 
 
-
+    static void delayHalfMillionCycles();
     static void delayBriefly();
 };
