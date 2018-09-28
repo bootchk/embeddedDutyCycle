@@ -55,7 +55,7 @@ int main(void)
 
     MCU::enableBSLOffAndVacantMemoryNMI();
 
-    ///Test::blinkForcedGreenLED(1);
+    Test::blinkForcedGreenLED(1);
 
     // Prevent NMI on FRAM writes
     MCU::disableFRAMWriteProtect();

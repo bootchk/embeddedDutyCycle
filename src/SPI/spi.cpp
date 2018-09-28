@@ -105,7 +105,7 @@ unsigned char SPI::transfer(unsigned char value) {
  * configure when disabled, in this order
  */
 void SPI::configureMaster() {
-    require(not isEnabled());
+    myAssert(not isEnabled());
 	configureMasterDevice();
 	SPIPins::configure();
 }
@@ -142,7 +142,12 @@ void SPI::configureMasterDevice() {
 	// Other API's just setClockDivider()
 	param.selectClockSource = EUSCI_A_SPI_CLOCKSOURCE_SMCLK;
 	param.clockSourceFrequency = 8000000;
+	/*
+	 * I experienced failure in RTC comm, and tried to reduce bit rate.
+	 * I also shortened wires.  May be noise, or loose connection.
+	 */
 	param.desiredSpiClock = 1000000;
+	///param.desiredSpiClock = 500000;
 
 	// setBitOrder()
 	param.msbFirst = EUSCI_A_SPI_MSB_FIRST;

@@ -7,13 +7,17 @@
 
 // Apparently this is C++ compatible
 
-
+#ifdef NOT_USED
+// Not used when warnings are errors
 #if defined(__TI_COMPILER_VERSION__)
-  #warning "TI compiler"
+  // #warning "TI compiler"
+  // unknown preprocessor directive: #message "TI compiler"
+  // unrecognized pragma: #pragma message "foo"
 #elif defined(__GNUC__)
   #warning "GNUC compiler"
 #else
   #error Compiler not supported!
+#endif
 #endif
 
 

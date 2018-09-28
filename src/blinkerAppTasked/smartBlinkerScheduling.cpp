@@ -13,7 +13,7 @@
 void SmartBlinker::scheduleBlinkTask() {
     TaskScheduler::scheduleTask(0,
                                 blinkTask,
-                                EpochClock::timeDurationFromNow(Duration::TenSeconds) );
+                                EpochClock::timeDurationFromNow(Duration::FiveSeconds) );
 }
 
 

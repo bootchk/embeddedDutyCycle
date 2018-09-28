@@ -49,7 +49,6 @@ bool ADC::isVccHigh() {
     // Voltage is > 3.4V
     bool result = (dvccValue > 340);
     return result;
-    return true;
 }
 
 

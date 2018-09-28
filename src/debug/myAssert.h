@@ -22,13 +22,13 @@ void fail(unsigned int line);
 
 
 // precondition assertion
-#define require(expr) \
+#define myRequire(expr) \
     if (!(expr)) \
         fail(__LINE__)
 
 
 // postcondition assertion
-#define ensure(expr) \
+#define myEnsure(expr) \
     if (!(expr)) \
         fail(__LINE__)
 

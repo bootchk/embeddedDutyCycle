@@ -99,17 +99,15 @@ void Bridge::unconfigureMcuSide() {
 void Bridge::write(Address address, unsigned char value) {
 	// require mcu Serial interface configured
 
-    // Value returned by slave on the write.  Is it the final value, or the previous value?
-    unsigned char transferredValue;
-
+    // discard values read during writes of address and value
 	SPIPins::selectSPISlave();
 	(void) Serial::transfer(mangleWriteAddress(address));
-	transferredValue = Serial::transfer( value);
-	(void) transferredValue;    // discard value read during write of address
+	(void) Serial::transfer( value);
+
 	SPIPins::deselectSPISlave();
 
 	unsigned char finalValue = Bridge::read(address);
-	ensure(finalValue == value);
+	myAssert(finalValue == value);
 }
 
 

@@ -14,7 +14,7 @@
 #include "../epochClock/epochClock.h"
 
 
-
+#ifdef NOT_USED
 namespace {
 
 /*
@@ -27,7 +27,7 @@ bool timeIsMonotonic(EpochTime nowTime) {
 }
 
 }
-
+#endif
 
 
 

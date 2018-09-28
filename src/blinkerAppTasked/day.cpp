@@ -14,9 +14,9 @@ namespace {
  * They must be initialized on cold restart by a call to init.
  */
 #pragma PERSISTENT
-static EpochTime previousSunrise;
+static EpochTime previousSunrise = 0;
 #pragma PERSISTENT
-static bool _isSunriseTimeValid ;
+static bool _isSunriseTimeValid = false;
 
 }
 

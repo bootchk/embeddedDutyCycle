@@ -7,6 +7,7 @@
 #include "../AB08xx/bridge.h"       //  hides SPI
 
 #include <src/debug/myAssert.h>
+#include <src/debug/test.h>
 
 
 /*
@@ -36,16 +37,19 @@ bool Alarm::isConfiguredForAlarming() {
  */
 void Alarm::configureForAlarming() {
     // GPIO must be unlocked because we configure SPI pins and use them
-    require(not PMM::isLockedLPM5());
+    // myAssert(not PMM::isLockedLPM5());
 
     // Configure interface (SPI) and driver (eUSCI)
+    // Side effect is unlock
     Alarm::configureMcuSide();
 
+    // assert not isLocked because we want to use SPI now
+
     // TODO needed?
-    //Test::delayBriefly();
+    ///Test::delayBriefly();
 
     // assert can talk to RTC
-    ///myAssert(RTC::isReadable());
+    myAssert(RTC::isReadable());
 
     Alarm::configureRTC();
 

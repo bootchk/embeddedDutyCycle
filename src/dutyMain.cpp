@@ -14,11 +14,12 @@
 void DutyMain::onColdReset() {
     // assert unused GPIO configured
 
-    // Must unlock, since we will configure SPI pins and use them
-    PMM::unlockLPM5();
-
     // require external RTC connected, because this configures it
     Duty::onPowerOnReset();
+
+    // assert not isLockedLPM5
+    // Must unlock, since we will configure SPI pins and use them
+    ///PMM::unlockLPM5();
 
     // assert Duty is ready for setAlarm
 #define APPPOR

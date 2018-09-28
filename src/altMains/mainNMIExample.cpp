@@ -350,4 +350,6 @@ int main777(void)
     __bis_SR_register(LPM4_bits | GIE);
     __no_operation();
     assert(false);
+
+    return 0;
 }

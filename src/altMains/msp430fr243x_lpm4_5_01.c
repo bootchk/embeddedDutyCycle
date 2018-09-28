@@ -74,7 +74,7 @@
 
 #include <assert.h>
 
-void initGpio(void);
+void initGpio2(void);
 void blinkLED(void);
 
 int mainaaaa(void)
@@ -82,7 +82,7 @@ int mainaaaa(void)
     WDTCTL = WDTPW | WDTHOLD;               // Stop WDT
 
     // Configure GPIO
-    initGpio();
+    initGpio2();
 
     // Determine whether we are coming out of an LPMx.5 or a regular RESET.
     if (SYSRSTIV == SYSRSTIV_LPM5WU)        // MSP430 just woke up from LPMx.5
@@ -131,7 +131,7 @@ int mainaaaa(void)
         assert(0);
     }
 
-
+    return 0;
 }
 
 void blinkLED() {
@@ -142,7 +142,7 @@ void blinkLED() {
         }
 }
 
-static void initGpio()
+void initGpio2()
 {
     P1DIR = 0xFF; P2DIR = 0xFF; P3DIR = 0xFF;
     P1REN = 0xFF; P2REN = 0xFF; P3REN = 0xFF;

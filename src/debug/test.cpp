@@ -19,7 +19,7 @@ bool Test::isResetAwakeFromSleep() {
 
 
 void Test::delayBriefly() {
-    __delay_cycles(5000);
+    __delay_cycles(50000);
 
     // When I was experiencing NMI VMA, added this delay somewhere?
     // 50000 works
