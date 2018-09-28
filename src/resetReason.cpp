@@ -2,8 +2,8 @@
 #include "resetReason.h"
 
 #include <msp430.h>
+#include <src/debug/test.h>
 
-#include "debug/testMain.h"
 #include "debug/myAssert.h"
 
 

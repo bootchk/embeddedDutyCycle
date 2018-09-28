@@ -1,4 +1,5 @@
 
+#include <src/debug/test.h>
 #include "dutyMain.h"
 
 #include "PMM/powerMgtModule.h"
@@ -7,23 +8,23 @@
 
 #include "app/app.h"
 
-#include "debug/testMain.h"
 #include "debug/myAssert.h"
 
 
 void DutyMain::onColdReset() {
-        // assert unused GPIO configured
+    // assert unused GPIO configured
 
-        // require external RTC connected, because this configures it
+    // Must unlock, since we will configure SPI pins and use them
+    PMM::unlockLPM5();
 
-        Duty::onPowerOnReset();
-        PMM::unlockLPM5();
-        myAssert(not PMM::isLockedLPM5());
-        // assert Duty is ready for setAlarm
+    // require external RTC connected, because this configures it
+    Duty::onPowerOnReset();
+
+    // assert Duty is ready for setAlarm
 #define APPPOR
 #ifdef APPPOR // test 1c
-        App::onPowerOnReset();
-        // assert app in initial state
+    App::onPowerOnReset();
+    // assert app in initial state
 #endif
 }
 

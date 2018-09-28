@@ -10,7 +10,7 @@
 
 
 #include "../debug/myAssert.h"
-#include "../debug/testMain.h"
+#include "../debug/test.h"
 
 
 

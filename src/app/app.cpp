@@ -12,7 +12,7 @@
 #endif
 
 // Test
-#include "../debug/testMain.h"
+#include <src/debug/test.h>
 
 
 

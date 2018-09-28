@@ -42,6 +42,9 @@ void PMM::configureOff() {
 
 void PMM::unlockLPM5() {
 	PMM_unlockLPM5();
+
+	// ensure
+	myAssert(not isLockedLPM5());
 }
 
 bool PMM::isLockedLPM5() {
@@ -78,7 +81,7 @@ void PMM::failSetAlarm() {myAssert(false);}
 
 void PMM::failClearAlarm() {myAssert(false);}
 
-void PMM::failReadTime(){myAssert(false);}
+void PMM::failReadTime() {myAssert(false);}
 
 
 void PMM::triggerSoftwareBORReset() {

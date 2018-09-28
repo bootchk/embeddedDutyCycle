@@ -10,6 +10,10 @@
  *
  * Is encoded BCD.
  * Year in range [0, 99]
+ *
+ * Order is important.
+ * This is copied from a buffer as a stream of bytes.
+ * The order must match the order in the buffer.
  */
 struct RTCTime {
 	unsigned char Hundredth;
@@ -19,6 +23,7 @@ struct RTCTime {
 	unsigned char DayOfMonth;
 	unsigned char Month;
 	unsigned char YearOfCentury;
+	// chip also has day of week, we don't use
 
 	// C++ does not provide == operator for structs
 	bool operator==(const RTCTime* rhs) const

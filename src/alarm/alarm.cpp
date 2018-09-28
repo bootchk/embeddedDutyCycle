@@ -1,75 +1,27 @@
 
 #include "alarm.h"
 
-#include "../RTC/realTimeClock.h"  // Avoid clash with rtc.h"
-#include "../AB08xx/bridge.h"	    //  hides SPI
-#include "../pinFunction/pinFunction.h"    // hides GPIO functions
 #include "../PMM/powerMgtModule.h"
-
-#include <cassert>
-
-/*
- * State variable that is NOT persistent across sleeps.
- */
-bool _isConfiguredForAlarming = false;
-
-
-bool Alarm::isConfiguredForAlarming() {
-    return _isConfiguredForAlarming;
-}
+#include "../RTC/realTimeClock.h"  // Avoid clash with rtc.h"
+//#include "../AB08xx/bridge.h"	    //  hides SPI
+#include "../pinFunction/pinFunction.h"    // hides GPIO functions
 
 
 
-void Alarm::configureMcuSide() {
-    // Must precede waitSPIReadyOrReset
-    Alarm::configureMcuAlarmInterface();
-
-    // Must precede use of SPI to configure rtc
-    Alarm::configureMcuSPIInterface();
-
-    PMM::unlockLPM5();
-}
-
-#ifdef OLD
-            /*
-             * Spin finite time waiting for rtc ready for SPI, i.e. out of reset.
-             */
-            // TODO TEMP
-            //Alarm::waitSPIReadyOrReset();
-
-            // assert alarm interrupt signal is high
-            // mcu pin resets to an input, but without interrupt enabled
-
-            // Assume rtc was reset also
-#endif
+#include <src/debug/myAssert.h>
+#include <src/debug/test.h>
 
 
-/*
- * Not assume RTC was reset also.
- * RTC might not have powered down and up.
- * RTC could be in some bizarre state.
- */
-void Alarm::configureForAlarming() {
-    Alarm::configureMcuSide();
-
-    assert(RTC::isReadable());
-
-    Alarm::configureRTC();
-
-    _isConfiguredForAlarming = true;
-    // Ensure MCU SPI interface and RTC are configured for alarming
-}
 
 
-void Alarm::configureAfterWake() {
-    // Fail reset if RTC not alive.
-    // TODO Alarm::resetIfSPINotReady();
 
-    Alarm::configureMcuSPIInterface();
 
-    // RTC is still configured
-    _isConfiguredForAlarming = true;
-}
+
+
+
+
+
+
 
 
 void Alarm::clearAlarm() {
@@ -80,48 +32,7 @@ void Alarm::clearAlarm() {
 }
 
 
-/*
- * RTC signals SPI not ready (during reset) by asserting rtc:Fout/nIRQ pin low.
- * !!! Same pin as for the Alarm signal.
- *
- * Since SPI ready uses the alarm pin, it depends on interrupt is a pulse on rising edge.
- * Alternatively, if signal is another RTC pin (nRST), the interrupt could be configured falling edge.
- */
-bool Alarm::isSPIReady() {
-    assert(isConfiguredMcuAlarmInterface());    // requires
-	return (Alarm::isAlarmInterruptSignalHigh());
-}
 
-#ifdef NOT_USED
-void Alarm::resetIfSPINotReady() {
-	if (!Alarm::isSPIReady()) {
-		 // System is in invalid state (mcu not POR, but rtc is POR)
-		 PMM::triggerSoftwareBORReset();
-	 }
-}
-
-
-
-
-void Alarm::waitSPIReadyOrReset() {
-    /*
-     * Require RTC in reset condition:  OUT bit is 1 and FOUT/nIRQ configured to show OUT bit.
-     * Otherwise, this code will reset.
-     */
-    /*
-     * Does NOT require SPI interface is ready, only requires alarm pin configured on MCU side.
-     */
-    // WRONG assert(RTC::readOUTBit() == true);
-
-	int i = 0;
-	while ( ! Alarm::isSPIReady() ) {
-		i++;
-		if (i > 1000) {
-			PMM::triggerSoftwareBORReset();
-		}
-	}
-}
-#endif
 
 
 bool Alarm::clearAlarmOnRTC() {
@@ -165,46 +76,6 @@ bool Alarm::isAlarmInterruptSignalHigh() {
 
 
 
-void Alarm::configureMcuSPIInterface(){ Bridge::configureMcuSide(); }
-
-void Alarm::unconfigureMcuSPIInterface() {
-    Bridge::unconfigureMcuSide();
-    _isConfiguredForAlarming = false;
-}
-
-
-void Alarm::configureMcuAlarmInterface() {
-	/*
-	 * Pin is high when no interrupt.
-	 * RTC pulses low on interrupt.
-	 * Pulse width is relatively long (1/4 second)
-	 * Use trailing edge, low-to-high
-	 */
-	PinFunction::configureAlarmPinPullupLoToHiInterrupt();
-}
-
-bool Alarm::isConfiguredMcuAlarmInterface() {
-    return PinFunction::isConfiguredAlarmPin();
-}
-
-
-void Alarm::configureRTC() {
-	// require configureMcuSPIInterface
-    /*
-     * Require alarm is behind the counter.
-     * Otherwise, by chance it could soon match,
-     * resulting in an alarm coming before calling setAlarm().
-     */
-
-	// Order of configuration not important.
-	RTC::configure24HourMode();
-
-	RTC::configureRCCalibratedOscillatorMode();
-
-	RTC::configureAlarmInterruptToFoutnIRQPin();
-
-	RTC::enableAlarm();
-}
 
 
 /*
@@ -213,7 +84,7 @@ void Alarm::configureRTC() {
 bool Alarm::setAlarmInSeconds(Duration duration) {
 	bool result;
 
-	assert(isConfiguredForAlarming());
+	myAssert(isConfiguredForAlarming());
 
 	// delegate to RTC
 	result = RTC::setAlarmInSeconds(duration);
@@ -226,7 +97,7 @@ bool Alarm::setAlarmInSeconds(Duration duration) {
 bool Alarm::setAlarmToTime(EpochTime time) {
     bool result;
 
-    assert(isConfiguredForAlarming());
+    myAssert(isConfiguredForAlarming());
 
     // delegate to RTC
     result = RTC::setAlarmTime(time);
@@ -234,6 +105,4 @@ bool Alarm::setAlarmToTime(EpochTime time) {
     // ensure alarm is set or result is false
     return result;
 }
-
-
 

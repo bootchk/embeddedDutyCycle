@@ -1,4 +1,5 @@
 #include <msp430.h>
+#include <src/debug/test.h>
 
 #include "mainObject.h"
 #include "mcuSleep.h"
@@ -6,7 +7,6 @@
 #include "MCU/mcu.h"
 
 #include "debug/myAssert.h"
-#include "debug/testMain.h"
 ///#include "debug.h"
 
 
@@ -55,7 +55,7 @@ int main(void)
 
     MCU::enableBSLOffAndVacantMemoryNMI();
 
-    TestMain::blinkForcedGreenLED(1);
+    ///Test::blinkForcedGreenLED(1);
 
     // Prevent NMI on FRAM writes
     MCU::disableFRAMWriteProtect();
@@ -80,23 +80,25 @@ int main(void)
         while (isTrapped)
             ;
 #endif
-        TestMain::blinkForcedGreenLED(3);
+        ///Test::blinkForcedGreenLED(3);
+        ///Debug::leaveCrumb(20);
 
-        /// Debug::leaveCrumb(20);
         Main::onWakeFromLPM();
-        TestMain::blinkRedLED(5);
+        ///Test::blinkRedLED(5);
     }
     else {
         didColdstart = true;
 
-        // Device powered up from a cold start or other reset reason
-        // assert(not PMM::isLockedLPM5());
-        // LPM5 might be locked if reset reason is not a cold start
+        /*
+         * Device reset from power up (cold start) or reset reason other than wake from LPM4.5
+         * LPM5 might be locked if reset reason is not a cold start
+         */
+
         /// Debug::leaveCrumb(10);
-        TestMain::blinkForcedGreenLED(2);
+        ///Test::blinkForcedGreenLED(2);
 
         Main::onColdReset();
-        TestMain::blinkRedLED(2);
+        ///Test::blinkRedLED(2);
     }
 
     myAssert(not PMM::isLockedLPM5());
@@ -105,8 +107,8 @@ int main(void)
     // Configure one or more wakeup sources
     Main::onResetPostlude();
 
-    ///TestMain::blinkRedLED(10);
-    ///TestMain::delayBriefly();
+    ///Test::blinkRedLED(10);
+    ///Test::delayBriefly();
 
     // require a wakeup source else never wake
 
@@ -127,8 +129,7 @@ int main(void)
 
     /*
      * Enter LPM4 or LPM4.5
-     * If LPM4.5, this does not return.
-     * LPM4.5 sleep will exit via a RESET event, resulting in re-start of code.
+     * LPM4.5 does not return, sleep will end via a RESET event and re-start at main().
      */
     __bis_SR_register(LPM4_bits | GIE);
     __no_operation();

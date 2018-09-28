@@ -1,8 +1,5 @@
 
-
 #include <src/mainObject.h>
-
-
 
 #include "dutyMain.h"
 
@@ -10,7 +7,9 @@
 #include "PMM/powerMgtModule.h"
 #include "mcuSleep.h"
 
-#include "debug/testMain.h"
+#include <src/debug/test.h>
+#include <src/debug/myAssert.h>
+
 
 /// #include "myAssert.h"
 
@@ -48,7 +47,7 @@
 bool Main::isResetAwakeFromSleep() {
 #ifdef WORKING_VERSION
     // checks only one reason
-    return TestMain::isResetAwakeFromSleep();
+    return Test::isResetAwakeFromSleep();
 #else
     // decodes all reasons and may assert
     return MCUSleep::isResetAWakeFromSleep();
@@ -62,7 +61,7 @@ void Main::onResetPreamble() {
     // !!! not require PMM::isLockedLPM5()
 
 #ifdef WORKING_VERSION
-    TestMain::initAllGpioOutLow();
+    Test::initAllGpioOutLow();
     PMM::unlockLPM5();
 #else
     MCUSleep::configureUnusedPinsLowPower();
@@ -77,8 +76,9 @@ void Main::onWakeFromLPM() {
     // No interrupts configured, ISR not called
 #else
     // Interrupts configured: ISR called when unlock
+
     /// This assertion is true only when not using forceBlink
-    /// assert(PMM::isLockedLPM5());
+    /// myAssert(PMM::isLockedLPM5());
 
     DutyMain::onWakeFromLPM();
 #endif
@@ -102,12 +102,14 @@ void Main::onColdReset() {
 #endif
 }
 
+
+
 void Main::onResetPostlude() {
 #ifdef WORKING_VERSION
-    TestMain::configureButtonWakeupSource();
+    Test::configureButtonWakeupSource();
 #else
     // For testing, an alternate source of wake
-    TestMain::configureButtonWakeupSource();
+    Test::configureButtonWakeupSource();
 
     // For duty cycling, set alarm source of wake
     DutyMain::onResetPostlude();

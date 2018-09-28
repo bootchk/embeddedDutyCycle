@@ -128,21 +128,3 @@ bool TaskScheduler::isTaskScheduled() {
 bool TaskScheduler::isTaskReady() {
     return (readyTaskIndex == 0 or readyTaskIndex == 1);
 }
-
-
-
-#ifdef OLD
-void TaskScheduler::scheduleBlinkTask() {
-    tasks[0].task = &blinkTask;
-    // Always schedules const seconds from now
-    tasks[0].scheduledTime = EpochClock::timeDurationFromNow(10);
-}
-
-void TaskScheduler::scheduleCheckSunriseTask() {
-    tasks[0].task = &blinkTask;
-    // Always schedules const seconds from now
-    tasks[0].scheduledTime = EpochClock::timeDurationFromNow(10);
-}
-#endif
-
-

@@ -3,9 +3,8 @@
  * For testing on msp-exp430fr2433 LaunchPad
  */
 
-#include "testMain.h"
-
 #include <msp430.h>
+#include <src/debug/test.h>
 
 #include "fatal.h"
 
@@ -14,13 +13,15 @@
  * Various hacks: temporary for testing alternative implementations.
  */
 
-bool TestMain::isResetAwakeFromSleep() {
+bool Test::isResetAwakeFromSleep() {
     return (SYSRSTIV == SYSRSTIV_LPM5WU);
 }
 
 
-void TestMain::delayBriefly() {
-    __delay_cycles(500);
+void Test::delayBriefly() {
+    __delay_cycles(5000);
+
+    // When I was experiencing NMI VMA, added this delay somewhere?
     // 50000 works
     // 50 fails another way
     // 0 fails with NMI VMA
@@ -33,7 +34,7 @@ void TestMain::delayBriefly() {
  */
 
 
-void TestMain::initAllGpioOutLow()
+void Test::initAllGpioOutLow()
 {
     // direction: out
     P1DIR = 0xFF; P2DIR = 0xFF; P3DIR = 0xFF;
@@ -47,7 +48,7 @@ void TestMain::initAllGpioOutLow()
 
 
 #ifdef OLD
-void TestMain::blinkRedLED() {
+void Test::blinkRedLED() {
     for (unsigned int i = 30; i > 0; i-- ) {
             P1OUT ^= BIT0;                      // P1.0 = toggle
             __delay_cycles(100000);
@@ -59,7 +60,7 @@ void TestMain::blinkRedLED() {
  * Blink on count number of times.
  * Leave off.
  */
-void TestMain::blinkGreenLED(unsigned int count) {
+void Test::blinkGreenLED(unsigned int count) {
     // start with off
     P1OUT &= ~BIT1;
 
@@ -74,7 +75,7 @@ void TestMain::blinkGreenLED(unsigned int count) {
 
 ///#define TESTBLINKRED 1
 #ifdef TESTBLINKRED
-void TestMain::blinkRedLED(unsigned int count) {
+void Test::blinkRedLED(unsigned int count) {
     // start with off
     P1OUT &= ~BIT0;
 
@@ -88,7 +89,7 @@ void TestMain::blinkRedLED(unsigned int count) {
 }
 #else
 // impotent
-void TestMain::blinkRedLED(unsigned int count) {}
+void Test::blinkRedLED(unsigned int count) {}
 #endif
 
 
@@ -96,13 +97,13 @@ void TestMain::blinkRedLED(unsigned int count) {}
 
 
 
-void TestMain::lightGreenLED() {
+void Test::lightGreenLED() {
     // require direction OUT
     P1OUT |= BIT1;
 }
 
 
-void TestMain::configureButtonWakeupSource() {
+void Test::configureButtonWakeupSource() {
     P2DIR &= ~(BIT3);                   // Configure P1.3 as input direction pin
     P2OUT |= BIT3;                      // Configure P1.3 as pulled-up
     P2REN |= BIT3;                      // P1.3 pull-up register enable
@@ -117,16 +118,16 @@ void TestMain::configureButtonWakeupSource() {
 /*
  * Uncomment this to see blink counts at various stages of main.
  */
-///#define TESTBLINKGREEN 1
+#define TESTBLINKGREEN 1
 #ifdef TESTBLINKGREEN
-void TestMain::blinkForcedGreenLED(unsigned int count) {
+void Test::blinkForcedGreenLED(unsigned int count) {
     // Should be considered fatal, since it unlocks GPIO config
     Fatal::ensureGreenLEDLightable();
     blinkGreenLED(count);
 }
 #else
 // impotent
-void TestMain::blinkForcedGreenLED(unsigned int count) {
+void Test::blinkForcedGreenLED(unsigned int count) {
     (void) count;
 }
 #endif

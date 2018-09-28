@@ -114,6 +114,7 @@ bool TimeConverter::isValidRTCTime(RTCTime & time) {
 	 * It doesn't check other constraints.
 	 *
 	 * A valid day of month as read from RTC is [1,31]
+	 * RTCTime is encoded BCD, so actual value is[0x01,.., 0x09,.., 0x19, ..., 0x31]
 	 */
 	return (time.DayOfMonth > 0 );
 }

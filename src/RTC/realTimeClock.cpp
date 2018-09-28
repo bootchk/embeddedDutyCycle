@@ -135,7 +135,8 @@ void RTC::unlockOscControlRegister() {
 bool RTC::isReadable() {
     /*
      * Sane if upper byte of part ID reads as 08, from 08xx part family.
-     * Read will return 0 if SPI not working.
+     * Read will return 0 if SPI or RTC not working.
+     * The RTC does not need to be configured first.
      */
     unsigned char ID;
 

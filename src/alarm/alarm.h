@@ -221,7 +221,8 @@ public:
     static bool isConfiguredForAlarming();
 
     /*
-     * After a wake from alarm, configure for clearing alarm.
+     * After a wake from LPM4.5 by alarm, configure MCU SPI pins interface to RTC.
+     * Does not reconfigure the RTC (it should still be powered.)
      *
      * May reset on failure.
      */

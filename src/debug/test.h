@@ -9,7 +9,7 @@
  */
 
 
-class TestMain {
+class Test {
 
 
 public:
