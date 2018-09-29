@@ -50,7 +50,11 @@ void SPI::disable() {
 bool SPI::isEnabled() {
     // implemented raw registers since Driverlib has no function
     // (bit0 == 1) => held in reset i.e. disabled
+#ifdef USE_EUSCI_A0
+    return ((UCA0CTLW0 & BIT0) == 0) ;
+#else
     return ((UCA1CTLW0 & BIT0) == 0) ;
+#endif
 }
 
 
