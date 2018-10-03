@@ -27,28 +27,13 @@ void ADC::configureSolarCellVoltagePin() {
 #define MaxADCRead 255
 
 
-bool ADC::isVccHigh() {
+unsigned long ADC::measureVccCentiVolts() {
     configureForVccMeasure();
 
-    // Wait for VBG internal bandgap reference to stabilize
+    // Wait for VBG internal bandgap reference to stabilize ???
+    unsigned int adcResult = read();
 
-    // Cloned from below
-    ADC_startConversion(ADC_BASE, ADC_SINGLECHANNEL);
-    while ( ADC_isBusy(ADC_BASE) == ADC_BUSY );
-    unsigned int adcResult = ADC_getResults(ADC_BASE);
-
-    // To calculate DVCC, the following equation is used
-    // DVCC = (1023 * 1.5) / adcResult
-    // The following equation is modified to use only integers instead
-    // of using float. All results needs to be divided by 100 to obtain
-    // the final value.
-    // DVCC = (1023 * 150) / adcResult
-    unsigned long dvccValue = ((unsigned long) MaxADCRead * (unsigned long) 150)
-            / (unsigned long) (adcResult);
-
-    // Voltage is > 3.4V
-    bool result = (dvccValue > 340);
-    return result;
+    return convertADCReadToCentiVolts(adcResult);
 }
 
 
@@ -57,23 +42,54 @@ bool ADC::isVccHigh() {
  * Vcc is above 1.9V else would not be booted.
  * Return if solar cell voltage is 1/2 of Vcc i.e. about 0.9V
  */
-bool ADC::isSolarCellDark() {
+unsigned long ADC::measureSolarCellCentiVolts() {
     configureForSolarCellVoltagePin();
 
-    //Enable and Start the conversion
-    //in Single-Channel, Single Conversion Mode
-    ADC_startConversion(ADC_BASE, ADC_SINGLECHANNEL);
+    unsigned int adcResult = read();
 
-    // Spin until result ready
-    while ( ADC_isBusy(ADC_BASE) == ADC_BUSY );
-
-
-    unsigned int voltage = ADC_getResults(ADC_BASE);
-    bool result = (voltage < 0x80);
-    return result;
+    return convertADCReadToCentiVolts(adcResult);
 }
 
 
+
+/*
+ * Private read routine
+ */
+unsigned int ADC::read()
+{
+    // Require configuration
+
+    //Enable and Start conversion  in Single-Channel, Single Conversion Mode
+    ADC_startConversion(ADC_BASE, ADC_SINGLECHANNEL);
+
+    // Spin until result ready
+    while (ADC_isBusy(ADC_BASE) == ADC_BUSY) ;
+
+    return ADC_getResults(ADC_BASE);
+}
+
+
+
+unsigned long ADC::convertADCReadToCentiVolts(unsigned int adcResult) {
+    /*
+     * DVcc is voltage on the digital Vcc pin (versus analog Vcc pin?)
+     * In other words, the voltage on the Vcc network in the system.
+     *
+     * To calculate DVCC with 10-bit resolution, the following float equation is used
+     * DVCC = (1023 * 1.5) / adcResult
+     *
+     * The following equation is modified to use only integers instead of float.
+     * (A time optimization.)
+     * The result is in hundreths of volts; needs to be divided by 100 to obtain units volts.
+     * DVCC = (1023 * 150) / adcResult
+     *
+     * For 10-bit resolution need a long to hold 1023*150)
+     * For 8-bit resolution, further optimizations possible (not need a long.)
+     */
+    unsigned long result = ((unsigned long) MaxADCRead * (unsigned long) 150)
+            / (unsigned long) (adcResult);
+    return result;
+}
 
 
 

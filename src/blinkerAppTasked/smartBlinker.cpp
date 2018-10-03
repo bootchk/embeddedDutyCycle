@@ -51,12 +51,14 @@ void SmartBlinker::scheduleInitialTask() {
     blinkTask();
 #endif
 #if defined(NIGHT_ONLY)
-    // Force sunrise, will schedule sunset detect for 15 minutes later
-    // sunsetDetectTask will never run (test will be over first)
-    onSunriseDetected();
+    // Force sunrise.
+    // !!! Not onSunriseDetected(), it will schedule sunset detect for 15 minutes later
+    // but onSunsetDetected would attempt to schedule task of same kind, and fail
+    Day::setSunriseTime();
 
     // Sunset detect will artificially detect sunset and schedule nightime blinking
     onSunsetDetected();
+    myAssert(TaskScheduler::isTaskScheduled());
 
 #endif
 #if defined(NORMAL_PERIODS)
@@ -177,5 +179,5 @@ bool SmartBlinker::isNight() {
     return true;
 
     /// Normal code
-    ///return ADC::isSolarCellDark();
+    ///return PowerMgr::isSolarCellDark();
 }

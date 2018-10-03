@@ -4,7 +4,16 @@
 
 
 
+// TODO parameters
 
 bool PowerMgr::isPowerForBlinking() {
-    return ADC::isVccHigh();
+    // Greater than 3 volts
+    return ADC::measureVccCentiVolts() > 300 ;
 }
+
+
+bool PowerMgr::isSolarCellDark() {
+    // Less the 0.8 volts
+    return ADC::measureSolarCellCentiVolts() < 80  ;
+}
+
