@@ -2,6 +2,8 @@
 #include <src/blinkerAppTasked/blinkPeriod.h>
 #include <src/blinkerAppTasked/day.h>
 #include <src/blinkerAppTasked/smartBlinker.h>
+#include "parameters.h"
+
 #include "../OS/taskScheduler.h"
 
 // implementation
@@ -20,18 +22,44 @@ void SmartBlinker::configureGPIO() {
 }
 
 
+
+/*
+ * Hacks for integration testing.
+ *
+ * BLINK_ONLY:  exercise task scheduling but only one task, the blinkTask.
+ *
+ * NIGHT_ONLY: blink tasks, and detect sun tasks, but always dark.
+ * Starts with a forced sunrise and sunset.
+ *
+ * NORMAL_PERIODS: full test as designed, blink and sun detect tasks, aligned with day
+ */
+//#define BLINK_ONLY
+#define NIGHT_ONLY
+//#define NORMAL_PERIODS
+
+
 void SmartBlinker::scheduleInitialTask() {
-#define BLINK_ONLY
+
 #ifdef BLINK_ONLY
-    /*
-     * For integration testing, only blink task, in a blink period
-     */
+    // Hack: start a blink period without waiting for sunset
     BlinkPeriod::initForEveningBlinking();
 
-    ///  test blink task by calling it to schedule self
+    /*
+     * test blink task by calling it to schedule self
+     * Alternatively, could: scheduleBlinkTask();
+     */
     blinkTask();
-    ///scheduleBlinkTask();
-#else
+#endif
+#if defined(NIGHT_ONLY)
+    // Force sunrise, will schedule sunset detect for 15 minutes later
+    // sunsetDetectTask will never run (test will be over first)
+    onSunriseDetected();
+
+    // Sunset detect will artificially detect sunset and schedule nightime blinking
+    onSunsetDetected();
+
+#endif
+#if defined(NORMAL_PERIODS)
     /*
      * Schedule sun detection
      */
@@ -89,7 +117,7 @@ void SmartBlinker::testTasks() {
  */
 
 void SmartBlinker::checkSunriseTask() {
-    if ( not ADC::isSolarCellDark()) {
+    if ( not isNight() ) {
         onSunriseDetected();
     }
     else {
@@ -100,7 +128,7 @@ void SmartBlinker::checkSunriseTask() {
 
 
 void SmartBlinker::checkSunsetTask() {
-    if ( ADC::isSolarCellDark()) {
+    if ( isNight() ) {
         onSunsetDetected();
     }
     else {
@@ -137,3 +165,17 @@ void SmartBlinker::blinkTask() {
 
 
 
+
+EpochTime SmartBlinker::timeOfMorningBlinkPeriodStart() {
+    return Day::timeBeforeNextSunriseBySeconds(Parameters::BetweenMorningBlinkStartAndSunrise);
+}
+
+
+
+bool SmartBlinker::isNight() {
+    /// For integration testing
+    return true;
+
+    /// Normal code
+    ///return ADC::isSolarCellDark();
+}

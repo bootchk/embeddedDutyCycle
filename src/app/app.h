@@ -1,6 +1,8 @@
 
-#include "../alarm/alarmTypes.h"    // Duration
-#include "../alarmClock/RTC/timeTypes.h"   // EpochTime
+
+#include "../alarmClock/RTC/timeTypes.h"   // EpochTime, Duration
+
+
 
 /*
  * API between DutyCycle framework and an app that does useful stuff.
@@ -49,6 +51,10 @@ public:
 	static EpochTime timeToWake();
 
 
-	// Configure GPIO that persists through sleep
+	/*
+	 * Configure GPIO that persists through sleep.
+	 * Called during the preamble phase, before GPIO unlocked.
+	 * I.E. could be called onPreamble()
+	 */
 	static void configureSleepingGPIO();
 };

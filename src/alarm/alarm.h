@@ -1,7 +1,6 @@
 
 
-#include "alarmTypes.h"
-#include "../alarmClock/RTC/timeTypes.h"
+#include "../alarmClock/RTC/timeTypes.h"    // EpochTime, Duration
 
 /*
  * Provides an alarm from a remote RTC.
@@ -187,7 +186,7 @@ public:
 	 * - duration too short
 	 * - library state errors (see algebra)
 	 */
-	static bool setAlarmInSeconds(Duration);
+	static bool setAlarmDurationSecondsFromNow(Duration);
 
 	/*
 	 *

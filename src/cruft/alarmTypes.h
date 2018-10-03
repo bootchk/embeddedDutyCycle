@@ -1,6 +1,11 @@
 
 #pragma once
 
+
+/*
+ * Cruft:  moved to timeTypes.h
+ */
+
 /*
  * Primitive types for AlarmLib
  */

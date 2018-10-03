@@ -22,5 +22,5 @@ void Blinker::configureGPIO() {
 
 
 EpochTime Blinker::timeToWake() {
-    return EpochClock::timeDurationFromNow(Duration::TenSeconds);
+    return EpochClock::timeDurationFromNow(10);
 }

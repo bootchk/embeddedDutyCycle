@@ -1,3 +1,6 @@
+#pragma once
+
+
 
 #include "../alarmClock/RTC/timeTypes.h"   // EpochTime
 
@@ -19,5 +22,8 @@ public:
     static void setSunriseTime();
     static bool isSunriseTimeValid();
 
-    static EpochTime timeTwoHoursBeforeSunriseTime();
+    /*
+     * Time before sunrise by given seconds
+     */
+    static EpochTime timeBeforeNextSunriseBySeconds(Duration);
 };

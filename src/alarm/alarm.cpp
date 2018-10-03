@@ -72,13 +72,13 @@ bool Alarm::isAlarmInterruptSignalHigh() {
 /*
  * Must be bulletproof since if alarm is failed to set, may sleep forever.
  */
-bool Alarm::setAlarmInSeconds(Duration duration) {
+bool Alarm::setAlarmDurationSecondsFromNow(Duration duration) {
 	bool result;
 
 	myAssert(isConfiguredForAlarming());
 
 	// delegate to RTC
-	result = RTC::setAlarmInSeconds(duration);
+	result = RTC::setAlarmDuration(duration);
 
 	// ensure alarm is set or result is false
 	return result;

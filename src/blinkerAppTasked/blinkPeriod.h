@@ -1,5 +1,10 @@
 
 
+#include "parameters.h"
+
+
+
+
 /*
  * Knows count of blinks in blink periods.
  *
@@ -39,19 +44,20 @@ class BlinkPeriod {
 
 
 public:
-    static void initForEveningBlinking() {
-        // Evening blink for 4 hours every 10 seconds
-        counter = 6 * 60 * 4;
+    static void initForEveningBlinking()
+    {
+        counter = Parameters::BlinksEvening;
         _isEvening = true;
         _isActive = true;
     }
 
-    static void initForMorningBlinking() {
-            // Evening blink for 2 hours every 10 seconds
-            counter = 6 * 60 * 2;
-            _isEvening = false;
-            _isActive = true;
-        }
+    static void initForMorningBlinking()
+    {
+
+        counter = Parameters::BlinksMorning;
+        _isEvening = false;
+        _isActive = true;
+    }
 
     static bool isActive() { return _isActive; }
 

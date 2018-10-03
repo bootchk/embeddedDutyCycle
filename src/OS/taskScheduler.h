@@ -1,7 +1,7 @@
 
 
-#include "../alarm/alarmTypes.h"
 #include "scheduledTaskSlot.h"
+#include "../alarmClock/RTC/timeTypes.h"  // EpochTime
 
 
 

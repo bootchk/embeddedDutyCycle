@@ -1,11 +1,12 @@
 /*
  * Scheduling methods
  */
-#include <src/blinkerAppTasked/day.h>
+
 #include <src/blinkerAppTasked/smartBlinker.h>
 #include "../OS/taskScheduler.h"
 #include "../alarmClock/epochClock/epochClock.h"
 
+#include "parameters.h"
 
 
 
@@ -13,7 +14,7 @@
 void SmartBlinker::scheduleBlinkTask() {
     TaskScheduler::scheduleTask(0,
                                 blinkTask,
-                                EpochClock::timeDurationFromNow(Duration::FiveSeconds) );
+                                EpochClock::timeDurationFromNow(Parameters::BetweenBlinks) );
 }
 
 
@@ -22,12 +23,13 @@ void SmartBlinker::scheduleFirstEveningBlinkTask() {
     // 30 minutes after sunset
     TaskScheduler::scheduleTask(0,
                                 blinkTask,
-                                EpochClock::timeDurationFromNow(Duration::ThirtyMinutes) );
+                                EpochClock::timeDurationFromNow(Parameters::BetweenSunsetAndBlinking) );
 }
 
 void SmartBlinker::scheduleFirstMorningBlinkTask() {
     TaskScheduler::scheduleTask(
-            0, blinkTask, Day::timeTwoHoursBeforeSunriseTime());
+            0, blinkTask,
+            timeOfMorningBlinkPeriodStart());
 }
 
 
@@ -39,13 +41,13 @@ void SmartBlinker::scheduleFirstMorningBlinkTask() {
 void SmartBlinker::scheduleCheckSunriseTask() {
     TaskScheduler::scheduleTask(1,
                                 checkSunriseTask,
-                                EpochClock::timeDurationFromNow(Duration::FifteenMinutes));
+                                EpochClock::timeDurationFromNow(Parameters::BetweenSunChecks));
 }
 
 void SmartBlinker::scheduleCheckSunsetTask() {
     TaskScheduler::scheduleTask(1,
                                 checkSunsetTask,
-                                EpochClock::timeDurationFromNow(Duration::FifteenMinutes));
+                                EpochClock::timeDurationFromNow(Parameters::BetweenSunChecks));
 }
 
 

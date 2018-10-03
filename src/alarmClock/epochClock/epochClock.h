@@ -1,6 +1,5 @@
 
-#include "../../alarm/alarmTypes.h"    // Duration
-#include "../RTC/timeTypes.h"   // EpochTime
+#include "../RTC/timeTypes.h"   // EpochTime, Duration
 
 
 /*

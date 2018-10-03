@@ -1,4 +1,9 @@
 
+#include "../alarmClock/RTC/timeTypes.h"  // EpochTime
+
+
+
+
 /*
  * App:
  * - blink in two periods, after sunset and before sunset
@@ -53,4 +58,11 @@ public:
     static void scheduleFirstMorningBlinkTask();
 
     ///static void scheduleLaggedCheckSunsetTask();
+
+
+    /*
+     * Timing etc
+     */
+    static EpochTime timeOfMorningBlinkPeriodStart();
+    static bool isNight();
 };

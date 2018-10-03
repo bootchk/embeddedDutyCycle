@@ -20,6 +20,21 @@ typedef struct  {
 
 
 /*
+ * Seconds from an epoch.
+ *
  * On most embedded machines, 32 bits, suffers from 2038 problem.
  */
 typedef unsigned long EpochTime;
+
+
+/*
+ * Duration in seconds.
+ *
+ * 32 bits
+ *
+ * Typical duration is less than 24 hours.   Not enforced by this code.
+ *
+ * 16 bits would not hold a 24 hour duration.
+ * A very large duration added to an epoch time could overflow without throwing exception.
+ */
+typedef unsigned long Duration;

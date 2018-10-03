@@ -64,7 +64,7 @@ EpochTime RTC::timeNowOrReset() {
  * to type EpochTime (seconds since epoch) so we can use simple math to add Duration
  * then reverse conversion back to the type (RTCTime) that RTC expects.
  */
-bool RTC::setAlarmInSeconds(Duration duration) {
+bool RTC::setAlarmDuration(Duration duration) {
 	bool result;
 
 	// TODO later, check preconditions for setting alarm

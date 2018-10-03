@@ -1,6 +1,7 @@
 
 #include <src/blinkerAppTasked/day.h>
 #include "../alarmClock/epochClock/epochClock.h"
+#include "parameters.h"
 
 #include "../debug/myAssert.h"
 
@@ -40,10 +41,10 @@ bool Day::isSunriseTimeValid() { return _isSunriseTimeValid; }
 
 
 
-EpochTime Day::timeTwoHoursBeforeSunriseTime() {
+EpochTime Day::timeBeforeNextSunriseBySeconds(Duration duration) {
     /*
      * Next sunrise is previous + 24 hours.
      */
     myAssert(isSunriseTimeValid());
-    return EpochClock::timeDurationFromTime(previousSunrise, Duration::TwentyTwoHours);
+    return EpochClock::timeDurationFromTime(previousSunrise, Parameters::TwentyFourHours - duration);
 }

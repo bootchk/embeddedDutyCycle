@@ -17,6 +17,8 @@ EpochTime EpochClock::timeDurationFromNow(Duration duration) {
 }
 
 EpochTime EpochClock::timeDurationFromTime(EpochTime time, Duration duration) {
-    return time + static_cast<unsigned int> (duration);
+    // When Duration type
+    // return time + static_cast<unsigned int> (duration);
+    return time + duration;
 }
 

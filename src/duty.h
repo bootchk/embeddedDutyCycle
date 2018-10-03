@@ -1,5 +1,5 @@
 
-#include "alarm/alarmTypes.h"
+
 #include "alarmClock/RTC/timeTypes.h"  // EpochTime
 
 /*
@@ -66,14 +66,12 @@ public:
 	 * Duration must be long enough for the above.
 	 * As currently coded, will not work if the duration has expired before sleep.
 	 */
-	static void setAlarmOrReset(Duration);
+	static void setDurationAlarmOrReset(Duration);
 
 	/*
-	 * Overloaded.
-	 *
 	 * Time must be beyond now time else sleep forever.
 	 */
-	static void setAlarmOrReset(EpochTime);
+	static void setTimeAlarmOrReset(EpochTime);
 
 	/*
 	 * Clear alarm interrupt.

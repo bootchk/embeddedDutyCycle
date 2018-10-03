@@ -51,16 +51,16 @@ void Duty::onWakeForAlarm() {
 }
 
 
-void Duty::setAlarmOrReset(Duration duration) {
+void Duty::setDurationAlarmOrReset(Duration duration) {
 	/*
 	 * Fail means system might sleep forever, so only adequate response is reset mcu
 	 */
-	if (!Alarm::setAlarmInSeconds(duration)) {
+	if (!Alarm::setAlarmDurationSecondsFromNow(duration)) {
 		PMM::failSetAlarm();
 	}
 }
 
-void Duty::setAlarmOrReset(EpochTime time) {
+void Duty::setTimeAlarmOrReset(EpochTime time) {
     /*
      * Fail means system might sleep forever, so only adequate response is reset mcu
      */

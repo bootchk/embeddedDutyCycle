@@ -1,6 +1,6 @@
 
-#include "timeTypes.h"
-#include "../../alarm/alarmTypes.h"	// Duration
+#include "timeTypes.h"  // EpochTime, Duration
+
 
 // Implementation specific, unfortunately
 #include "../AB08xx/rtcTime.h"  // RTCTime
@@ -62,8 +62,10 @@ public:
 	 * There can be a race to set a short alarm.
 	 * This code has no special consideration for the race.
 	 */
-	static bool setAlarmInSeconds(Duration);
+	// Set alarm duration from now
+	static bool setAlarmDuration(Duration);
 
+	// Set alarm to a time
 	static bool setAlarmTime(EpochTime);
 
 	static bool verifyAlarmTime(const RTCTime*);

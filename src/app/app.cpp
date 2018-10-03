@@ -56,7 +56,7 @@ void App::onWakeForAlarm() {
 
 
 Duration App::constantDurationOfSleep() {
-	return Duration::TenSeconds;
+	return 10;
 }
 
 

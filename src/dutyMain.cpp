@@ -11,6 +11,8 @@
 #include "debug/myAssert.h"
 
 
+
+
 void DutyMain::onColdReset() {
     // assert unused GPIO configured
 
@@ -22,6 +24,8 @@ void DutyMain::onColdReset() {
     ///PMM::unlockLPM5();
 
     // assert Duty is ready for setAlarm
+
+    // Comment out this define to test only the DutyCycle framework, without App
 #define APPPOR
 #ifdef APPPOR // test 1c
     App::onPowerOnReset();
@@ -75,11 +79,11 @@ void DutyMain::onResetPostlude() {
      * Alternatives, depending on whether app schedules in terms of type Duration or EpochTime
      */
 
-#define TESTSMARTBLINKER
-#ifdef TESTSMARTBLINKER
-    Duty::setAlarmOrReset(App::timeToWake());
+#define SET_ALARM_BY_TIME
+#ifdef SET_ALARM_BY_TIME
+    Duty::setTimeAlarmOrReset(App::timeToWake());
 #else
-    Duty::setAlarmOrReset(App::constantDurationOfSleep());
+    Duty::setDurationAlarmOrReset(App::constantDurationOfSleep());
 #endif
 
 
