@@ -23,18 +23,22 @@ public:
 #define TEST_PARAMETERS
 #ifdef TEST_PARAMETERS
     // Most durations very short so time compressed
-    static const Duration BetweenBlinks = 5;
-    static const Duration BetweenSunsetAndBlinking = 30;
-    // Evening blinking lasts 60 seconds (12 blinks every 5 seconds)
+    static const Duration BetweenBlinks = 3;
+    static const Duration BetweenSunsetAndBlinking = 10;
+    // Evening blinking lasts 30 seconds (10 blinks every 3 seconds)
 
-    // Start morning one minute after last evening blink
-    static const Duration BetweenMorningBlinkStartAndSunrise = 86400 - 150;
+    // Start morning two minutes after fake sunrise,sunset
+    // Because of other built-in delays, allow much greater than 40 seconds
+    static const Duration BetweenMorningBlinkStartAndSunrise = 86400 - 60;
 
-    static const Duration BetweenSunChecks = 60;
+    // Check sun every thirty seconds (in middle of blinking period)
+    static const Duration BetweenSunChecks = 30;
+    // Check sun every 3 minutes
+    ///static const Duration BetweenSunChecks = 120;
 
     // counts for periods
-    static const unsigned int BlinksEvening = 12;
-    static const unsigned int BlinksMorning = 12;
+    static const unsigned int BlinksEvening = 5;
+    static const unsigned int BlinksMorning = 5;
 
 
 #else

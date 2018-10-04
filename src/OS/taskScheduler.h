@@ -16,6 +16,11 @@
  * At most one of each kind.
  * Container holds only two tasks.
  *
+ * !!! Tasks of different kinds can be scheduled for the same time.
+ * Then one will execute first, and the task of the other kind will be late,
+ * in the sense that it will execute slightly after the scheduled time.
+ * See the implementation:  a task may be seconds later than scheduled.
+ *
  *
  * States:
  * - task scheduled: app is still running and scheduling possibly other tasks
@@ -26,7 +31,19 @@
 
 class TaskScheduler {
 private:
+    /*
+     * Make ready the task of given kind.
+     * Return time for which alarm should be set for the task.
+     *
+     * !!! The time must be in the future, else alarm would not go off.
+     * This enforces that by adding to the task's scheduledTime, when it is already in the past.
+     */
     static EpochTime readyATask(unsigned int);
+
+    /*
+     * Adjust scheduled time of given task so it is in the future.
+     */
+    static void makeTaskScheduledTimeInFuture(unsigned int);
 
 public:
     static void init();

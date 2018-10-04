@@ -1,6 +1,7 @@
 
 #include <src/OS/scheduledTaskSlot.h>
 #include "taskScheduler.h"
+#include "../alarmClock/epochClock/epochClock.h"
 
 #include "../debug/myAssert.h"
 
@@ -18,7 +19,7 @@ namespace {
  * !!! Must be initialized, else CCS compiler puts them in .bss RAM.  Compile time initial value is moot.
  */
 #pragma PERSISTENT
-static ScheduledTaskSlot tasks[2] = {0,0};
+ScheduledTaskSlot tasks[2] = {0,0};
 
 
 
@@ -34,6 +35,8 @@ static ScheduledTaskSlot tasks[2] = {0,0};
 unsigned int readyTaskIndex = 666;
 
 }
+
+
 
 
 void TaskScheduler::init() {
@@ -72,6 +75,13 @@ EpochTime TaskScheduler::readyATask(unsigned int taskIndex) {
 }
 
 
+
+void TaskScheduler::makeTaskScheduledTimeInFuture(unsigned int taskIndex) {
+    // Side effect on parameter
+    EpochClock::setTimeAlarmableInFuture(tasks[taskIndex].scheduledTime );
+}
+
+
 EpochTime TaskScheduler::timeOfNextTask() {
     myAssert(isTaskScheduled());
 
@@ -101,6 +111,16 @@ EpochTime TaskScheduler::timeOfNextTask() {
             theReadyTaskIndex = 1;
         }
     }
+
+    /*
+     * Caller will set alarm and sleep.
+     * Ensure that alarm time is in the future, else alarm would not go off.
+     * If alarm does not go off, and it is the only scheduled task,
+     * that violates "some task is alarmed to execute in future"
+     * which should be true before we go to sleep.
+     */
+    makeTaskScheduledTimeInFuture(theReadyTaskIndex);
+
     return readyATask(theReadyTaskIndex);
 }
 
