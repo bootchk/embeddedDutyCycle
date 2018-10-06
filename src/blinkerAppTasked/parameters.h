@@ -41,6 +41,12 @@ public:
     static const unsigned int BlinksMorning = 5;
 
 
+    // Voltages
+    static const unsigned int MinVccForBlinking = 300;  // centiVolts, 3V
+    static const unsigned int MaxVccForDark = 80;  // centiVolts, 0.8V
+
+
+
 #else
     static const Duration BetweenBlinks = 10;
     static const Duration BetweenSunsetAndBlinking = 1800;  // Thirty minutes

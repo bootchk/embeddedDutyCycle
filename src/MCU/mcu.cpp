@@ -6,6 +6,10 @@
 #include <driverlib.h>
 
 
+void MCU::stopWatchDog() {
+    WDTCTL = WDTPW | WDTHOLD;
+}
+
 void MCU::enterLPM4orLPM4_5(){
 
 	/*

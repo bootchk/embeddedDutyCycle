@@ -1,6 +1,10 @@
 
 class ADC {
+    // configure to measure SC proportion to Vcc
     static void configureForSolarCellVoltagePin();
+    // configure to measure SC centivolts
+    static void configureForSolarCellVoltagePinFoo();
+    // configure to measure Vcc in centiVolts
     static void configureForVccMeasure();
 
     // Configuration common to the above
@@ -20,6 +24,7 @@ public:
     static unsigned long measureVccCentiVolts();
     // Requires prior configuration of GPIO pin
     static unsigned long measureSolarCellCentiVolts();
+    static unsigned int measureSolarCellProportionToVcc();
 
     static void configureSolarCellVoltagePin();
 };

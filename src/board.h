@@ -101,3 +101,9 @@
 #define SolarCellVoltagePort GPIO_PORT_P1
 #define SolarCellVoltagePin  GPIO_PIN4
 #define SolarCellVoltagePinFunction GPIO_PRIMARY_MODULE_FUNCTION
+#define SolarCellVoltagePinADCSelection ADC_INPUT_A4
+
+
+
+
+

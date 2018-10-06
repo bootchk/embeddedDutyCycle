@@ -47,9 +47,9 @@ bool didColdstart = false;
 
 
 
-int main(void)
+int mainaaa(void)
 {
-    WDTCTL = WDTPW | WDTHOLD;               // Stop WDT
+    MCU::stopWatchDog();
 
     /// Debug::leaveCrumb(1);
 

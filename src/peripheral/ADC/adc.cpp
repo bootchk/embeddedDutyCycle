@@ -39,9 +39,21 @@ unsigned long ADC::measureVccCentiVolts() {
 
 /*
  * Compare voltage on solar cell to Vcc
- * Vcc is above 1.9V else would not be booted.
- * Return if solar cell voltage is 1/2 of Vcc i.e. about 0.9V
+ *
  */
+unsigned int ADC::measureSolarCellProportionToVcc() {
+    configureForSolarCellVoltagePin();
+
+    unsigned int adcResult = read();
+
+    // assert result in range [0,255]
+    return adcResult;
+}
+
+
+#ifdef WRONG
+
+
 unsigned long ADC::measureSolarCellCentiVolts() {
     configureForSolarCellVoltagePin();
 
@@ -49,7 +61,7 @@ unsigned long ADC::measureSolarCellCentiVolts() {
 
     return convertADCReadToCentiVolts(adcResult);
 }
-
+#endif
 
 
 /*
@@ -75,6 +87,7 @@ unsigned long ADC::convertADCReadToCentiVolts(unsigned int adcResult) {
      * DVcc is voltage on the digital Vcc pin (versus analog Vcc pin?)
      * In other words, the voltage on the Vcc network in the system.
      *
+     * To measure Vcc, ADC read 1.5V bandgap with reference DVcc:
      * To calculate DVCC with 10-bit resolution, the following float equation is used
      * DVCC = (1023 * 1.5) / adcResult
      *
@@ -127,8 +140,8 @@ void ADC::configureCommon() {
      * Do not enable Multiple Sampling
      */
     ADC_setupSamplingTimer(ADC_BASE,
-    ADC_CYCLEHOLD_16_CYCLES,
-                           ADC_MULTIPLESAMPLESDISABLE);
+       ADC_CYCLEHOLD_16_CYCLES,
+       ADC_MULTIPLESAMPLESDISABLE);
 
     // Default read-back format is unsigned
 
@@ -147,10 +160,10 @@ void ADC::configureForVccMeasure() {
     configureCommon();
 
     /*
-     * To measure vcc,
+     * To measure Vcc,
      * sample the 1.5V bandgap reference from the PMM
-     * with DVCC as input reference.
-     * The sampled bandgap varies in proportion to vcc.
+     * with AVCC as input reference.
+     * The sampled bandgap varies in proportion to Vcc.
      */
     ADC_configureMemory(ADC_BASE,
                 ADC_INPUT_REFVOLTAGE,              // <<<<<<<<
@@ -170,8 +183,25 @@ void ADC::configureForSolarCellVoltagePin() {
      * Use negative reference of AVss
      */
     ADC_configureMemory(ADC_BASE,
-            ADC_INPUT_A7,              // <<<<<<<<
+            SolarCellVoltagePinADCSelection,              // <<<<<<<< typically ADC_INPUT_A4
             ADC_VREFPOS_AVCC,
             ADC_VREFNEG_AVSS);
-    // TODO correct input
+}
+
+
+void ADC::configureForSolarCellVoltagePinFoo() {
+    configureVoltageBandgapReference();
+    configureCommon();
+
+    //Configure Memory Buffer
+    /*
+     * Base Address for the ADC Module
+     * Use input A7
+     * Use positive reference of AVBG
+     * Use negative reference of AVss
+     */
+    ADC_configureMemory(ADC_BASE,
+            SolarCellVoltagePinADCSelection,              // <<<<<<<< typically ADC_INPUT_A4
+            ADC_VREFPOS_INT,    // Internal reference VBG
+            ADC_VREFNEG_AVSS);
 }
