@@ -42,13 +42,26 @@ unsigned long ADC::measureVccCentiVolts() {
  *
  */
 unsigned int ADC::measureSolarCellProportionToVcc() {
-    configureForSolarCellVoltagePin();
+    configureForSolarCellVoltageProportionToVcc();
 
     unsigned int adcResult = read();
 
     // assert result in range [0,255]
     return adcResult;
 }
+
+
+
+unsigned int ADC::measureSolarCellProportionTo1_5VBG() {
+    configureForSolarCellVoltageProportionTo1_5VBG();
+
+    unsigned int adcResult = read();
+
+    // assert result in range [0,255]
+    return adcResult;
+}
+
+
 
 
 #ifdef WRONG
@@ -172,7 +185,7 @@ void ADC::configureForVccMeasure() {
 }
 
 
-void ADC::configureForSolarCellVoltagePin() {
+void ADC::configureForSolarCellVoltageProportionToVcc() {
     configureCommon();
 
     //Configure Memory Buffer
@@ -189,7 +202,7 @@ void ADC::configureForSolarCellVoltagePin() {
 }
 
 
-void ADC::configureForSolarCellVoltagePinFoo() {
+void ADC::configureForSolarCellVoltageProportionTo1_5VBG() {
     configureVoltageBandgapReference();
     configureCommon();
 
