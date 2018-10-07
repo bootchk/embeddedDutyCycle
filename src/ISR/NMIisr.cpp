@@ -1,6 +1,7 @@
 
 #include <msp430.h>
-#include "../testMain.h"
+#include "../debug/fatal.h"
+#include "../debug/test.h"
 #include "../MCU/mcu.h"
 
 
@@ -70,8 +71,11 @@ __interrupt void SYSNMI_ISR(void)
         break;
 
     case SYSSNIV_VMAIFG:       /* SYSSNIV : VMAIFG */
-        // Common
-        TestMain::warbleGreenLEDForever();
+        // Common case, in my experience
+
+        // In testing, this warbles green LED.
+        // In production, this soft resets
+        Fatal::warbleGreenLEDForever();
 
 
     case SYSSNIV_SVSLIFG:      /* SYSSNIV : SVS low-power reset entry */
@@ -83,7 +87,9 @@ __interrupt void SYSNMI_ISR(void)
     case SYSSNIV_JMBINIFG :    /* SYSSNIV : JMBINIFG */
     case SYSSNIV_JMBOUTIFG:    /* SYSSNIV : JMBOUTIFG */
     default:
-        while (true) TestMain::blinkGreenLED(2);
+        // These seem uncommon, in my experience
+        // Never the less, these should also probably do SW reset
+        while (true) Test::blinkGreenLED(2);
     }
   }
 }

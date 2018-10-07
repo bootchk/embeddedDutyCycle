@@ -3,6 +3,8 @@
 
 #include "../duty.h"
 
+#include "../board.h"  // board config
+
 
 
 // Apparently this is C++ compatible
@@ -36,11 +38,19 @@
  * Here, the ISR just clears interrupt flag, so no infinite interrupt loop.
  */
 
+#if  GPIO_PORT_P2 == AlarmSignalPort
 #pragma vector = PORT2_VECTOR
 __interrupt void Port2_ISR(void)
 {
     Duty::clearAlarmOnMCU();
 }
+#else
+#pragma vector = PORT1_VECTOR
+__interrupt void Port1_ISR(void)
+{
+    Duty::clearAlarmOnMCU();
+}
+#endif
 
 
 

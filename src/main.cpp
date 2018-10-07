@@ -47,7 +47,7 @@ bool didColdstart = false;
 
 
 
-int mainaaa(void)
+int main(void)
 {
     MCU::stopWatchDog();
 
@@ -133,10 +133,12 @@ int mainaaa(void)
     //PMMCTL0_H = 0;                    // Lock PMM Registers
 
     /*
-     * Enter LPM4 or LPM4.5
-     * LPM4.5 does not return, sleep will end via a RESET event and re-start at main().
+     * Enter LPM4 or LPM4.5.
+     * Since core regulator is off, this will be LPM4.5.
+     * LPM4.5 does not return, sleep will end via a RESET event and continuation is at main().
      */
     __bis_SR_register(LPM4_bits | GIE);
     __no_operation();
+    ///__delay_cycles(2);
     myAssert(false);
 }

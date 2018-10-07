@@ -80,11 +80,11 @@ void MCUSleep::enterLowestPowerSleep(){
 
 #endif
 
-
+// Used only for debugging
 void MCUSleep::spinWithInterruptsEnabled() {
     __bis_SR_register(GIE);
     while (true) {
-        __no_operation();
+        /// __no_operation();
     }
 }
 

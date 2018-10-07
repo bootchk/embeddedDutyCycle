@@ -1,6 +1,10 @@
 
 #pragma once
 
+// Some right hand sides from gpio.h in DriverLib
+#include <gpio.h>
+
+
 /*
  * Depends on hardware design i.e. connections between pins of mcu and rtc chips
  *
@@ -8,16 +12,12 @@
  * - choice of family member (here MSP430FR2433)
  * - choice of instance of serial device
  * - choice of alarm pin
- *
-
- *
- * Right hand sides from gpio.h
  */
 
 
 /*  depends on board design:
- * - prototype on launchpad PROTO_BOARD
- * - custom PCB             MYPCB_BOARD
+ * - PROTO_BOARD: prototype on launchpad  with GPIO configured different from MYPCB
+ * - MYPCB_BOARD: custom PCB or launchpad connected with proto boards full emulation of MYPCB
  */
 /// Comment this out to get MYPCB_BOARD
 ///#define PROTO_BOARD
@@ -97,13 +97,12 @@
 #endif
 
 
+/*
+ * Pin to read solar cell voltage as light meter i.e. daylight detector
+ */
 
 #define SolarCellVoltagePort GPIO_PORT_P1
 #define SolarCellVoltagePin  GPIO_PIN4
 #define SolarCellVoltagePinFunction GPIO_PRIMARY_MODULE_FUNCTION
 #define SolarCellVoltagePinADCSelection ADC_INPUT_A4
-
-
-
-
 
