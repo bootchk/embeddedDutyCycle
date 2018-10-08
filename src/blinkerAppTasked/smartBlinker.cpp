@@ -1,5 +1,5 @@
 
-#include <src/blinkerAppTasked/blinkPeriod.h>
+//#include <src/blinkerAppTasked/blinkPeriod.h>
 #include <src/blinkerAppTasked/day.h>
 #include <src/blinkerAppTasked/smartBlinker.h>
 #include <src/blinkerAppTasked/powerMgr.h>
@@ -118,59 +118,6 @@ void SmartBlinker::testTasks() {
     checkSunsetTask();
     blinkTask();
 }
-
-/*
- * Tasks
- */
-
-void SmartBlinker::checkSunriseTask() {
-    if ( not isNight() ) {
-        onSunriseDetected();
-    }
-    else {
-        // still dark, schedule self again short time later
-        scheduleCheckSunriseTask();
-    }
-}
-
-
-void SmartBlinker::checkSunsetTask() {
-    if ( isNight() ) {
-        onSunsetDetected();
-    }
-    else {
-        // still dark, schedule self again short time later
-        scheduleCheckSunsetTask();
-    }
-}
-
-
-void SmartBlinker::blinkTask() {
-    LED::blink();
-
-    ///TestMain::blinkForcedGreenLED(5);
-
-    myAssert(BlinkPeriod::isActive());
-
-    BlinkPeriod::advance();
-
-    // check for blink period over
-    if (BlinkPeriod::isOver()) {
-        if (BlinkPeriod::isEvening()) {
-            onEveningBlinkPeriodOver();
-            // first blink task of morning is scheduled
-        }
-        // else morning blink subperiod over,  blink period over, no blinkTask scheduled
-    }
-    else {
-        scheduleBlinkTask();
-        // next blink task of period is scheduled
-    }
-    // assert blinkTask or no blinking related task is scheduled
-}
-
-
-
 
 
 EpochTime SmartBlinker::timeOfMorningBlinkPeriodStart() {

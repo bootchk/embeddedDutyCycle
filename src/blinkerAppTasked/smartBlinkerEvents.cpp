@@ -25,17 +25,18 @@ void SmartBlinker::onSunriseDetected() {
 void SmartBlinker::onSunsetDetected() {
     // We don't record sunset
 
-    scheduleCheckSunriseTask();
-
     if (PowerMgr::isPowerForBlinking()) {
         onPowerLevelGood();
+        // check sunrise much later tonight
+        // scheduleLaggedCheckSunriseTask();
+        // OR after morning blink period
     }
     else {
-        // No task except checkSunrise
+        // Not enough power to blink, check sunrise all night long
+        scheduleCheckSunriseTask();
+        // No blinking task
     }
-
-    // check sunrise much later tonight
-    // scheduleLaggedCheckSunriseTask();
+    // assert blinking task or checkSunriseTask is scheduled
 }
 
 
@@ -59,6 +60,23 @@ void SmartBlinker::onEveningBlinkPeriodOver() {
         BlinkPeriod::initForMorningBlinking();
         scheduleFirstMorningBlinkTask();
     }
-    // else omit morning blinking.
+    else {
+        /*
+         * We don't know when to start, so omit morning blinking.
+         * But we must schedule same tasks as if we had done morning blinking,
+         * i.e. checkSunrise
+         */
+        scheduleCheckSunriseTask();
+    }
+}
+
+
+void SmartBlinker::onMorningBlinkPeriodOver() {
+    /*
+     * In this design, we don't check for sunrise until morning blink is over.
+     * That should be soon enough for an advancing sunrise due to seasons,
+     * That is also safer: no possiblity of falsely detecting sunrise, then sunset while it is really night.
+     */
+    scheduleCheckSunriseTask();
 }
 
