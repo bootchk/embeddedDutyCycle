@@ -29,7 +29,14 @@
  * !!! if family member does not contain the choice of instance, you get compile errors.
  */
 
-// msp430fr2433 specific, using instance UCB0: 1.2, 1.3, 1.1
+// Unused config: msp430fr2433 specific, using instance UCB0: 1.2, 1.3, 1.1
+
+#ifdef PROTO_BOARD
+// No solar cell, certain routines are mocked
+#else
+// MYPCB_BOARD has a solar cell
+#define SOLAR_CELL_PRESENT
+#endif
 
 #ifdef PROTO_BOARD
 

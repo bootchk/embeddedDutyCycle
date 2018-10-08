@@ -31,10 +31,9 @@ public:
     // Because of other built-in delays, allow much greater than 40 seconds
     static const Duration BetweenMorningBlinkStartAndSunrise = 86400 - 60;
 
-    // Check sun every thirty seconds (in middle of blinking period)
-    static const Duration BetweenSunChecks = 30;
-    // Check sun every 3 minutes
-    ///static const Duration BetweenSunChecks = 120;
+    // Check sun every 15-30 seconds (in middle of blinking period)
+    static const Duration BetweenSunChecks = 15;
+
 
     // counts for periods
     static const unsigned int BlinksEvening = 5;
@@ -51,6 +50,8 @@ public:
     static const Duration BetweenBlinks = 10;
     static const Duration BetweenSunsetAndBlinking = 1800;  // Thirty minutes
 
+    // Check sun every 3 minutes
+    ///static const Duration BetweenSunChecks = 120;
     static const Duration BetweenSunChecks = 900;  // Fifteen minutes
 
     static const Duration BetweenMorningBlinkStartAndSunrise = 7200;    // Two hours

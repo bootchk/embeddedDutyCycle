@@ -2,6 +2,8 @@
 #include <src/blinkerAppTasked/blinkPeriod.h>
 #include <src/blinkerAppTasked/day.h>
 #include <src/blinkerAppTasked/smartBlinker.h>
+#include <src/blinkerAppTasked/powerMgr.h>
+
 #include "parameters.h"
 
 #include "../OS/taskScheduler.h"
@@ -13,6 +15,9 @@
 
 #include "../debug/myAssert.h"
 #include "../debug/test.h"
+
+// Configures code by ifdef
+#include "../board.h"
 
 
 
@@ -34,8 +39,8 @@ void SmartBlinker::configureGPIO() {
  * NORMAL_PERIODS: full test as designed, blink and sun detect tasks, aligned with day
  */
 //#define BLINK_ONLY
-#define NIGHT_ONLY
-//#define NORMAL_PERIODS
+//#define NIGHT_ONLY
+#define NORMAL_PERIODS
 
 
 void SmartBlinker::scheduleInitialTask() {
@@ -175,9 +180,13 @@ EpochTime SmartBlinker::timeOfMorningBlinkPeriodStart() {
 
 
 bool SmartBlinker::isNight() {
+#ifdef SOLAR_CELL_PRESENT
+    /// Normal code
+        return PowerMgr::isSolarCellDark();
+#else
     /// For integration testing
     return true;
+#endif
 
-    /// Normal code
-    ///return PowerMgr::isSolarCellDark();
+
 }
