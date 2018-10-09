@@ -57,6 +57,10 @@
 
 #else
 
+
+// Configuration of PCB
+// And also configuration of one prototype on launchpad
+
 #define SPIInstanceAddress      EUSCI_A1_BASE
 
 // msp430fr2433 specific, using instance UCA1: 2.6, 2.5, 2.4
@@ -113,3 +117,24 @@
 #define SolarCellVoltagePinFunction GPIO_PRIMARY_MODULE_FUNCTION
 #define SolarCellVoltagePinADCSelection ADC_INPUT_A4
 
+
+
+/*
+ * LED configuration
+ */
+
+/*
+ * Definitions for MSP-EXP430FR2433: two LED's
+ */
+
+// On PCB, LED is sunk
+// TODO for prototype on launchpad, led is sourced
+///#define LED_SOURCED
+
+// P1.0, red on launchpad
+#define APP_LED1_PORT     GPIO_PORT_P1
+#define APP_LED1_PIN      GPIO_PIN0
+
+// P1.1 green
+#define APP_LED2_PORT     GPIO_PORT_P1
+#define APP_LED2_PIN      GPIO_PIN1

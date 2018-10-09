@@ -5,17 +5,9 @@
 // DriverLib
 #include <gpio.h>
 
+#include "../../board.h"
 
-/*
- * Definitions for MSP-EXP430FR2433: two LED's
- */
-// P1.0 red
-#define APP_LED1_PORT     GPIO_PORT_P1
-#define APP_LED1_PIN      GPIO_PIN0
 
-// P1.1 green
-#define APP_LED2_PORT     GPIO_PORT_P1
-#define APP_LED2_PIN      GPIO_PIN1
 
 
 void LED::configureGPIO() {
@@ -24,8 +16,8 @@ void LED::configureGPIO() {
 
 	// OUT register resets to "undefined".
 	// Ensure known state
-	GPIO_setOutputLowOnPin(APP_LED1_PORT,    APP_LED1_PIN);
-	GPIO_setOutputLowOnPin(APP_LED2_PORT,    APP_LED2_PIN);
+	turnOff();
+	turnOffLED2();
 }
 
 
@@ -33,12 +25,28 @@ void LED::configureGPIO() {
  * mcu sources current to LED: high is on
  */
 void LED::turnOff(){
+#if LED_SOURCED
 	GPIO_setOutputLowOnPin(APP_LED1_PORT,    APP_LED1_PIN);
+#else
+	GPIO_setOutputHighOnPin(APP_LED1_PORT,    APP_LED1_PIN);
+#endif
 }
 
-void LED::turnOn(){
-	GPIO_setOutputHighOnPin(APP_LED1_PORT,    APP_LED1_PIN);
+void LED::turnOffLED2() {
+    // TODO is sourced LED, add sunk
+    GPIO_setOutputLowOnPin(APP_LED2_PORT,    APP_LED2_PIN);
 }
+
+
+
+void LED::turnOn(){
+#if LED_SOURCED
+	GPIO_setOutputHighOnPin(APP_LED1_PORT,    APP_LED1_PIN);
+#else
+	GPIO_setOutputLowOnPin(APP_LED1_PORT,    APP_LED1_PIN);
+#endif
+}
+
 
 void LED::toggle() {
     GPIO_toggleOutputOnPin(APP_LED1_PORT, APP_LED1_PIN);
