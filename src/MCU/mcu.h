@@ -30,6 +30,26 @@ public:
 	 */
 	static void disableFRAMWriteProtect();
 
-	// TODO belongs elsewhere
-	static void configureUnusedPinsLowPower();
+    /*
+     * Called after mcu has been reset.
+     * True if sleeping before this reset.
+     * False if not sleeping, and therefore a power on or software reset or other reset.
+     *
+     * Decodes and clears all reasons for sleep.
+     */
+    static bool isResetAWakeFromSleep();
+
+    /*
+     * Clear IFG for wake from LPMx.5
+     */
+    static void clearIsResetAWakeFromSleep();
+
+    /*
+     * Unlocks GPIO state and makes effective any prior configuration.
+     * GPIO can be configured prior, but said configuration is not effective until this call.
+     *
+     * Must follow isResetAWakeFromSleep
+     * Once unlocked, you can't tell whether reset was from sleep.
+     */
+    static void unlockMCUFromSleep();
 };

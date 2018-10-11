@@ -64,6 +64,9 @@ void PMM::clearIsResetAWakeFromSleep() {
 	PMM_clearInterrupt(PMM_LPM5_INTERRUPT);
 }
 
+
+
+
 void PMM::clearAllResetInterruptFlags() {
     PMM_clearInterrupt(PMM_ALL);
 }

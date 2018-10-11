@@ -6,11 +6,12 @@
 
 #include "PMM/powerMgtModule.h"
 #include "MCU/mcu.h"
-#include "mcuSleep.h"
+//#include "mcuSleep.h"
 
 #include <src/debug/test.h>
 #include <src/debug/myAssert.h>
 
+#include "pinFunction/pinFunction.h"
 
 /// #include "myAssert.h"
 
@@ -51,7 +52,7 @@ bool Main::isResetAwakeFromSleep() {
     return Test::isResetAwakeFromSleep();
 #else
     // decodes all reasons and may assert
-    return MCUSleep::isResetAWakeFromSleep();
+    return MCU::isResetAWakeFromSleep();
 #endif
 }
 
@@ -65,7 +66,8 @@ void Main::onResetPreamble() {
     Test::initAllGpioOutLow();
     PMM::unlockLPM5();
 #else
-    MCU::configureUnusedPinsLowPower();
+    PinFunction::configureUnusedPinsLowPower();
+    ///MCU::configureUnusedPinsLowPower();
     //PMM::unlockLPM5();
 #endif
 }

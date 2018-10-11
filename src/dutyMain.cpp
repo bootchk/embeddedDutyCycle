@@ -2,9 +2,8 @@
 #include <src/debug/test.h>
 #include "dutyMain.h"
 
-#include "PMM/powerMgtModule.h"
+#include "MCU/mcu.h"
 #include "duty.h"
-#include "mcuSleep.h"
 
 #include "app/app.h"
 
@@ -38,7 +37,7 @@ void DutyMain::onWakeFromLPM() {
     // LOCKLPM5 is set unless we are using forceBlink functions
     /// myAssert(PMM::isLockedLPM5());
 
-    MCUSleep::clearIsResetAWakeFromSleep();
+    MCU::clearIsResetAWakeFromSleep();
 
     /*
      * GPIO config registers were reset (but GPIO state is held.)
@@ -48,7 +47,7 @@ void DutyMain::onWakeFromLPM() {
     Duty::restoreMCUToPresleepConfiguration();
     App::configureSleepingGPIO();
 
-    MCUSleep::unlockMCUFromSleep();
+    MCU::unlockMCUFromSleep();
 
     // Interrupt is serviced now, if presleep configuration enables interrupts
 

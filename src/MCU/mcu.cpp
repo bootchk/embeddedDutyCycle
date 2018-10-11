@@ -5,7 +5,8 @@
 
 #include <driverlib.h>
 
-#include "../pinFunction/pinFunction.h"
+#include "../PMM/powerMgtModule.h"
+#include "../resetReason.h"
 
 
 #ifdef DISABLE_BSL
@@ -72,6 +73,15 @@ void MCU::disableFRAMWriteProtect() {
     SysCtl_enableFRAMWrite(SYSCTL_FRAMWRITEPROTECTION_DATA | SYSCTL_FRAMWRITEPROTECTION_PROGRAM);
 }
 
-void MCU::configureUnusedPinsLowPower() {
-    PinFunction::configureUnusedPinsLowPower();
-}
+
+/*
+ * Delegate to PMM
+ */
+void MCU::clearIsResetAWakeFromSleep() { PMM::clearIsResetAWakeFromSleep(); }
+void MCU::unlockMCUFromSleep(){ PMM::unlockLPM5(); }
+
+/*
+ * Delegate to ResetReason
+ * (Another version delegates to PMM)
+ */
+bool MCU::isResetAWakeFromSleep() { return ResetReason::isResetAWakeFromSleep(); }

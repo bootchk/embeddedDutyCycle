@@ -2,10 +2,11 @@
 #include <src/debug/test.h>
 
 #include "mainObject.h"
-#include "mcuSleep.h"
+//#include "mcuSleep.h"
 #include "PMM/powerMgtModule.h"
 #include "MCU/mcu.h"
 #include "timer/timer.h"
+#include "pinFunction/pinFunction.h"
 
 #include "debug/myAssert.h"
 ///#include "debug.h"
@@ -93,7 +94,8 @@ int main(void)
     if ( Main::isResetAwakeFromSleep() and didColdstart ) {
 
         //delayForStartup();
-        Main::onResetPreamble();
+        ///Main::onResetPreamble();
+        PinFunction::configureUnusedPinsLowPower();
 
 #ifdef TRAP_WAKE
         // Trap to allow debugger to synch when using "Free Run" ?
@@ -114,7 +116,8 @@ int main(void)
         didColdstart = true;
 
         delayForStartup();
-        Main::onResetPreamble();
+        ///Main::onResetPreamble();
+        PinFunction::configureUnusedPinsLowPower();
 
         // TODO
         /*
