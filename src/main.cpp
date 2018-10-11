@@ -5,6 +5,7 @@
 #include "mcuSleep.h"
 #include "PMM/powerMgtModule.h"
 #include "MCU/mcu.h"
+#include "timer/timer.h"
 
 #include "debug/myAssert.h"
 ///#include "debug.h"
@@ -24,16 +25,7 @@
  * I have posted a bug report to TI forum.
  */
 
-#ifdef DISABLE_BSL
-/*
- * Disable BSL
- * BSL might already have executed, this only affects subsequent resets.
- */
-#pragma location=0xFF84
-unsigned int bslSignature1=0x5555;
-#pragma location=0xFF86
-unsigned int bslSignature2=0x5555;
-#endif
+
 
 
 /*
@@ -60,7 +52,16 @@ int main(void)
      * !!! This delay, determined experimentally, seems necessary, for unknown reasons.
      */
     ///Test::blinkForcedGreenLED(1);
-    Test::delayHalfMillionCycles();
+
+    /*
+     * Delay is needed for some unknown reason, on every wakeup
+     * If no delay, ??? SPI failure
+     */
+    // 500k cycles at 8mHz SMCLK is .05 seconds
+    ///Test::delayHalfMillionCycles();
+
+    // 5k * 10uSec tick is 50kuSec is .05 seconds
+    LowPowerTimer::delay(5000);
 
     // Prevent NMI on FRAM writes
     MCU::disableFRAMWriteProtect();
@@ -93,6 +94,13 @@ int main(void)
     }
     else {
         didColdstart = true;
+
+        // TODO
+        /*
+         * When solar powered, must sleep until power is adequate.
+         * Too much processing will exhaust slim margin of power at coldstart
+         */
+
 
         /*
          * Device reset from power up (cold start) or reset reason other than wake from LPM4.5

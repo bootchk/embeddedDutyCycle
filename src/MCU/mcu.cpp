@@ -6,6 +6,20 @@
 #include <driverlib.h>
 
 
+#ifdef DISABLE_BSL
+/*
+ * Disable BSL
+ * BSL might already have executed, this only affects subsequent resets.
+ */
+#pragma location=0xFF84
+unsigned int bslSignature1=0x5555;
+#pragma location=0xFF86
+unsigned int bslSignature2=0x5555;
+#endif
+
+
+
+
 void MCU::stopWatchDog() {
     WDTCTL = WDTPW | WDTHOLD;
 }
