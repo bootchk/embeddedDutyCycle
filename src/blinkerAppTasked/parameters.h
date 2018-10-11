@@ -93,4 +93,8 @@ static const unsigned int MaxVscProportionTo1_5ForDark = 30;  // centiVolts, 0.3
 #endif
 
 
+/*
+ * Voltage that indicates a reserve of power above Vmin
+ */
+static const unsigned int MinVccForStarting = 190; // centiVolts 1.9V
 };

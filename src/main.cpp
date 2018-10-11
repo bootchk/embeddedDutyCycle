@@ -7,6 +7,7 @@
 #include "MCU/mcu.h"
 #include "timer/timer.h"
 #include "pinFunction/pinFunction.h"
+#include "solar/solarPower.h"
 
 #include "debug/myAssert.h"
 ///#include "debug.h"
@@ -54,6 +55,7 @@ void configureSystem() {
  * It also seems to work only for coldstart.
  */
 
+#ifdef UNUSED
 void delayForStartup()
 {
     ///Test::blinkForcedGreenLED(1);
@@ -64,6 +66,7 @@ void delayForStartup()
     // 5k * 10uSec tick is 50kuSec is .05 seconds
     LowPowerTimer::delay(5000);
 }
+#endif
 
 }
 
@@ -116,10 +119,18 @@ int main(void)
     else {
         didColdstart = true;
 
-        delayForStartup();
-        ///Main::onResetPreamble();
+        /*
+         * Need to configure for low power (because pins are floating input using power)
+         * and set output values (because they default to LED on)
+         * BEFORE delay for Startup
+         */
         PinFunction::setUsedOutPinValues();
         PinFunction::configureUnusedPinsLowPower();
+
+        SolarPower::sleepUntilPowerReserve();
+        //delayForStartup();
+        ///Main::onResetPreamble();
+
 
         // TODO
         /*
