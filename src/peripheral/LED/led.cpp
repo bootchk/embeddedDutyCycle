@@ -25,7 +25,7 @@ void LED::configureGPIO() {
  * mcu sources current to LED: high is on
  */
 void LED::turnOff(){
-#if LED_SOURCED
+#ifdef LED_SOURCED
 	GPIO_setOutputLowOnPin(APP_LED1_PORT,    APP_LED1_PIN);
 #else
 	GPIO_setOutputHighOnPin(APP_LED1_PORT,    APP_LED1_PIN);
@@ -40,7 +40,7 @@ void LED::turnOffLED2() {
 
 
 void LED::turnOn(){
-#if LED_SOURCED
+#ifdef LED_SOURCED
 	GPIO_setOutputHighOnPin(APP_LED1_PORT,    APP_LED1_PIN);
 #else
 	GPIO_setOutputLowOnPin(APP_LED1_PORT,    APP_LED1_PIN);

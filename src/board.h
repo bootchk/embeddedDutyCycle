@@ -24,6 +24,22 @@
 
 
 /*
+ * More board specifics
+ * The prototype on launchpad has sourced LED
+ * The prototype on my PCB has sunk LED
+ */
+#define LED_SOURCED
+
+/*
+ *
+ */
+#define TEST_PARAMETERS
+
+#define SOLAR_CELL2V
+///#define SOLAR_CELL4_2V
+
+
+/*
  * Address of chosen device instance on chosen family member.
  * MSP430FR2433 choices are A0, A1, B0
  * !!! if family member does not contain the choice of instance, you get compile errors.

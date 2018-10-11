@@ -5,6 +5,8 @@
 
 #include <driverlib.h>
 
+#include "../pinFunction/pinFunction.h"
+
 
 #ifdef DISABLE_BSL
 /*
@@ -23,6 +25,7 @@ unsigned int bslSignature2=0x5555;
 void MCU::stopWatchDog() {
     WDTCTL = WDTPW | WDTHOLD;
 }
+
 
 void MCU::enterLPM4orLPM4_5(){
 
@@ -67,4 +70,8 @@ void MCU::enableBSLOffAndVacantMemoryNMI() {
 void MCU::disableFRAMWriteProtect() {
     // By default, writes cause NMI.  To disable, enable writing.
     SysCtl_enableFRAMWrite(SYSCTL_FRAMWRITEPROTECTION_DATA | SYSCTL_FRAMWRITEPROTECTION_PROGRAM);
+}
+
+void MCU::configureUnusedPinsLowPower() {
+    PinFunction::configureUnusedPinsLowPower();
 }

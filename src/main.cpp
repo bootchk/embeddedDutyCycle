@@ -36,47 +36,64 @@
 bool didColdstart = false;
 
 
+namespace {
 
+void configureSystem() {
+    MCU::enableBSLOffAndVacantMemoryNMI();
+
+    // Prevent NMI on FRAM writes
+    MCU::disableFRAMWriteProtect();
+}
+
+/*
+ * Delay is needed for some unknown reason.
+ * When I remove this delay, fails assert RTC::isReadable in alarmConfigure
+ * !!! This delay, determined experimentally, seems necessary.
+ * Originally it was on every reset.
+ * It also seems to work only for coldstart.
+ */
+
+void delayForStartup()
+{
+    ///Test::blinkForcedGreenLED(1);
+
+    // 500k cycles at 8mHz SMCLK is .05 seconds
+    //Test::delayHalfMillionCycles();
+
+    // 5k * 10uSec tick is 50kuSec is .05 seconds
+    LowPowerTimer::delay(5000);
+}
+
+}
+
+
+/*
+ * !!! If no interrupt is enabled when unlocked,
+ * no ISR is called, even though interrupt occurred in wakeup case.
+ */
 
 
 int main(void)
 {
+    /*
+     * Conditions on every reset:
+     * - watchdog running
+     * - VMA NMI disabled
+     * Conditions on some resets (LPMx.5 exit)
+     * - LPM5 locked
+     */
     MCU::stopWatchDog();
 
-    /// Debug::leaveCrumb(1);
+    configureSystem();
 
-    MCU::enableBSLOffAndVacantMemoryNMI();
-
-    /*
-     * When I remove the blinkForced, fails assert RTC::isReadable in alarmConfigure
-     * !!! This delay, determined experimentally, seems necessary, for unknown reasons.
-     */
-    ///Test::blinkForcedGreenLED(1);
-
-    /*
-     * Delay is needed for some unknown reason, on every wakeup
-     * If no delay, ??? SPI failure
-     */
-    // 500k cycles at 8mHz SMCLK is .05 seconds
-    ///Test::delayHalfMillionCycles();
-
-    // 5k * 10uSec tick is 50kuSec is .05 seconds
-    LowPowerTimer::delay(5000);
-
-    // Prevent NMI on FRAM writes
-    MCU::disableFRAMWriteProtect();
-
-    // LPM5 might be locked
-    // Cannot blink LEDs when LPM5 locked
-    Main::onResetPreamble();
-    /// Debug::leaveCrumb(2);
-    /*
-     * !!! If no interrupt is enabled when unlocked,
-     * no ISR is called, even though interrupt occurred in wakeup case.
-     */
+    ///delayForStartup();
+    ///Main::onResetPreamble();
 
     // Dispatch on reset reason: reset is wake out of an LPMx.5 OR any other (typically cold start.)
     if ( Main::isResetAwakeFromSleep() and didColdstart ) {
+
+        //delayForStartup();
+        Main::onResetPreamble();
 
 #ifdef TRAP_WAKE
         // Trap to allow debugger to synch when using "Free Run" ?
@@ -86,6 +103,7 @@ int main(void)
         while (isTrapped)
             ;
 #endif
+
         ///Test::blinkForcedGreenLED(3);
         ///Debug::leaveCrumb(20);
 
@@ -94,6 +112,9 @@ int main(void)
     }
     else {
         didColdstart = true;
+
+        delayForStartup();
+        Main::onResetPreamble();
 
         // TODO
         /*

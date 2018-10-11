@@ -5,6 +5,7 @@
 
 
 #include "PMM/powerMgtModule.h"
+#include "MCU/mcu.h"
 #include "mcuSleep.h"
 
 #include <src/debug/test.h>
@@ -64,7 +65,7 @@ void Main::onResetPreamble() {
     Test::initAllGpioOutLow();
     PMM::unlockLPM5();
 #else
-    MCUSleep::configureUnusedPinsLowPower();
+    MCU::configureUnusedPinsLowPower();
     //PMM::unlockLPM5();
 #endif
 }

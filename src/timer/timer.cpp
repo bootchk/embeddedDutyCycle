@@ -2,13 +2,15 @@
 #include "timer.h"
 
 // Implementation uses Driverlib
-///#include <timer_a.h>
 #include <cs.h>
 #include <rtc.h>
 
 
 /*
  * !!! Requires separate ISR for RTC, which must exit LPM
+ */
+/*
+ * Use RTC instead of TIMER_A: lower power?
  */
 
 namespace {

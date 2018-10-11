@@ -4,6 +4,10 @@
  * system core
  * bus faults
  * watchdog
+ *
+ * TODO misnamed.
+ * These deal with the SoC, not just the mcu.
+ * The watchdog, PMM, etc are not part of the mcu.
  */
 
 class MCU {
@@ -25,4 +29,7 @@ public:
 	 * Disable write protect for all FRAM.
 	 */
 	static void disableFRAMWriteProtect();
+
+	// TODO belongs elsewhere
+	static void configureUnusedPinsLowPower();
 };
