@@ -78,10 +78,18 @@ static const unsigned int MinVccForBlinking = 300;  // centiVolts, 3V
 // solar cell KXOB22-01x8
 // 2V light, .6V dark
 static const unsigned int MaxVccForDark = 80;  // centiVolts, 0.8V
+
+// (128/256)*1.5 => .75V
+static const unsigned int MaxVscProportionTo1_5ForDark = 128;  // centiVolts, 0.3V128
 #elif defined SOLAR_CELL2V
 // solar cell KXOB22-04x3
 // .5V light, .2V dark
-static const unsigned int MaxVccForDark = 30;  // centiVolts, 0.3V
+
+// NOT USED static const unsigned int MaxVccForDark = 30;  // centiVolts, 0.3V
+
+// (50/256)*1.5 => .3V
+static const unsigned int MaxVscProportionTo1_5ForDark = 30;  // centiVolts, 0.3V
+
 #endif
 
 

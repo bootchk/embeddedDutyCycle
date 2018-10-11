@@ -23,7 +23,7 @@ bool PowerMgr::isPowerForBlinking() {
  * Max Vcc is 3.6V.
  * Vcc in range [1.9, 3.6]
  *
- * adcResult in range [0, 255 (0xFF)]
+ * adcResult is a proportion in range [0, 255 (0xFF)] of a reference voltage
  *
  * Return if solar cell voltage is 1/2 (0x80, 128 base 10) of Vcc i.e. about 0.9V to 1.8V
  * Return if solar cell voltage is 1/3 (0x50, 80 base 10) of Vcc i.e. about 0.6V to 1.2V
@@ -40,7 +40,7 @@ bool PowerMgr::isSolarCellDark() {
     // Inaccurate: A third of Vcc
     /// bool result = ADC::measureSolarCellProportionToVcc() < 80;
 
-    bool result = ADC::measureSolarCellProportionTo1_5VBG() < 128;
+    bool result = ADC::measureSolarCellProportionTo1_5VBG() < Parameters::MaxVscProportionTo1_5ForDark;
     return result;
 }
 

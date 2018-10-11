@@ -80,6 +80,9 @@ bool Alarm::setAlarmDurationSecondsFromNow(Duration duration) {
 	// delegate to RTC
 	result = RTC::setAlarmDuration(duration);
 
+	// Clear interrupt flag and enable at last moment
+	PinFunction::enableAlarmInterrupt();
+
 	// ensure alarm is set or result is false
 	return result;
 }
@@ -92,6 +95,9 @@ bool Alarm::setAlarmToTime(EpochTime time) {
 
     // delegate to RTC
     result = RTC::setAlarmTime(time);
+
+    // Clear interrupt flag and enable at last moment
+    PinFunction::enableAlarmInterrupt();
 
     // ensure alarm is set or result is false
     return result;

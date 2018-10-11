@@ -6,6 +6,8 @@
 
 #include "../board.h"
 
+#include "../debug/myAssert.h"
+
 
 
 
@@ -15,9 +17,16 @@
 
 void PinFunction::configureAlarmPinPullupLoToHiInterrupt() {
 	GPIO_setAsInputPinWithPullUpResistor(AlarmSignalPort, AlarmSignalPin);
-    GPIO_enableInterrupt(AlarmSignalPort, AlarmSignalPin);
 	GPIO_selectInterruptEdge(AlarmSignalPort, AlarmSignalPin, GPIO_LOW_TO_HIGH_TRANSITION);
 }
+
+
+void PinFunction::enableAlarmInterrupt() {
+    clearAlarmInterruptOnPin();
+    GPIO_enableInterrupt(AlarmSignalPort, AlarmSignalPin);
+}
+
+
 
 /*
  * Hack for asserts only.
@@ -28,8 +37,16 @@ bool PinFunction::isConfiguredAlarmPin() {
     return true;
 }
 
+bool PinFunction::isAlarmInterruptClear() {
+    // hack not independent of port, fixed to port 1
+    return not (P1IFG & AlarmSignalPin);
+}
+
 void PinFunction::clearAlarmInterruptOnPin() {
 	GPIO_clearInterrupt(AlarmSignalPort, AlarmSignalPin);
+
+	// If interrupt flag still set, the signaling device is still signaling
+	myAssert(isAlarmInterruptClear());
 }
 
 bool PinFunction::isAlarmPinHigh() {
@@ -42,60 +59,74 @@ bool PinFunction::isAlarmPinHigh() {
 
 
 
-
+/*
+ * OLD prototype
+ * Used pins:
+ * - SPI 1.4-1.6
+ * - slave select 3.2
+ * - alarm 2.7
+ */
 
 
 void PinFunction::configureUnusedPinsLowPower() {
     /*
      * Not require LPM5 locked.
+     *
      * Only configure pins not connected,
      * since configuring connected pins as output can trigger connected devices.
      */
 
-    /*
-     * TODO This should depend on board.h
-     * For now, hardcoded:
-     * Used pins:
-     * - SPI 1.4-1.6
-     * - slave select 3.2
-     * - alarm 2.7
-     *
-     * Test pins:
-     * - leds 1.1 and 1.2
-     */
-        GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
-        GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN1);
-        GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN2);
-        GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN3);
-        // SPI data pins
-        //GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN4);
-        //GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN5);
-        //GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN6);
-        GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN7);
 
-        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0);
-        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN1);
-        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2);
-        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN3);
-        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN4);
-        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN5);
-        GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN6);
-        // RTC alarm pin
-        //GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN7);
+    // TODO these should be in another routine configureUsedPins
+    // Launch pad LED pins 1.0 and 1.1 (out)
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN1);
 
-        // Only 5 pins on port 3
-        GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN0);
-        GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN1);
+    // Slave select (out)
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN2);
+    // P1.3 Alarm (in)
+    // P1.4 Solar cell Vcc ADC pin (analog in)
+    //GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN4);
 
-        // SPI slave select pin
-        //GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN2);
-        GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN3);
-        GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN4);
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN5);
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN6);
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN7);
 
-        // Test pins (leds) low
-        GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
-        GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN1);
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0);
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN1);
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2);
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN3);
+    // SPI pins
+    //GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN4);
+    //GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN5);
+    //GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN6);
+    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN7);
+
+    // Only 5 pins on port 3
+    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN0);
+    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN1);
+    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN2);
+    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN3);
+    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN4);
+
+    // Not ensure configuration is effective, since LPM5 might be locked
 }
+
+
+
+/*
+ * Should be called before configured, so they don't blink.
+ */
+void PinFunction::setUsedOutPinValues() {
+    // app led (also test led) low
+    // TODO call driver functions for sink/source
+    GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
+    // Test pin (green led) low
+    GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN1);
+    // TODO chip select
+}
+
+
 
 #ifdef OLD
 Flawed because hardcoded to pins that have changed.
@@ -120,25 +151,5 @@ void PinFunction::configureUnusedPinsLowPower() {
 	// This will be an input always
 	// GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN3);
 
-	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN4);
-	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN5);
-	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN6);
-	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN7);
-
-	GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0);
-	GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN1);
-	GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2);
-	GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN3);
-	GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN4);
-	GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN5);
-	GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN6);
-	GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN7);
-
-	// Only 5 pins on port 3
-	GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN0);
-	GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN1);
-	GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN2);
-	GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN3);
-	GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN4);
 }
 #endif

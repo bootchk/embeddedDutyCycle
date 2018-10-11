@@ -93,8 +93,9 @@ int main(void)
     // Dispatch on reset reason: reset is wake out of an LPMx.5 OR any other (typically cold start.)
     if ( Main::isResetAwakeFromSleep() and didColdstart ) {
 
-        //delayForStartup();
+        ///delayForStartup();
         ///Main::onResetPreamble();
+        PinFunction::setUsedOutPinValues();
         PinFunction::configureUnusedPinsLowPower();
 
 #ifdef TRAP_WAKE
@@ -117,6 +118,7 @@ int main(void)
 
         delayForStartup();
         ///Main::onResetPreamble();
+        PinFunction::setUsedOutPinValues();
         PinFunction::configureUnusedPinsLowPower();
 
         // TODO
