@@ -28,15 +28,15 @@
  * The prototype on launchpad has sourced LED
  * The prototype on my PCB has sunk LED
  */
-#define LED_SOURCED
+///#define LED_SOURCED
 
 /*
  *
  */
 #define TEST_PARAMETERS
 
-#define SOLAR_CELL2V
-///#define SOLAR_CELL4_2V
+///#define SOLAR_CELL2V
+#define SOLAR_CELL4_2V
 
 
 /*
@@ -128,12 +128,15 @@
  * Pin to read solar cell voltage as light meter i.e. daylight detector
  */
 
-#define SolarCellVoltagePort GPIO_PORT_P1
-#define SolarCellVoltagePin  GPIO_PIN4
-#define SolarCellVoltagePinFunction GPIO_PRIMARY_MODULE_FUNCTION
-#define SolarCellVoltagePinADCSelection ADC_INPUT_A4
-
-
+/*#define ExternalPinVoltagePort GPIO_PORT_P1
+#define ExternalPinVoltagePin  GPIO_PIN4
+#define ExternalPinVoltagePinFunction GPIO_PRIMARY_MODULE_FUNCTION
+#define ExternalPinVoltagePinADCSelection ADC_INPUT_A4
+*/
+#define ExternalPinVoltagePort GPIO_PORT_P1
+#define ExternalPinVoltagePin  GPIO_PIN0
+#define ExternalPinVoltagePinFunction GPIO_PRIMARY_MODULE_FUNCTION
+#define ExternalPinVoltagePinADCSelection ADC_INPUT_A0
 
 /*
  * LED configuration
@@ -145,7 +148,7 @@
 
 // On PCB, LED is sunk
 // TODO for prototype on launchpad, led is sourced
-///#define LED_SOURCED
+#define LED_SOURCED
 
 // P1.0, red on launchpad
 #define APP_LED1_PORT     GPIO_PORT_P1

@@ -10,7 +10,9 @@
  * !!! Requires separate ISR for RTC, which must exit LPM
  */
 /*
- * Use RTC instead of TIMER_A: lower power?
+ * Use internal RTC instead of TIMER_A: lower power?
+ *
+ * !!! Note internal RTC vs external RTC
  */
 
 namespace {
@@ -32,10 +34,10 @@ void initVLOClock()
  */
 void initRTC(unsigned int durationInRTCTicks)
 {
-    // Since clock is VLO at approx 10kHx, a tick is about 10uSec
+    // Since clock is VLO at approx 10kHz, a tick is about 100uSec
     RTC_init(
         RTC_BASE,
-        durationInRTCTicks,  // INTERVAL_TIME,
+        durationInRTCTicks,  // compare reg value at which will trigger interrupt
         RTC_CLOCKPREDIVIDER_1);
 }
 
@@ -79,12 +81,12 @@ void shutdownTimerResources() {
 
 
 
-void LowPowerTimer::delay(unsigned int duration) {
+void LowPowerTimer::delayTicksOf100uSec(unsigned int ticks) {
     // Init the clock each time
     initVLOClock();
 
     // Init RTC each time
-    initRTC(duration);
+    initRTC(ticks);
 
     startRTC();
 

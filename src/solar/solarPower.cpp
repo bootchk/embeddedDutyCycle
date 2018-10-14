@@ -26,9 +26,9 @@ void SolarPower::sleepUntilPowerReserve() {
      * Start by sleeping long enough to build a reserve
      * that will sustain the first ADC use to read Vcc.
      */
-    // 50k * 10uSec tick is 500kuSec is .5 seconds
-    LowPowerTimer::delay(50000);
+    // 50k * 100uSec tick is 500kuSec is 5 seconds
+    LowPowerTimer::delayTicksOf100uSec(50000);
 
     while (not isPowerForStarting())
-        LowPowerTimer::delay(50000);
+        LowPowerTimer::delayTicksOf100uSec(50000);
 }

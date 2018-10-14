@@ -1,8 +1,6 @@
 #include <msp430.h>
-#include <src/debug/test.h>
 
 #include "mainObject.h"
-//#include "mcuSleep.h"
 #include "PMM/powerMgtModule.h"
 #include "MCU/mcu.h"
 #include "timer/timer.h"
@@ -10,7 +8,7 @@
 #include "solar/solarPower.h"
 
 #include "debug/myAssert.h"
-///#include "debug.h"
+#include <src/debug/test.h>
 
 
 
@@ -77,7 +75,7 @@ void delayForStartup()
  */
 
 
-int main(void)
+int main777(void)
 {
     /*
      * Conditions on every reset:
@@ -117,6 +115,10 @@ int main(void)
         ///Test::blinkRedLED(5);
     }
     else {
+        /*
+         * Reset from power up (cold start) or reset reason other than wake from LPM4.5
+         * LPM5 might be locked if reset reason is not a cold start
+         */
         didColdstart = true;
 
         /*
@@ -127,22 +129,10 @@ int main(void)
         PinFunction::setUsedOutPinValues();
         PinFunction::configureUnusedPinsLowPower();
 
+        // When solar powered, must sleep until power is adequate.
         SolarPower::sleepUntilPowerReserve();
         //delayForStartup();
         ///Main::onResetPreamble();
-
-
-        // TODO
-        /*
-         * When solar powered, must sleep until power is adequate.
-         * Too much processing will exhaust slim margin of power at coldstart
-         */
-
-
-        /*
-         * Device reset from power up (cold start) or reset reason other than wake from LPM4.5
-         * LPM5 might be locked if reset reason is not a cold start
-         */
 
         /// Debug::leaveCrumb(10);
         ///Test::blinkForcedGreenLED(2);

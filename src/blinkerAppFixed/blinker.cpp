@@ -17,7 +17,7 @@ void Blinker::onAlarm() {
 }
 
 void Blinker::configureGPIO() {
-    LED::configureGPIO();
+    LED::configureLED1();
 }
 
 

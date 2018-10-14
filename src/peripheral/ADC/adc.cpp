@@ -1,12 +1,11 @@
 
 #include "adc.h"
+#include "ADCConfigure.h"
 
-#include "../../board.h"
 
 // DriverLib
-#include <gpio.h>
 #include <adc.h>
-#include <pmm.h>
+
 
 
 /*
@@ -15,22 +14,28 @@
  * from which I derived this code.
  */
 
-void ADC::configureSolarCellVoltagePin() {
+#ifdef OLD
+void ADC::configureExternalPinVoltagePin() {
     GPIO_setAsPeripheralModuleFunctionInputPin(
-            SolarCellVoltagePort,
-            SolarCellVoltagePin,
-            SolarCellVoltagePinFunction);
+            ExternalPinVoltagePort,
+            ExternalPinVoltagePin,
+            ExternalPinVoltagePinFunction);
 }
+#endif
 
 
-// 8-bit resolution
+// For 8-bit resolution
 #define MaxADCRead 255
 
 
-unsigned long ADC::measureVccCentiVolts() {
-    configureForVccMeasure();
 
-    // Wait for VBG internal bandgap reference to stabilize ???
+
+
+unsigned long ADC::measureVccCentiVolts() {
+    ADCConfigure::configureForVccMeasure();
+
+    // Assert VBG internal bandgap reference is ready
+
     unsigned int adcResult = read();
 
     return convertADCReadToCentiVolts(adcResult);
@@ -41,8 +46,10 @@ unsigned long ADC::measureVccCentiVolts() {
  * Compare voltage on solar cell to Vcc
  *
  */
-unsigned int ADC::measureSolarCellProportionToVcc() {
-    configureForSolarCellVoltageProportionToVcc();
+unsigned int ADC::measureExternalPinProportionToVcc() {
+    ADCConfigure::configureForExternalPinVoltageProportionToVcc();
+
+    // !!!! No delay from prior configuration/use of pin, for signal to stabililize?
 
     unsigned int adcResult = read();
 
@@ -52,8 +59,8 @@ unsigned int ADC::measureSolarCellProportionToVcc() {
 
 
 
-unsigned int ADC::measureSolarCellProportionTo1_5VBG() {
-    configureForSolarCellVoltageProportionTo1_5VBG();
+unsigned int ADC::measureExternalPinProportionTo1_5VBG() {
+    ADCConfigure::configureForExternalPinVoltageProportionTo1_5VBG();
 
     unsigned int adcResult = read();
 
@@ -67,8 +74,8 @@ unsigned int ADC::measureSolarCellProportionTo1_5VBG() {
 #ifdef WRONG
 
 
-unsigned long ADC::measureSolarCellCentiVolts() {
-    configureForSolarCellVoltagePin();
+unsigned long ADC::measureExternalPinCentiVolts() {
+    configureForExternalPinVoltagePin();
 
     unsigned int adcResult = read();
 
@@ -120,101 +127,12 @@ unsigned long ADC::convertADCReadToCentiVolts(unsigned int adcResult) {
 
 
 /*
- * Private configuration routines
+ * Methods delegated or private.
  */
+void ADC::configureForExternalPinVoltageProportionToVcc() {  ADCConfigure::configureForExternalPinVoltageProportionToVcc(); }
+
+unsigned int ADC::readExternalPinVoltageProportionToVcc(){ return read(); }
+
+void ADC::releaseExternalPin(){ ADCConfigure::releaseExternalPin(); }
 
 
-void ADC::configureVoltageBandgapReference() {
-    PMM_enableInternalReference();
-
-    // spin
-    while (not PMM_getVariableReferenceVoltageStatus == PMM_REFGEN_READY) ;
-}
-
-
-void ADC::configureCommon() {
-    //Initialize the ADC Module
-    /*
-     * Base Address for the ADC Module
-     * Use internal ADC bit as sample/hold signal to start conversion
-     * USE MODOSC 5MHZ Digital Oscillator as clock source
-     * Use default clock divider of 1
-     */
-    ADC_init(ADC_BASE,
-    ADC_SAMPLEHOLDSOURCE_SC,
-             ADC_CLOCKSOURCE_ADCOSC,
-             ADC_CLOCKDIVIDER_1);
-
-    ADC_enable(ADC_BASE);
-
-    /*
-     * Base Address for the ADC Module
-     * Sample/hold for 16 clock cycles
-     * Do not enable Multiple Sampling
-     */
-    ADC_setupSamplingTimer(ADC_BASE,
-       ADC_CYCLEHOLD_16_CYCLES,
-       ADC_MULTIPLESAMPLESDISABLE);
-
-    // Default read-back format is unsigned
-
-    ADC_setResolution(ADC_BASE,
-            ADC_RESOLUTION_8BIT);
-}
-
-
-
-// See adc.h for these constants for input sources
-//ADC_INPUT_DVSS
-
-void ADC::configureForVccMeasure() {
-    configureVoltageBandgapReference();
-
-    configureCommon();
-
-    /*
-     * To measure Vcc,
-     * sample the 1.5V bandgap reference from the PMM
-     * with AVCC as input reference.
-     * The sampled bandgap varies in proportion to Vcc.
-     */
-    ADC_configureMemory(ADC_BASE,
-                ADC_INPUT_REFVOLTAGE,              // <<<<<<<<
-                ADC_VREFPOS_AVCC,
-                ADC_VREFNEG_AVSS);
-}
-
-
-void ADC::configureForSolarCellVoltageProportionToVcc() {
-    configureCommon();
-
-    //Configure Memory Buffer
-    /*
-     * Base Address for the ADC Module
-     * Use input A7
-     * Use positive reference of AVcc
-     * Use negative reference of AVss
-     */
-    ADC_configureMemory(ADC_BASE,
-            SolarCellVoltagePinADCSelection,              // <<<<<<<< typically ADC_INPUT_A4
-            ADC_VREFPOS_AVCC,
-            ADC_VREFNEG_AVSS);
-}
-
-
-void ADC::configureForSolarCellVoltageProportionTo1_5VBG() {
-    configureVoltageBandgapReference();
-    configureCommon();
-
-    //Configure Memory Buffer
-    /*
-     * Base Address for the ADC Module
-     * Use input A7
-     * Use positive reference of AVBG
-     * Use negative reference of AVss
-     */
-    ADC_configureMemory(ADC_BASE,
-            SolarCellVoltagePinADCSelection,              // <<<<<<<< typically ADC_INPUT_A4
-            ADC_VREFPOS_INT,    // Internal reference VBG
-            ADC_VREFNEG_AVSS);
-}

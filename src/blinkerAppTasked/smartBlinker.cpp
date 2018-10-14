@@ -23,7 +23,7 @@
 
 
 void SmartBlinker::configureGPIO() {
-    LED::configureGPIO();
+    LED::configureLED1();
 }
 
 

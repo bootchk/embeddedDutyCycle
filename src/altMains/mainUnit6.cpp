@@ -1,7 +1,6 @@
 
 /*
- * Unit test of sun detecting.
- * Requires proto hw: solar cell Vcc to pin 1.4/A4
+ * Unit test of LowPowerTimer
  */
 
 #include "../MCU/mcu.h"
@@ -20,7 +19,7 @@ int mainddd() {
 
     // No sleeping
     while (true) {
-        LowPowerTimer::delay(5000);
+        LowPowerTimer::delayTicksOf100uSec(5000);
         Test::blinkForcedGreenLED(1);
     }
 }

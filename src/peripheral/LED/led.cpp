@@ -10,15 +10,22 @@
 
 
 
-void LED::configureGPIO() {
-	GPIO_setAsOutputPin(APP_LED1_PORT,    APP_LED1_PIN);
-	GPIO_setAsOutputPin(APP_LED2_PORT,    APP_LED2_PIN);
+void LED::configureLED1() {
 
-	// OUT register resets to "undefined".
-	// Ensure known state
-	turnOff();
-	turnOffLED2();
+    // Ensure known state BEFORE configuring as out, else might blink
+    // OUT register resets to "undefined".
+    // Ensure known state
+    turnOff();
+
+	GPIO_setAsOutputPin(APP_LED1_PORT,    APP_LED1_PIN);
+
 }
+
+void LED::configureLED2() {
+    turnOffLED2();
+    GPIO_setAsOutputPin(APP_LED2_PORT,    APP_LED2_PIN);
+}
+
 
 
 /*
@@ -33,8 +40,11 @@ void LED::turnOff(){
 }
 
 void LED::turnOffLED2() {
-    // TODO is sourced LED, add sunk
+#ifdef LED_SOURCED
     GPIO_setOutputLowOnPin(APP_LED2_PORT,    APP_LED2_PIN);
+#else
+    GPIO_setOutputHighOnPin(APP_LED2_PORT,    APP_LED2_PIN);
+#endif
 }
 
 

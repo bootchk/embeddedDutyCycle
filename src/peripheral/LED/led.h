@@ -7,7 +7,8 @@
 
 class LED {
 public:
-	static void configureGPIO();
+	static void configureLED1();
+	static void configureLED2();
 
 	static void turnOn();
 	static void turnOff();

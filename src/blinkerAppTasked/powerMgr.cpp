@@ -35,12 +35,12 @@ bool PowerMgr::isSolarCellDark() {
     // This configures a GPIO as side effect.
 
     // Wrong: Less than 0.8 volts
-    /// return ADC::measureSolarCellCentiVolts() < Parameters::MaxVccForDark  ;
+    /// return ADC::measureExternalPinCentiVolts() < Parameters::MaxVccForDark  ;
 
     // Inaccurate: A third of Vcc
-    /// bool result = ADC::measureSolarCellProportionToVcc() < 80;
+    /// bool result = ADC::measureExternalPinProportionToVcc() < 80;
 
-    bool result = ADC::measureSolarCellProportionTo1_5VBG() < Parameters::MaxVscProportionTo1_5ForDark;
+    bool result = ADC::measureExternalPinProportionTo1_5VBG() < Parameters::MaxVscProportionTo1_5ForDark;
     return result;
 }
 
