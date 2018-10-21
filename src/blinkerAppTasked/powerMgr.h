@@ -6,6 +6,4 @@
 class PowerMgr {
 public:
     static bool isPowerForBlinking();
-
-    static bool isSolarCellDark();
 };

@@ -5,7 +5,7 @@
  */
 
 #include "../MCU/mcu.h"
-#include "../blinkerAppTasked/powerMgr.h"
+#include "../peripheral/lightSensor/lightSensor.h"
 #include "../debug/test.h"
 
 
@@ -20,7 +20,7 @@ int mainccc() {
 
     // No sleeping
     while (true) {
-        if (PowerMgr::isSolarCellDark()) {
+        if (LightSensor::isDark()) {
             Test::blinkForcedGreenLED(1);
         }
     }

@@ -9,11 +9,18 @@
 #include <pmm.h>
 
 
-
+/*
+ * Private
+ */
 // TODO hack, not tied to board.h
 void ADCConfigure::releaseExternalPin() {
     // bit clear A0
     SYSCFG2 &= ~BIT0;
+    /*
+     * assert configuration and release of an external GPIO pin for ADC use
+     * does not alter the configuration of the GPIO pin
+     * e.g. if it was GPIO out, it still is
+     */
 }
 
 
@@ -51,7 +58,7 @@ void ADCConfigure::configureCommon() {
      * Do not enable Multiple Sampling
      */
     ADC_setupSamplingTimer(ADC_BASE,
-       ADC_CYCLEHOLD_16_CYCLES,
+       ADC_CYCLEHOLD_4_CYCLES, //ADC_CYCLEHOLD_16_CYCLES, 4, 64
        ADC_MULTIPLESAMPLESDISABLE);
 
     // Default read-back format is unsigned
@@ -61,6 +68,11 @@ void ADCConfigure::configureCommon() {
 }
 
 
+
+
+/*
+ * Public
+ */
 
 // See adc.h for these constants for input sources
 //ADC_INPUT_DVSS

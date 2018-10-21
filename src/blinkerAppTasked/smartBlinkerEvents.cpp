@@ -26,7 +26,7 @@ void SmartBlinker::onSunsetDetected() {
     // We don't record sunset
 
     if (PowerMgr::isPowerForBlinking()) {
-        onPowerLevelGood();
+        onPowerForBlinking();
         // check sunrise much later tonight
         // scheduleLaggedCheckSunriseTask();
         // OR after morning blink period
@@ -44,7 +44,7 @@ void SmartBlinker::onSunsetDetected() {
 
 
 
-void SmartBlinker::onPowerLevelGood() {
+void SmartBlinker::onPowerForBlinking() {
     BlinkPeriod::initForEveningBlinking();
     scheduleFirstEveningBlinkTask();
 }

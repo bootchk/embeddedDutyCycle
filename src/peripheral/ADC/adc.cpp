@@ -31,14 +31,14 @@ void ADC::configureExternalPinVoltagePin() {
 
 
 
-unsigned long ADC::measureVccCentiVolts() {
+unsigned int ADC::measureVccCentiVolts() {
     ADCConfigure::configureForVccMeasure();
 
     // Assert VBG internal bandgap reference is ready
 
     unsigned int adcResult = read();
 
-    return convertADCReadToCentiVolts(adcResult);
+    return convert8BitADCReadToCentiVolts(adcResult);
 }
 
 
@@ -101,26 +101,30 @@ unsigned int ADC::read()
 }
 
 
-
-unsigned long ADC::convertADCReadToCentiVolts(unsigned int adcResult) {
-    /*
-     * DVcc is voltage on the digital Vcc pin (versus analog Vcc pin?)
-     * In other words, the voltage on the Vcc network in the system.
-     *
-     * To measure Vcc, ADC read 1.5V bandgap with reference DVcc:
-     * To calculate DVCC with 10-bit resolution, the following float equation is used
-     * DVCC = (1023 * 1.5) / adcResult
-     *
-     * The following equation is modified to use only integers instead of float.
-     * (A time optimization.)
-     * The result is in hundreths of volts; needs to be divided by 100 to obtain units volts.
-     * DVCC = (1023 * 150) / adcResult
-     *
-     * For 10-bit resolution need a long to hold 1023*150)
-     * For 8-bit resolution, further optimizations possible (not need a long.)
-     */
+/*
+ * DVcc is voltage on the digital Vcc pin (versus analog Vcc pin?)
+ * In other words, the voltage on the Vcc network in the system.
+ *
+ * To measure Vcc, ADC read 1.5V bandgap with reference DVcc:
+ * To calculate DVCC with 10-bit resolution, use equation: result/1023 = 1.5/DVcc.
+ * That equation rearranges to DVCC = (1023 * 1.5) / adcResult.
+ *
+ * That equation modified to use only integers instead of float. (A time optimization.)
+ * The result is in hundreths of volts; needs to be divided by 100 to obtain units volts.
+ * DVCC = (1023 * 150) / adcResult
+ *
+ * For 10-bit resolution need a long (32 bits, max 4G) to hold 1023*150)
+ * For 8-bit resolution, need int (16 bits, max 65k) to hold 255*150=38,250
+ */
+unsigned long ADC::convert10BitADCReadToCentiVolts(unsigned int adcResult) {
     unsigned long result = ((unsigned long) MaxADCRead * (unsigned long) 150)
             / (unsigned long) (adcResult);
+    return result;
+}
+
+unsigned int ADC::convert8BitADCReadToCentiVolts(unsigned int adcResult) {
+    unsigned int result = ((unsigned int) MaxADCRead * (unsigned int) 150)
+            / adcResult;
     return result;
 }
 

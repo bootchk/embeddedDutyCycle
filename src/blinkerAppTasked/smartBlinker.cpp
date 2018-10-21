@@ -1,5 +1,4 @@
 
-//#include <src/blinkerAppTasked/blinkPeriod.h>
 #include <src/blinkerAppTasked/day.h>
 #include <src/blinkerAppTasked/smartBlinker.h>
 #include <src/blinkerAppTasked/powerMgr.h>
@@ -9,8 +8,8 @@
 #include "../OS/taskScheduler.h"
 
 // implementation
-#include "../peripheral/ADC/adc.h"
 #include "../peripheral/LED/led.h"
+#include "../peripheral/lightSensor/lightSensor.h"
 
 
 #include "../debug/myAssert.h"
@@ -127,12 +126,12 @@ EpochTime SmartBlinker::timeOfMorningBlinkPeriodStart() {
 
 
 bool SmartBlinker::isNight() {
-#ifdef SOLAR_CELL_PRESENT
-    /// Normal code
-        return PowerMgr::isSolarCellDark();
-#else
-    /// For integration testing
+#ifdef INTEGRATION_TESTING
     return true;
+#else
+    /// Normal code
+    return LightSensor::isDark();
+    // OBSOLETE: PowerMgr::isSolarCellDark();
 #endif
 
 

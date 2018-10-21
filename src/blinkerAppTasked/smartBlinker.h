@@ -43,7 +43,9 @@ public:
      */
     static void onSunriseDetected();
     static void onSunsetDetected();
-    static void onPowerLevelGood();
+
+    static void onPowerForBlinking();
+
     static void onEveningBlinkPeriodOver();
     static void onMorningBlinkPeriodOver();
 

@@ -50,12 +50,13 @@ class ADC {
      */
     static unsigned int read();
 
-    static unsigned long convertADCReadToCentiVolts(unsigned int);
+    static unsigned long convert10BitADCReadToCentiVolts(unsigned int);
+    static unsigned int convert8BitADCReadToCentiVolts(unsigned int);
 
 
 public:
     // Does not require configure or release GPIO pin
-    static unsigned long measureVccCentiVolts();
+    static unsigned int measureVccCentiVolts();
 
     // May hijack external pin, and may not be accurate in that case
     static unsigned int measureExternalPinProportionTo1_5VBG();
