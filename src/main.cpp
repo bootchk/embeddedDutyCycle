@@ -75,7 +75,7 @@ void delayForStartup()
  */
 
 
-int main(void)
+int main888(void)
 {
     /*
      * Conditions on every reset:
