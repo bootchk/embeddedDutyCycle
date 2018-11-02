@@ -75,7 +75,7 @@ void delayForStartup()
  */
 
 
-int main888(void)
+int main(void)
 {
     /*
      * Conditions on every reset:
@@ -97,6 +97,7 @@ int main888(void)
         ///delayForStartup();
         ///Main::onResetPreamble();
         PinFunction::setUsedOutPinValues();
+        PinFunction::configureUsedPins();
         PinFunction::configureUnusedPinsLowPower();
 
 #ifdef TRAP_WAKE
@@ -127,6 +128,7 @@ int main888(void)
          * BEFORE delay for Startup
          */
         PinFunction::setUsedOutPinValues();
+        PinFunction::configureUsedPins();
         PinFunction::configureUnusedPinsLowPower();
 
         // When solar powered, must sleep until power is adequate.

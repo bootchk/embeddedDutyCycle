@@ -4,31 +4,7 @@
 // DriverLib
 #include <gpio.h>
 
-
-
-
-
-/*
- * What pins are used.
- * Two GPIO pins, one for each side of LED.
- * Must not conflict with other uses.
- */
-#define NSideLEDPort GPIO_PORT_P1
-#define NSideLEDPin  GPIO_PIN0
-
-// P1.1 is green led on launchpad
-
-// P side high to light LED
-#define PSideLEDPort GPIO_PORT_P1
-#define PSideLEDPin  GPIO_PIN2
-
-
-
-namespace {
-
-}
-
-
+#include "../../board.h"
 
 
 /*

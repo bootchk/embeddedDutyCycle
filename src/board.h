@@ -28,7 +28,6 @@
  * The prototype on launchpad has sourced LED
  * The prototype on my PCB has sunk LED
  */
-///#define LED_SOURCED
 
 /*
  *
@@ -120,7 +119,8 @@
 
 #endif
 
-
+#ifdef OBSOLETE
+// this didn't work because it powered mcu through the analog pin
 /*
  * Pin to read solar cell voltage as light meter i.e. daylight detector
  */
@@ -134,6 +134,8 @@
 #define ExternalPinVoltagePin  GPIO_PIN0
 #define ExternalPinVoltagePinFunction GPIO_PRIMARY_MODULE_FUNCTION
 #define ExternalPinVoltagePinADCSelection ADC_INPUT_A0
+#endif
+
 
 /*
  * LED configuration
@@ -141,7 +143,11 @@
 
 /*
  * Definitions for MSP-EXP430FR2433: two LED's
+ *
+ * !!! These are only for class LED, where LED is driven from a single side.
+ * See also LEDAndLightSensor class
  */
+
 
 // On PCB, LED is sunk
 // TODO for prototype on launchpad, led is sourced
@@ -154,3 +160,26 @@
 // P1.1 green
 #define APP_LED2_PORT     GPIO_PORT_P1
 #define APP_LED2_PIN      GPIO_PIN1
+
+
+
+/*
+ * LEDAndLightSensor configuration
+ */
+/*
+ * For rev 1 board hacked, LEDP 1.0, LEDN 1.4
+ */
+/*
+ * What pins are used.
+ * Two GPIO pins, one for each side of LED.
+ * Must not conflict with other uses.
+ */
+#define NSideLEDPort GPIO_PORT_P1
+#define NSideLEDPin  GPIO_PIN4
+
+// P1.1 is green led on launchpad
+
+// P side high to light LED
+#define PSideLEDPort GPIO_PORT_P1
+#define PSideLEDPin  GPIO_PIN0
+

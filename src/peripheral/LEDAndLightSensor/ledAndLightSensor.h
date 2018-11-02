@@ -4,6 +4,8 @@
  *
  * pSideLED  ->|-  nSideLED
  *
+ * Forward biased (lit) has pSide high, nSide low
+ *
  * States:
  *    Unconfigured
  *    Off       LED dark            low  pSideLED  ->|-  nSideLED low

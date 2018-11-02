@@ -6,7 +6,7 @@
  */
 
 #include "../MCU/mcu.h"
-#include "../debug/test.h"
+//#include "../debug/test.h"
 
 #include "../peripheral/LEDAndLightSensor/ledAndLightSensor.h"
 
@@ -79,7 +79,8 @@ void sampleAndBlink2() {
     // greater value is more light
     if (sample > 90) // and sample2 < 90)
     {
-        Test::blinkForcedGreenLED(1);
+        ///Test::blinkForcedGreenLED(1);
+        blinkAmber2();
     }
 }
 
@@ -94,15 +95,16 @@ void sampleAndBlink2() {
  * - green LED should blink if LED illuminated by night dark
  */
 
-int main() {
+int main888() {
 
     MCU::stopWatchDog();
 
-    Test::blinkForcedGreenLED(1);
-
-    // assert LPM5 is unlocked
+    ///Test::blinkForcedGreenLED(1);
+    // assert LPM5 is unlocked because blinkForced unlocked it.
 
     LEDAndLightSensor::toOffFromUnconfigured();
+
+    MCU::unlockMCUFromSleep();
 
     // No sleeping
     while (true) {

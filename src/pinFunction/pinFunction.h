@@ -20,6 +20,11 @@ public:
 	static bool isAlarmPinHigh();
 
 	/*
+	 *
+	 */
+	static void configureUsedPins();
+
+	/*
 	 * Configure unused and unconnected pins as low power.
 	 *
 	 * On most platforms, outputs.

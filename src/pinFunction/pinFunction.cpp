@@ -76,12 +76,6 @@ void PinFunction::configureUnusedPinsLowPower() {
      * since configuring connected pins as output can trigger connected devices.
      */
 
-
-    // TODO these should be in another routine configureUsedPins
-    // Launch pad LED pins 1.0 and 1.1 (out)
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN1);
-
     // Slave select (out)
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN2);
     // P1.3 Alarm (in)
@@ -119,11 +113,31 @@ void PinFunction::configureUnusedPinsLowPower() {
  */
 void PinFunction::setUsedOutPinValues() {
     // app led (also test led) low
+#ifdef LAUNCHPAD_BOARD
     // TODO call driver functions for sink/source
     GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN0);
     // Test pin (green led) low
     GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN1);
     // TODO chip select
+#else
+    // TODO depend on LEDAndLightSensor method??
+    // both LED pins lows
+    GPIO_setOutputLowOnPin(NSideLEDPort, NSideLEDPin);
+    GPIO_setOutputLowOnPin(PSideLEDPort, PSideLEDPin);
+#endif
+
+}
+
+void PinFunction::configureUsedPins() {
+#ifdef LAUNCHPAD_BOARD
+    // Launch pad LED pins 1.0 and 1.1 (out)
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
+    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN1);
+#else
+    // both LED pins initially output
+    GPIO_setAsOutputPin(NSideLEDPort, NSideLEDPin);
+    GPIO_setAsOutputPin(PSideLEDPort, PSideLEDPin);
+#endif
 }
 
 

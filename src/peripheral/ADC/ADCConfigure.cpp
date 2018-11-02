@@ -12,6 +12,9 @@
 /*
  * Private
  */
+
+#ifdef OBSOLETE
+// didn't work, reverse powered mcu through analog pin
 // TODO hack, not tied to board.h
 void ADCConfigure::releaseExternalPin() {
     // bit clear A0
@@ -22,7 +25,7 @@ void ADCConfigure::releaseExternalPin() {
      * e.g. if it was GPIO out, it still is
      */
 }
-
+#endif
 
 
 void ADCConfigure::waitForVoltageBandgapReference() {
@@ -100,6 +103,7 @@ void ADCConfigure::configureForVccMeasure() {
 }
 
 
+#ifdef OBSOLETE
 void ADCConfigure::configureForExternalPinVoltageProportionToVcc() {
     configureCommon();
 
@@ -135,3 +139,4 @@ void ADCConfigure::configureForExternalPinVoltageProportionTo1_5VBG() {
 
     waitForVoltageBandgapReference();
 }
+#endif

@@ -2,13 +2,17 @@
 #include "lightSensor.h"
 
 #include "../ADC/adc.h"
+#include "../LEDAndLightSensor/ledAndLightSensor.h"
 
 
 
 
 namespace {
 
-unsigned int measureLightFromLEDAsSolarCell() {
+// These are unreliable, determined through experimentation.
+// Evidently LED as solar cell is high impedance, ADC is low impedance
+
+unsigned int measureLightFromLEDAsSolarCellUsingADC() {
     unsigned int result;
 
     // Measure light using LED on P1.0
@@ -20,6 +24,19 @@ unsigned int measureLightFromLEDAsSolarCell() {
    return result;
    // !!! P1.0 can't be used as LED until it is reconfigured.
 }
+
+
+bool isDarkFromLEDLightSensorUsingADC() {
+    unsigned int lightSample = measureLightFromLEDAsSolarCellUsingADC();
+    // TODO parameters.h
+    return lightSample < 90;
+}
+
+
+bool isDarkFromLEDLightSensorUsingReverseBias() {
+    return LEDAndLightSensor::isNighttimeDark();
+}
+
 
 }
 
@@ -41,10 +58,8 @@ unsigned int measureLightFromLEDAsSolarCell() {
  * thereby draining all the solar cell power indefinitely.
  */
 bool LightSensor::isDark() {
-
-    unsigned int lightSample = measureLightFromLEDAsSolarCell();
-    // TODO parameters.h
-    return lightSample < 90;
+    // return isDarkFromLEDLightSensorUsingADC();
+    return isDarkFromLEDLightSensorUsingReverseBias();
 }
 
 
