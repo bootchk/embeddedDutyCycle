@@ -4,7 +4,7 @@
 #include "../PMM/powerMgtModule.h"
 #include "../alarmClock/RTC/realTimeClock.h"  // Avoid clash with rtc.h"
 //#include "../AB08xx/bridge.h"	    //  hides SPI
-#include "../pinFunction/pinFunction.h"    // hides GPIO functions
+#include "../pinFunction/alarmPin.h"    // hides GPIO functions
 
 
 
@@ -55,14 +55,14 @@ void Alarm::clearAlarmOnRTCOrReset() {
 
 
 void Alarm::clearAlarmOnMCU() {
-	PinFunction::clearAlarmInterruptOnPin();
+	AlarmPin::clearInterrupt();
 }
 
 
 bool Alarm::isAlarmInterruptSignalHigh() {
 	// requires pin configured as input
 
-	return PinFunction::isAlarmPinHigh();
+	return AlarmPin::isHigh();
 }
 
 
@@ -81,7 +81,7 @@ bool Alarm::setAlarmDurationSecondsFromNow(Duration duration) {
 	result = RTC::setAlarmDuration(duration);
 
 	// Clear interrupt flag and enable at last moment
-	PinFunction::enableAlarmInterrupt();
+	AlarmPin::enableInterrupt();
 
 	// ensure alarm is set or result is false
 	return result;
@@ -97,7 +97,7 @@ bool Alarm::setAlarmToTime(EpochTime time) {
     result = RTC::setAlarmTime(time);
 
     // Clear interrupt flag and enable at last moment
-    PinFunction::enableAlarmInterrupt();
+    AlarmPin::enableInterrupt();
 
     // ensure alarm is set or result is false
     return result;

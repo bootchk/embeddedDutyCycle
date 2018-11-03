@@ -46,7 +46,7 @@ void SPIPins::deselectSPISlave(){
 
 
 
-// Private
+// Public because RTC is always alive so pin must remain configured during sleep
 
 void SPIPins::configureSelectSPIPin() {
     /*
@@ -57,6 +57,8 @@ void SPIPins::configureSelectSPIPin() {
     SPIPins::deselectSPISlave();
     GPIO_setAsOutputPin(RTCSelectPort, RTCSelectPin);
 }
+
+// Private
 
 
 void SPIPins::configureDataSPIPins() {

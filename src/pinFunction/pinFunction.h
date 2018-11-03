@@ -3,25 +3,19 @@
  * Abstracts functions of GPIO pins.
  * Hides implementation: TI MSPWare Driverlib
  *
- * Two pins:
+ * Pin functions:
  * - alarm interrupt from RTC
  * - chip (slave) select for SPI to RTC
+ * - LED / light sensor
  *
- * Three other pins are used by SPI.
+ * Three other pins are used by SPI, as needed
  */
+
 class PinFunction {
 public:
+    static void configure();
 
-	static void configureAlarmPinPullupLoToHiInterrupt();
-	static bool isConfiguredAlarmPin();
-	static void enableAlarmInterrupt();
-	static void clearAlarmInterruptOnPin();
-	static bool isAlarmInterruptClear();
-	static bool isAlarmPinHigh();
-
-	/*
-	 *
-	 */
+private:
 	static void configureUsedPins();
 
 	/*
@@ -34,9 +28,4 @@ public:
 	 * Does not ensure determinate output values.
 	 */
 	static void configureUnusedPinsLowPower();
-
-	/*
-	 * So they don't blink while starting
-	 */
-	static void setUsedOutPinValues();
 };

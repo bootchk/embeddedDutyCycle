@@ -11,7 +11,7 @@
 #include <src/debug/test.h>
 #include <src/debug/myAssert.h>
 
-#include "pinFunction/pinFunction.h"
+//#include "pinFunction/pinFunction.h"
 
 /// #include "myAssert.h"
 
@@ -58,7 +58,7 @@ bool Main::isResetAwakeFromSleep() {
 
 
 
-
+#ifdef OBSOLETE
 void Main::onResetPreamble() {
     // !!! not require PMM::isLockedLPM5()
 
@@ -71,7 +71,7 @@ void Main::onResetPreamble() {
     //PMM::unlockLPM5();
 #endif
 }
-
+#endif
 
 
 void Main::onWakeFromLPM() {

@@ -4,7 +4,7 @@
 #include "../PMM/powerMgtModule.h"
 #include "../alarmClock/RTC/realTimeClock.h"  // Avoid clash with rtc.h"
 #include "../alarmClock/AB08xx/bridge.h"       //  hides SPI
-#include "../pinFunction/pinFunction.h"    // hides GPIO functions
+#include "../pinFunction/alarmPin.h"    // hides GPIO functions
 
 
 #include <src/debug/myAssert.h>
@@ -100,11 +100,11 @@ void Alarm::configureMcuAlarmInterface() {
      * Pulse width is relatively long (1/4 second)
      * Use trailing edge, low-to-high
      */
-    PinFunction::configureAlarmPinPullupLoToHiInterrupt();
+    AlarmPin::configurePullupLoToHiInterrupt();
 }
 
 bool Alarm::isConfiguredMcuAlarmInterface() {
-    return PinFunction::isConfiguredAlarmPin();
+    return AlarmPin::isConfigured();
 }
 
 

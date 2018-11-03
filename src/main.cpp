@@ -96,9 +96,7 @@ int main(void)
 
         ///delayForStartup();
         ///Main::onResetPreamble();
-        PinFunction::setUsedOutPinValues();
-        PinFunction::configureUsedPins();
-        PinFunction::configureUnusedPinsLowPower();
+        PinFunction::configure();
 
 #ifdef TRAP_WAKE
         // Trap to allow debugger to synch when using "Free Run" ?
@@ -127,9 +125,7 @@ int main(void)
          * and set output values (because they default to LED on)
          * BEFORE delay for Startup
          */
-        PinFunction::setUsedOutPinValues();
-        PinFunction::configureUsedPins();
-        PinFunction::configureUnusedPinsLowPower();
+        PinFunction::configure();
 
         // When solar powered, must sleep until power is adequate.
         SolarPower::sleepUntilPowerReserve();
