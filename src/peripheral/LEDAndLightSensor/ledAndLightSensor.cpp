@@ -6,6 +6,8 @@
 
 #include "../../board.h"
 
+#include "../../blinkerAppTasked/parameters.h"
+
 
 /*
  * private
@@ -94,8 +96,16 @@ unsigned int LEDAndLightSensor::measureLight() {
 }
 
 
-// TODO
-bool LEDAndLightSensor::isNighttimeDark() {
 
-    return false;
+bool LEDAndLightSensor::isNighttimeDark() {
+    unsigned int sample;
+
+    sample = measureLight();
+
+    /*
+     * Greater value is dark.
+     * Discharge is through the LED as solar cell generated current.
+     * That current is greater in illumination, and discharges quickly, in fewer cycles of loop.
+     */
+    return (sample > Parameters::MinCyclesInLightToDischargeLEDCapacitance );
 }

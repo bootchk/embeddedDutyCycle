@@ -17,10 +17,6 @@
 
 
 
-
-
-
-
 class Parameters {
 public:
 
@@ -66,13 +62,39 @@ public:
 #endif
 
 
+
+/*
+ * Count of loop cycles discharging reversed biased LED to sense light.
+ */
+static const unsigned int MinCyclesInLightToDischargeLEDCapacitance = 90;
+
+
+
 /*
  * Voltages.
  * Depends on:
  * - power supply Vccmax (3.3V on Launchpad, 3.6V on PCB)
  * - sunlight detector
  */
+
+
+/*
+ * Vcc voltage indicates full charge on storage.
+ * Required for LED blinking function.
+ */
 static const unsigned int MinVccForBlinking = 300;  // centiVolts, 3V
+
+
+/*
+ * Vcc voltage indicates a reserve of power above mcu Vmin (1.8V)
+ * Required to finish booting and start app.
+ */
+static const unsigned int MinVccForStarting = 190; // centiVolts 1.9V
+};
+
+
+
+
 
 #ifdef SOLAR_CELL4_2V
 // solar cell KXOB22-01x8
@@ -91,10 +113,3 @@ static const unsigned int MaxVscProportionTo1_5ForDark = 128;  // centiVolts, 0.
 static const unsigned int MaxVscProportionTo1_5ForDark = 30;  // centiVolts, 0.3V
 
 #endif
-
-
-/*
- * Voltage that indicates a reserve of power above Vmin
- */
-static const unsigned int MinVccForStarting = 190; // centiVolts 1.9V
-};
