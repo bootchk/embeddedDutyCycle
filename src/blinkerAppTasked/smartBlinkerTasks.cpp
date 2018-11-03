@@ -1,7 +1,7 @@
 
 #include "smartBlinker.h"
 
-#include "../peripheral/LED/led.h"
+#include "blinker.h"
 #include <src/blinkerAppTasked/blinkPeriod.h>
 
 #include "../debug/myAssert.h"
@@ -34,7 +34,7 @@ void SmartBlinker::checkSunsetTask() {
 
 
 void SmartBlinker::blinkTask() {
-    LED::blink();
+    Blinker::blink();
 
     ///TestMain::blinkForcedGreenLED(5);
 
