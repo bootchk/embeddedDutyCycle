@@ -9,9 +9,10 @@
 class PMM {
 public:
     /*
-     * !!! POR is a named event in mcu state diagram, different from power-on reset which is called BOR
+     * !!! BOR is a named event in mcu state diagram, equivalent to power-on reset
+     * !!! POR is a distinct event, not equivalent to power-on reset.
      */
-    static void triggerSoftwarePORReset();
+    static void triggerSoftwareBORReset();
 
 	/*
 	 * Configure PMM for least power in sleep.

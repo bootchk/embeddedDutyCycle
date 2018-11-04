@@ -79,7 +79,7 @@ void SoC::disableFRAMWriteProtect() {
  */
 void SoC::clearIsResetAWakeFromSleep() { PMM::clearIsResetAWakeFromSleep(); }
 void SoC::unlockMCUFromSleep(){ PMM::unlockLPM5(); }
-void SoC::triggerSoftwareReset() { PMM::triggerSoftwarePORReset(); }
+void SoC::triggerSoftwareReset() { PMM::triggerSoftwareBORReset(); }
 
 /*
  * Delegate to ResetReason

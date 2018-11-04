@@ -7,6 +7,7 @@
 #include "debug.h"
 
 #include "../peripheral/LEDAndLightSensor/ledAndLightSensor.h"
+#include "../SoC/SoC.h"
 
 
 // On production PCB
@@ -83,7 +84,13 @@ void Fatal::reboot() {
     LEDAndLightSensor::toOnFromOff();
     __delay_cycles(500000);
 
-    //
+    SoC::triggerSoftwareReset();
+    /*
+     * Continuation via reset vector.
+     * That means C startup code, main() etc.
+     * But reset reason will be SYSRSTIV_DOBOR.
+     * main() must be equipped to handle reset properly, usually same as reason SYSRSTIV_BOR, power up.
+     */
 }
 
 

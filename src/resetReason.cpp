@@ -58,8 +58,8 @@ bool ResetReason::isResetAWakeFromSleep() {
 
     // Expected
     case SYSRSTIV_BOR:     // power up
-    case SYSRSTIV_RSTNMI:  // RST/NMI pin reset e.g. from debug prove
-        /// Won't work, LPM5 locked TestMain::blinkGreenLED(3);
+    case SYSRSTIV_RSTNMI:  // RST/NMI pin reset e.g. from debug probe
+    case SYSRSTIV_DOBOR:   // software initiated
       break;
 
     // Security. Accessing BSL that is protected. Probably errant
@@ -72,7 +72,7 @@ bool ResetReason::isResetAWakeFromSleep() {
      case SYSRSTIV_WDTTO:
 
     // Software initiated
-    case SYSRSTIV_DOBOR:
+    // But our software never initiates.
     case SYSRSTIV_DOPOR:
 
     // Faults, abnormal e.g. "bus error"

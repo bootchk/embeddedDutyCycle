@@ -58,6 +58,7 @@ void PMM::clearAllResetInterruptFlags() {
     PMM_clearInterrupt(PMM_ALL);
 }
 
-void PMM::triggerSoftwarePORReset() {
+void PMM::triggerSoftwareBORReset() {
+    // !!! BOR is distinct from POR.  BOR is equivalent to power up reset
     PMM_trigBOR();
 }
