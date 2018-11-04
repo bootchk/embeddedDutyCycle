@@ -33,6 +33,7 @@ public:
     /*
      *
      */
+    static void reboot();
     static void fatalReset();
     static void fatalAssert(unsigned int);
 };

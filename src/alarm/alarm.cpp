@@ -1,14 +1,12 @@
 
 #include "alarm.h"
 
-#include "../PMM/powerMgtModule.h"
 #include "../alarmClock/RTC/realTimeClock.h"  // Avoid clash with rtc.h"
 //#include "../AB08xx/bridge.h"	    //  hides SPI
 #include "../pinFunction/alarmPin.h"    // hides GPIO functions
 
-
-
 #include <src/debug/myAssert.h>
+#include <src/debug/softFault.h>
 
 
 
@@ -47,7 +45,7 @@ bool Alarm::clearAlarmOnRTC() {
 void Alarm::clearAlarmOnRTCOrReset() {
 	if (!Alarm::clearAlarmOnRTC())  {
 		// RTC may be continuing to generate interrupt signal on Fout/nIRQ
-		PMM::failClearAlarm();
+		SoftFault::failClearAlarm();
 	}
 	// ensure RTC interrupt flag is clear
 	// ensure interrupt signal net is high

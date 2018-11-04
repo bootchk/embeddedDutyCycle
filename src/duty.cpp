@@ -2,7 +2,8 @@
 #include "duty.h"
 
 #include "alarm/alarm.h"
-#include "PMM/powerMgtModule.h"	// Software reset
+
+#include "debug/softFault.h"
 
 
 
@@ -56,7 +57,7 @@ void Duty::setDurationAlarmOrReset(Duration duration) {
 	 * Fail means system might sleep forever, so only adequate response is reset mcu
 	 */
 	if (!Alarm::setAlarmDurationSecondsFromNow(duration)) {
-		PMM::failSetAlarm();
+		SoftFault::failSetAlarm();
 	}
 }
 
@@ -65,7 +66,7 @@ void Duty::setTimeAlarmOrReset(EpochTime time) {
      * Fail means system might sleep forever, so only adequate response is reset mcu
      */
     if (!Alarm::setAlarmToTime(time)) {
-        PMM::failSetAlarm();
+        SoftFault::failSetAlarm();
     }
 }
 

@@ -40,12 +40,4 @@ public:
 	 * Clear all flags for any reset reasons.
 	 */
 	static void clearAllResetInterruptFlags();
-
-
-	/*
-	 * Fatal exceptions requiring software BOR.
-	 */
-	static void failSetAlarm();
-	static void failClearAlarm();
-	static void failReadTime();
 };

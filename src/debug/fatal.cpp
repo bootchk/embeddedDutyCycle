@@ -12,7 +12,10 @@
 // On production PCB
 #define FATAL_PRODUCTION 1
 
-// Testing on launchpad
+/*
+ * Testing on launchpad.
+ * Enter a tight loop with green or red led blinking so we can debug.
+ */
 //#define FATAL_TESTING 1
 
 
@@ -75,10 +78,22 @@ void Fatal::ensureRedLEDLightable() {
 }
 
 
+void Fatal::reboot() {
+    // LED on briefly, you may fail to see
+    LEDAndLightSensor::toOnFromOff();
+    __delay_cycles(500000);
+
+    //
+}
+
+
+
 void Fatal::fatalReset() {
-    // In testing, this warbles green LED.
-    // In production, this soft resets
+#ifdef FATAL_TESTING
     Fatal::warbleGreenLEDForever();
+#elif defined(FATAL_PRODUCTION)
+    reboot();
+#endif
 }
 
 void Fatal::fatalAssert(unsigned int line) {
@@ -87,12 +102,7 @@ void Fatal::fatalAssert(unsigned int line) {
 #ifdef FATAL_TESTING
     Fatal::warbleRedLEDForever();
 #elif defined(FATAL_PRODUCTION)
-    // LED on briefly, you may fail to see
-    LEDAndLightSensor::toOnFromOff();
-    __delay_cycles(500000);
-
-    //
-
+    reboot();
 #endif
 
 }

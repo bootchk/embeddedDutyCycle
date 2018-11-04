@@ -8,7 +8,8 @@
 #include "../AB08xx/bridge.h"
 #include "realTimeClock.h"
 #include "timeConverter.h"
-#include "../../PMM/powerMgtModule.h"
+
+#include <src/debug/softFault.h>
 
 // TODO circular includes
 #include "../epochClock/epochClock.h"
@@ -50,7 +51,7 @@ EpochTime RTC::timeNowOrReset() {
      * If RTC has failed, Bridge reads time as all zeroes.
      */
     if (not TimeConverter::isValidRTCTime(now)) {
-        PMM::failReadTime();
+        SoftFault::failReadTime();
     }
 
     return TimeConverter::convertRTCTimeToEpochTime(now);
