@@ -29,4 +29,10 @@ public:
      * Light green LED.  Does not return.
      */
     static void abortGreenLED();
+
+    /*
+     *
+     */
+    static void fatalReset();
+    static void fatalAssert(unsigned int);
 };

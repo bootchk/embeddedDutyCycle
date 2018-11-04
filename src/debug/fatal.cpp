@@ -4,6 +4,21 @@
 
 #include "../PMM/powerMgtModule.h"  // unlock LPM4.5
 
+#include "debug.h"
+
+#include "../peripheral/LEDAndLightSensor/ledAndLightSensor.h"
+
+
+// On production PCB
+#define FATAL_PRODUCTION 1
+
+// Testing on launchpad
+//#define FATAL_TESTING 1
+
+
+
+
+
 /*
  * Terminal routines: never return.
  * To indicate faults.
@@ -57,4 +72,27 @@ void Fatal::ensureRedLEDLightable() {
 
     // GPIO configured out
     P1DIR |= BIT0;
+}
+
+
+void Fatal::fatalReset() {
+    // In testing, this warbles green LED.
+    // In production, this soft resets
+    Fatal::warbleGreenLEDForever();
+}
+
+void Fatal::fatalAssert(unsigned int line) {
+    Debug::persistLineNumber(line);
+
+#ifdef FATAL_TESTING
+    Fatal::warbleRedLEDForever();
+#elif defined(FATAL_PRODUCTION)
+    // LED on briefly, you may fail to see
+    LEDAndLightSensor::toOnFromOff();
+    __delay_cycles(500000);
+
+    //
+
+#endif
+
 }

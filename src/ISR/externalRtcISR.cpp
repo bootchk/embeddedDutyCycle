@@ -28,7 +28,7 @@
 
 
 /*
- * ISR for RTC alarm interrupt.
+ * ISR for external RTC alarm interrupt.
  *
  * If alarm pin is Px, need ISR for Port x
  *

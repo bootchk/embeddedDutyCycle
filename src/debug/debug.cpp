@@ -1,7 +1,7 @@
 
+#include <src/SoC/SoC.h>
 #include "debug.h"
 
-#include "../MCU/mcu.h"
 /*
  * Not a trail, just the last mark.
  */
@@ -18,7 +18,7 @@ unsigned int assertLineNumber = 0;
 void Debug::leaveCrumb(unsigned int mark) {
     // ensure can write FRAM even after reset
     // Enable FRAM write
-    MCU::disableFRAMWriteProtect();
+    SoC::disableFRAMWriteProtect();
 
     breadCrumbTrail = mark;
 }
@@ -26,7 +26,7 @@ void Debug::leaveCrumb(unsigned int mark) {
 void Debug::persistLineNumber(unsigned int mark) {
     // ensure can write FRAM even after reset
     // Enable FRAM write
-    MCU::disableFRAMWriteProtect();
+    SoC::disableFRAMWriteProtect();
 
     assertLineNumber = mark;
 }

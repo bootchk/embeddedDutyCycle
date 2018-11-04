@@ -3,7 +3,7 @@
  * Unit test of LowPowerTimer
  */
 
-#include "../MCU/mcu.h"
+#include <src/SoC/SoC.h>
 #include "../debug/test.h"
 #include "../timer/timer.h"
 
@@ -11,7 +11,7 @@
 
 int mainddd() {
 
-    MCU::stopWatchDog();
+    SoC::stopWatchDog();
 
     /*
      * All routines below configure their own pins.

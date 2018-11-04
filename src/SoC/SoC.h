@@ -5,13 +5,16 @@
  * bus faults
  * watchdog
  *
- * TODO misnamed.
- * These deal with the SoC, not just the mcu.
+ * These deal with the SoC (system on chip) not just the mcu.
  * The watchdog, PMM, etc are not part of the mcu.
  */
 
-class MCU {
+class SoC {
 public:
+    /*
+     * Stop watchdog, which is enabled on reset.
+     * Thus usually during boot, this is called early.
+     */
     static void stopWatchDog();
 
 	static void enterLPM4orLPM4_5();
@@ -52,4 +55,7 @@ public:
      * Once unlocked, you can't tell whether reset was from sleep.
      */
     static void unlockMCUFromSleep();
+
+
+    static void triggerSoftwareReset();
 };

@@ -5,7 +5,7 @@
  * in board.h, temporarily configure ADC pin to A0 instead of A4
  */
 
-#include "../MCU/mcu.h"
+#include <src/SoC/SoC.h>
 #include "../debug/test.h"
 #include "../timer/timer.h"
 #include "../peripheral/ADC/adc.h"
@@ -84,7 +84,7 @@ void spin10mSec() {
 
 int main777() {
 
-    MCU::stopWatchDog();
+    SoC::stopWatchDog();
 
     Test::blinkForcedGreenLED(1);
 

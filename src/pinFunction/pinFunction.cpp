@@ -44,6 +44,10 @@ void PinFunction::configureUnusedPinsLowPower() {
 
     // P1.0 red LED or LEDP
     // P1.1 not used or green LED or LEDPWM
+
+    // TODO set known OUT
+    // hack, if it is launchpad, dark the sourced green led
+    GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN1);
     GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN1);
     // P1.2 SPI Slave select (out)
     // P1.3 Alarm (in)

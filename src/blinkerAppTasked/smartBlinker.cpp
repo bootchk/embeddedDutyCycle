@@ -22,8 +22,14 @@
 
 
 void SmartBlinker::configureGPIO() {
-    LED::configureLED1();
+    /*
+     * Since now we are using an LED also light sensor
+     * already configured, do nothing here.
+     */
+    // TODO, move configuration here, to make the framework whole
+    //LED::configureLED1();
 }
+
 
 
 
@@ -129,10 +135,6 @@ bool SmartBlinker::isNight() {
 #ifdef INTEGRATION_TESTING
     return true;
 #else
-    /// Normal code
     return LightSensor::isDark();
-    // OBSOLETE: PowerMgr::isSolarCellDark();
 #endif
-
-
 }

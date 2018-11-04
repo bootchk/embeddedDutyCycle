@@ -1,10 +1,8 @@
 
-#include "mcu.h"
-
 #include <msp430.h>
 
 #include <driverlib.h>
-
+#include <src/SoC/SoC.h>
 #include "../PMM/powerMgtModule.h"
 #include "../resetReason.h"
 
@@ -23,12 +21,14 @@ unsigned int bslSignature2=0x5555;
 
 
 
-void MCU::stopWatchDog() {
+void SoC::stopWatchDog() {
+    // Using Driverlib
+    //WDT_A_hold();
     WDTCTL = WDTPW | WDTHOLD;
 }
 
 
-void MCU::enterLPM4orLPM4_5(){
+void SoC::enterLPM4orLPM4_5(){
 
 	/*
 	 * Set certain bits in the mcu status register (SR)
@@ -45,13 +45,13 @@ void MCU::enterLPM4orLPM4_5(){
 
 
 
-void MCU::enableGlobalInterrupts() {
+void SoC::enableGlobalInterrupts() {
     __bis_SR_register(GIE);
 }
 
 
 
-void MCU::enableBSLOffAndVacantMemoryNMI() {
+void SoC::enableBSLOffAndVacantMemoryNMI() {
 
     // Clear NMI and VMA flags
     // so we don't get an immediate interrupt if one has already occurred.
@@ -68,7 +68,7 @@ void MCU::enableBSLOffAndVacantMemoryNMI() {
 }
 
 
-void MCU::disableFRAMWriteProtect() {
+void SoC::disableFRAMWriteProtect() {
     // By default, writes cause NMI.  To disable, enable writing.
     SysCtl_enableFRAMWrite(SYSCTL_FRAMWRITEPROTECTION_DATA | SYSCTL_FRAMWRITEPROTECTION_PROGRAM);
 }
@@ -77,11 +77,12 @@ void MCU::disableFRAMWriteProtect() {
 /*
  * Delegate to PMM
  */
-void MCU::clearIsResetAWakeFromSleep() { PMM::clearIsResetAWakeFromSleep(); }
-void MCU::unlockMCUFromSleep(){ PMM::unlockLPM5(); }
+void SoC::clearIsResetAWakeFromSleep() { PMM::clearIsResetAWakeFromSleep(); }
+void SoC::unlockMCUFromSleep(){ PMM::unlockLPM5(); }
+void SoC::triggerSoftwareReset() { PMM::triggerSoftwarePORReset(); }
 
 /*
  * Delegate to ResetReason
  * (Another version delegates to PMM)
  */
-bool MCU::isResetAWakeFromSleep() { return ResetReason::isResetAWakeFromSleep(); }
+bool SoC::isResetAWakeFromSleep() { return ResetReason::isResetAWakeFromSleep(); }

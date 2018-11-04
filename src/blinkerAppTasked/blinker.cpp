@@ -15,6 +15,7 @@ void Blinker::blink()
     /*
      * Delay 10 mSec
      */
+    // TODO Parameters::
     LowPowerTimer::delayTicksOf100uSec(100);
 
     LEDAndLightSensor::toOffFromOn();

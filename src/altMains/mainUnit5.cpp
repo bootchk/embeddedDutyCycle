@@ -4,7 +4,7 @@
  * Requires proto hw: solar cell Vcc to pin 1.4/A4
  */
 
-#include "../MCU/mcu.h"
+#include <src/SoC/SoC.h>
 #include "../peripheral/lightSensor/lightSensor.h"
 #include "../debug/test.h"
 
@@ -12,7 +12,7 @@
 
 int mainccc() {
 
-    MCU::stopWatchDog();
+    SoC::stopWatchDog();
 
     /*
      * All routines below configure their own pins.

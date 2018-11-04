@@ -16,6 +16,7 @@ namespace {
  */
 #pragma PERSISTENT
 EpochTime previousSunrise = 0;
+
 #pragma PERSISTENT
 bool _isSunriseTimeValid = false;
 

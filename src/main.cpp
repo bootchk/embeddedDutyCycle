@@ -2,13 +2,13 @@
 
 #include "mainObject.h"
 #include "PMM/powerMgtModule.h"
-#include "MCU/mcu.h"
 #include "timer/timer.h"
 #include "pinFunction/pinFunction.h"
 #include "solar/solarPower.h"
 
 #include "debug/myAssert.h"
 #include <src/debug/test.h>
+#include <src/SoC/SoC.h>
 
 
 
@@ -39,10 +39,10 @@ bool didColdstart = false;
 namespace {
 
 void configureSystem() {
-    MCU::enableBSLOffAndVacantMemoryNMI();
+    SoC::enableBSLOffAndVacantMemoryNMI();
 
     // Prevent NMI on FRAM writes
-    MCU::disableFRAMWriteProtect();
+    SoC::disableFRAMWriteProtect();
 }
 
 /*
@@ -84,7 +84,7 @@ int main(void)
      * Conditions on some resets (LPMx.5 exit)
      * - LPM5 locked
      */
-    MCU::stopWatchDog();
+    SoC::stopWatchDog();
 
     configureSystem();
 

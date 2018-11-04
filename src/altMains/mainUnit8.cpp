@@ -5,12 +5,12 @@
  * in board.h, temporarily configure ADC pin to A0 instead of A4
  */
 
-#include "../MCU/mcu.h"
-//#include "../debug/test.h"
-
+#include <src/SoC/SoC.h>
 #include "../peripheral/LEDAndLightSensor/ledAndLightSensor.h"
 
 #include "../timer/timer.h"
+#include "../PMM/powerMgtModule.h"
+
 //#include "../peripheral/ADC/adc.h"
 //#include "../peripheral/LED/led.h"
 
@@ -97,14 +97,15 @@ void sampleAndBlink2() {
 
 int main888() {
 
-    MCU::stopWatchDog();
+    SoC::stopWatchDog();
 
     ///Test::blinkForcedGreenLED(1);
     // assert LPM5 is unlocked because blinkForced unlocked it.
 
     LEDAndLightSensor::toOffFromUnconfigured();
+    PMM::unlockLPM5();
 
-    MCU::unlockMCUFromSleep();
+    SoC::unlockMCUFromSleep();
 
     // No sleeping
     while (true) {

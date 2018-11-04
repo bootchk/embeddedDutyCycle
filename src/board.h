@@ -167,7 +167,8 @@
  * LEDAndLightSensor configuration
  */
 /*
- * For rev 1 board hacked, LEDP 1.0, LEDN 1.4
+ * For rev 1 board hack #1, LEDP 1.0, LEDN 1.4
+ * For rev 1 board hack #2, LEDP 1.0, LEDN 1.1 (was LEDpwm)
  */
 /*
  * What pins are used.
@@ -175,7 +176,7 @@
  * Must not conflict with other uses.
  */
 #define NSideLEDPort GPIO_PORT_P1
-#define NSideLEDPin  GPIO_PIN4
+#define NSideLEDPin  GPIO_PIN1
 
 // P1.1 is green led on launchpad
 

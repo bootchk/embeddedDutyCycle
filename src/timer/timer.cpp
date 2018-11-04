@@ -100,3 +100,11 @@ void LowPowerTimer::delayTicksOf100uSec(unsigned int ticks) {
     shutdownTimerResources();
     // Assert VLO clock is off and RTC counter is off
 }
+
+
+void LowPowerTimer::delayFiveSeconds() {
+    // 50k * 100uSec tick is 5 meg uSec is 5 seconds
+    LowPowerTimer::delayTicksOf100uSec(50000);
+}
+
+

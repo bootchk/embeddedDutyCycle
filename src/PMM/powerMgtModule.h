@@ -7,20 +7,11 @@
  * See User's Guide: 1.4.3 "Low-Power Modes...LPMx.5"
  */
 class PMM {
-    /*
-     * Private.  Called only from other routines that provide more context for debugging.
-     *
-     * !!! BOR is a named event in mcu state diagram, different from power-on reset
-     */
-    static void triggerSoftwareBORReset();
-
-
 public:
-	/*
-	 * Watchdog is enabled on reset.
-	 * Should be separate module.
-	 */
-	static void stopWatchdog();
+    /*
+     * !!! POR is a named event in mcu state diagram, different from power-on reset which is called BOR
+     */
+    static void triggerSoftwarePORReset();
 
 	/*
 	 * Configure PMM for least power in sleep.

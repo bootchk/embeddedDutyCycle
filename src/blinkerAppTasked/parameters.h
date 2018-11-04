@@ -25,16 +25,21 @@ public:
 
 #ifdef TEST_PARAMETERS
     // Most durations very short so time compressed
+
     static const Duration BetweenBlinks = 3;
     static const Duration BetweenSunsetAndBlinking = 10;
-    // Evening blinking lasts 30 seconds (10 blinks every 3 seconds)
+    // Evening blinking lasts 15 seconds (5 blinks every 3 seconds)
 
-    // Start morning two minutes after fake sunrise,sunset
-    // Because of other built-in delays, allow much greater than 40 seconds
-    static const Duration BetweenMorningBlinkStartAndSunrise = 86400 - 60;
+    /*
+     * Start morning one minute after fake sunrise,sunset.
+     * Because of other built-in delays, allow much greater than 40 seconds
+     *
+     * Next sunrise is 24 hours from fake sunrise.
+     * So 24 hours - 30 seconds is a large duration from next sunrise, only 30 seconds from previou
+     */
+    static const Duration BetweenMorningBlinkStartAndSunrise = TwentyFourHours - 30;
 
-    // Check sun every 15-30 seconds (in middle of blinking period)
-    ///static const Duration BetweenSunChecks = 15;
+    // Check sun every 15-30 seconds
     static const Duration BetweenSunChecks = 10;
 
 

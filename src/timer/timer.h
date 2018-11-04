@@ -11,4 +11,5 @@ class LowPowerTimer {
 public:
 
     static void delayTicksOf100uSec(unsigned int);
+    static void delayFiveSeconds();
 };

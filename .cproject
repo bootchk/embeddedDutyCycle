@@ -98,7 +98,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/cruft|src/altMains/mainNMIExample.cpp|src/altMains/msp430fr243x_lpm4_5_01.c|src/altMains/main2.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/altMains/main2.cpp|src/altMains/mainNMIExample.cpp|src/cruft|src/altMains/msp430fr243x_lpm4_5_01.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
