@@ -27,12 +27,16 @@ void LEDAndLightSensor::toMeasuringFromReversed() {
 
 
 unsigned int LEDAndLightSensor::measureByBleeding() {
-    unsigned int j;
-    for ( j = 0; j < 30000; j++) {
-        if ( GPIO_getInputPinValue(NSideLEDPort, NSideLEDPin) == GPIO_INPUT_PIN_LOW )
+    unsigned int result;
+    unsigned char value;
+
+    for ( result = 0; result < 30000; result++) {
+        value = GPIO_getInputPinValue(NSideLEDPort, NSideLEDPin);
+        // assert value is 0 or 1
+        if (  value == GPIO_INPUT_PIN_LOW )
             break;
     }
-    return j;
+    return result;
     // assert state still measuring
 }
 

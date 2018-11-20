@@ -168,7 +168,7 @@
  */
 /*
  * For rev 1 board hack #1, LEDP 1.0, LEDN 1.4
- * For rev 1 board hack #2, LEDP 1.0, LEDN 1.1 (was LEDpwm)
+ * For rev 1 board hack #2, LEDP 1.1, LEDN 1.0 (P1.1 was LEDpwm)
  */
 /*
  * What pins are used.
@@ -176,11 +176,11 @@
  * Must not conflict with other uses.
  */
 #define NSideLEDPort GPIO_PORT_P1
-#define NSideLEDPin  GPIO_PIN1
+#define NSideLEDPin  GPIO_PIN0
 
 // P1.1 is green led on launchpad
 
 // P side high to light LED
 #define PSideLEDPort GPIO_PORT_P1
-#define PSideLEDPin  GPIO_PIN0
+#define PSideLEDPin  GPIO_PIN1
 

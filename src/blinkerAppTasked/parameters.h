@@ -87,7 +87,8 @@ static const unsigned int MinCyclesInLightToDischargeLEDCapacitance = 90;
  * Vcc voltage indicates full charge on storage.
  * Required for LED blinking function.
  */
-static const unsigned int MinVccForBlinking = 300;  // centiVolts, 3V
+static const unsigned int MinVccForBlinking = 280; // 2.8V
+// 300;  // centiVolts, 3V
 
 
 /*

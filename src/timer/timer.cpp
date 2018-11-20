@@ -102,9 +102,10 @@ void LowPowerTimer::delayTicksOf100uSec(unsigned int ticks) {
 }
 
 
-void LowPowerTimer::delayFiveSeconds() {
-    // 50k * 100uSec tick is 5 meg uSec is 5 seconds
-    LowPowerTimer::delayTicksOf100uSec(50000);
-}
+// 50k * 100uSec tick is 5 meg uSec is 5 seconds
+void LowPowerTimer::delayFiveSeconds() { LowPowerTimer::delayTicksOf100uSec(50000); }
 
+void LowPowerTimer::delayTwentyMilliSeconds() { LowPowerTimer::delayTicksOf100uSec(200); }
+
+void LowPowerTimer::delayHalfSecond() { LowPowerTimer::delayTicksOf100uSec(5000); }
 

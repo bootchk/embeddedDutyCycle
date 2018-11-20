@@ -34,9 +34,7 @@ unsigned int measureLight2() {
 void blinkAmber2() {
     // Same LED as used to measure light, now used to generate light
     LEDAndLightSensor::toOnFromOff();
-
-    LowPowerTimer::delayTicksOf100uSec(5000);
-
+    LowPowerTimer::delayTwentyMilliSeconds();
     LEDAndLightSensor::toOffFromOn();
 }
 
@@ -77,7 +75,7 @@ void sampleAndBlink2() {
 
     // blink green led when dark
     // greater value is more light
-    if (sample > 90) // and sample2 < 90)
+    if (sample > 25) // and sample2 < 90)
     {
         ///Test::blinkForcedGreenLED(1);
         blinkAmber2();
@@ -95,7 +93,7 @@ void sampleAndBlink2() {
  * - green LED should blink if LED illuminated by night dark
  */
 
-int main888() {
+int main() {
 
     SoC::stopWatchDog();
 
@@ -109,9 +107,10 @@ int main888() {
 
     // No sleeping
     while (true) {
-        blinkAmber2();
-
         delayOneSecond2();
+        delayOneSecond2();
+
+        blinkAmber2();
 
         sampleAndBlink2();
     }
