@@ -13,6 +13,15 @@
 
 
 
+bool DutyMain::isResetAwakeFromSleep() {
+    /*
+     * decodes all reasons.
+     * May assert if reset reason is not an expected one,
+     * e.g. some fault and not a wake from sleep reset or a coldstart reset.
+     */
+    return SoC::isResetAWakeFromSleep();
+}
+
 
 void DutyMain::onColdReset() {
     // assert unused GPIO configured
@@ -35,7 +44,7 @@ void DutyMain::onColdReset() {
 }
 
 
-void DutyMain::onWakeFromLPM() {
+void DutyMain::onWakeFromLPMReset() {
     // LOCKLPM5 is set unless we are using forceBlink functions
     /// myAssert(PMM::isLockedLPM5());
 

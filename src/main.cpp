@@ -7,7 +7,7 @@
 #include <SoC/SoC.h>
 #include <assert/myAssert.h>
 
-#include "mainObject.h"
+#include "dutyMain.h"
 #include "timer/timer.h"
 #include "pinFunction/pinFunction.h"
 #include "solar/solarPower.h"
@@ -94,13 +94,11 @@ int main(void)
     configureSystem();
 
     ///delayForStartup();
-    ///Main::onResetPreamble();
 
     // Dispatch on reset reason: reset is wake out of an LPMx.5 OR any other (typically cold start.)
-    if ( Main::isResetAwakeFromSleep() and didColdstart ) {
+    if ( DutyMain::isResetAwakeFromSleep() and didColdstart ) {
 
         ///delayForStartup();
-        ///Main::onResetPreamble();
         PinFunction::configure();
 
 #ifdef TRAP_WAKE
@@ -115,7 +113,7 @@ int main(void)
         ///Test::blinkForcedGreenLED(3);
         ///Debug::leaveCrumb(20);
 
-        Main::onWakeFromLPM();
+        DutyMain::onWakeFromLPMReset();
         ///Test::blinkRedLED(5);
     }
     else {
@@ -135,12 +133,11 @@ int main(void)
         // When solar powered, must sleep until power is adequate.
         SolarPower::sleepUntilPowerReserve();
         //delayForStartup();
-        ///Main::onResetPreamble();
 
         /// Debug::leaveCrumb(10);
         ///Test::blinkForcedGreenLED(2);
 
-        Main::onColdReset();
+        DutyMain::onColdReset();
         ///Test::blinkRedLED(2);
     }
 
@@ -148,7 +145,7 @@ int main(void)
 
     /// Debug::leaveCrumb(30);
     // Configure one or more wakeup sources
-    Main::onResetPostlude();
+    DutyMain::onResetPostlude();
 
     ///Test::blinkRedLED(10);
     ///Test::delayBriefly();
