@@ -8,7 +8,7 @@
 #ifdef CONSTANT_DUTY
 #include "../blinkerAppFixed/blinker.h"
 #else
-#include <src/blinkerAppTasked/smartBlinker.h>
+#include "../blinkerAppTasked/smartBlinker.h"
 #endif
 
 // Test

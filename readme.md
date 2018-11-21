@@ -37,6 +37,15 @@ The combination duty-cycles the mcu.  Average current drawn by the system depend
 
 The duty cycle can be very large.  For example, the system theoretically could wake up for one second every hundred years, powered by a coin cell battery.
 
+Solar power
+-
+
+The framework also allows for operation with a wide ranging Vcc.
+In particular, where the power supply is solar without a battery and without voltage regulation.
+For such a power supply, Vcc ranges from the Vmin of the mcu to the Voc of the solar panel.
+For such a power supply, power reserves may be low when the system cold starts.
+The framework can wait until power reserves are adequate for application power requirements.
+
 Dev env
 -
 

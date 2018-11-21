@@ -32,9 +32,6 @@ public:
 	 */
 	static void onWakeForAlarm();
 
-
-
-
 	/*
 	 * Called from postlude.
 	 * About to low power sleep in duty cycle.

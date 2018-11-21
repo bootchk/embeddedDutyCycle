@@ -1,7 +1,7 @@
 
 #include <msp430.h>
 
-#include "../duty.h"
+#include "../dutyCycle/duty.h"
 
 #include "../board.h"  // board config
 

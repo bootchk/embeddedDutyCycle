@@ -7,10 +7,8 @@
 #include <SoC/SoC.h>
 #include <assert/myAssert.h>
 
-#include "dutyMain.h"
-#include "timer/timer.h"
+#include "dutyCycle/dutyMain.h"
 #include "pinFunction/pinFunction.h"
-#include "solar/solarPower.h"
 
 
 //#include <src/debug/test.h>
@@ -43,6 +41,11 @@ bool didColdstart = false;
 
 namespace {
 
+/*
+ * Configure system (after reset)
+ * - faults we want to catch (NMI for vacant memory access)
+ * - capability we want (write to FRAM)
+ */
 void configureSystem() {
     SoC::enableBSLOffAndVacantMemoryNMI();
 
@@ -125,13 +128,11 @@ int main(void)
 
         /*
          * Need to configure for low power (because pins are floating input using power)
-         * and set output values (because they default to LED on)
+         * and set output values (because they are indeterminate, possibly LED on)
          * BEFORE delay for Startup
          */
         PinFunction::configure();
 
-        // When solar powered, must sleep until power is adequate.
-        SolarPower::sleepUntilPowerReserve();
         //delayForStartup();
 
         /// Debug::leaveCrumb(10);

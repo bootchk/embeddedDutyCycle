@@ -3,8 +3,9 @@
 #include "dutyMain.h"
 
 #include "duty.h"
+#include "solarPower.h"
 
-#include "app/app.h"
+#include "../app/app.h"
 
 // MSP430Drivers
 #include <SoC/SoC.h>
@@ -26,6 +27,10 @@ bool DutyMain::isResetAwakeFromSleep() {
 void DutyMain::onColdReset() {
     // assert unused GPIO configured
 
+    // When solar powered, must sleep until power is adequate.
+    SolarPower::sleepUntilPowerReserve();
+
+    // Give framework a slice
     // require external RTC connected, because this configures it
     Duty::onPowerOnReset();
 
@@ -35,6 +40,7 @@ void DutyMain::onColdReset() {
 
     // assert Duty is ready for setAlarm
 
+    // Give application a slice
     // Comment out this define to test only the DutyCycle framework, without App
 #define APPPOR
 #ifdef APPPOR // test 1c
