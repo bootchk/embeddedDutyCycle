@@ -4,6 +4,7 @@
  */
 
 #include <msp430.h>
+
 #include <src/debug/test.h>
 
 #include "fatal.h"

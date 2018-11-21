@@ -1,14 +1,12 @@
 #include "pinFunction.h"
 
-
 // mcu hal layer e.g. MSPWare DriverLib
 #include <gpio.h>	// depends on msp430.h
 
+// MSP430Drivers
+#include <pinFunction/spiPins.h>
+#include <pinFunction/ledPins.h>
 
-#include "spiPins.h"
-#include "ledPins.h"
-
-#include "../debug/myAssert.h"
 
 
 

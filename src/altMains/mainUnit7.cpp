@@ -5,11 +5,14 @@
  * in board.h, temporarily configure ADC pin to A0 instead of A4
  */
 
-#include <src/SoC/SoC.h>
-#include "../debug/test.h"
-#include "../timer/timer.h"
-#include "../peripheral/ADC/adc.h"
-#include "../peripheral/LED/led.h"
+#include <SoC/SoC.h>
+#include <timer/timer.h>
+#include <ADC/adc.h>
+#include <LED/led.h>
+
+#include "../test/test.h"
+
+
 
 
 

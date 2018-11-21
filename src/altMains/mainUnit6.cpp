@@ -3,9 +3,12 @@
  * Unit test of LowPowerTimer
  */
 
-#include <src/SoC/SoC.h>
-#include "../debug/test.h"
-#include "../timer/timer.h"
+// MSP430Drivers
+#include <SoC/SoC.h>
+#include <timer/timer.h>
+
+#include "../test/test.h"
+
 
 
 

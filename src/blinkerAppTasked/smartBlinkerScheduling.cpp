@@ -4,9 +4,9 @@
 
 #include <src/blinkerAppTasked/smartBlinker.h>
 #include "../OS/taskScheduler.h"
-#include "../alarmClock/epochClock/epochClock.h"
-
 #include "parameters.h"
+
+#include <realTimeClock/epochClock/epochClock.h>
 
 
 /*

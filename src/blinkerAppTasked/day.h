@@ -2,7 +2,7 @@
 
 
 
-#include "../alarmClock/RTC/timeTypes.h"   // EpochTime
+#include <time/timeTypes.h>   // EpochTime
 
 
 

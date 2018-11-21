@@ -1,13 +1,15 @@
 
-#include <src/debug/test.h>
-#include <src/SoC/SoC.h>
+
 #include "dutyMain.h"
 
 #include "duty.h"
 
 #include "app/app.h"
 
-#include "debug/myAssert.h"
+// MSP430Drivers
+#include <SoC/SoC.h>
+#include <assert/myAssert.h>
+//#include <src/debug/test.h>
 
 
 

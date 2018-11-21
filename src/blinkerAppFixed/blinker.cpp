@@ -1,7 +1,9 @@
 
-#include <src/blinkerAppFixed/blinker.h>
-#include "../peripheral/LED/led.h"
-#include "../alarmClock/epochClock/epochClock.h"
+#include "blinker.h"
+
+// MSP430Drivers
+#include <realTimeClock/epochClock/epochClock.h>
+#include <LED/led.h>
 
 
 /*

@@ -1,8 +1,9 @@
 
 #include <msp430.h>
-#include <src/SoC/SoC.h>
-#include "../debug/fatal.h"
-#include "../debug/test.h"
+#include <SoC/SoC.h>
+#include <assert/fatal.h>
+
+#include "../test/test.h"
 
 
 /*

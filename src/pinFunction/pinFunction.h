@@ -3,6 +3,10 @@
  * Abstracts functions of GPIO pins.
  * Hides implementation: TI MSPWare Driverlib
  *
+ * Application and board specific.
+ * Knows which devices (that use pins) are used by application.
+ * board.h knows which devices use which pins.
+ *
  * Pin functions:
  * - alarm interrupt from RTC
  * - chip (slave) select for SPI to RTC

@@ -24,4 +24,11 @@
 		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>MSP430Drivers</name>
+			<type>2</type>
+			<location>/Users/lloydkonneker/git/msp430Drivers/src</location>
+		</link>
+	</linkedResources>
 </projectDescription>

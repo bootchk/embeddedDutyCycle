@@ -1,5 +1,5 @@
 
-#include "../alarmClock/RTC/timeTypes.h"
+#include <time/timeTypes.h>
 
 
 /*

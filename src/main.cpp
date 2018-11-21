@@ -1,14 +1,19 @@
+
+// TI
 #include <msp430.h>
 
+// MSP430Drivers
+#include <PMM/powerMgtModule.h>
+#include <SoC/SoC.h>
+#include <assert/myAssert.h>
+
 #include "mainObject.h"
-#include "PMM/powerMgtModule.h"
 #include "timer/timer.h"
 #include "pinFunction/pinFunction.h"
 #include "solar/solarPower.h"
 
-#include "debug/myAssert.h"
-#include <src/debug/test.h>
-#include <src/SoC/SoC.h>
+
+//#include <src/debug/test.h>
 
 
 
@@ -75,7 +80,7 @@ void delayForStartup()
  */
 
 
-int main888(void)
+int main(void)
 {
     /*
      * Conditions on every reset:

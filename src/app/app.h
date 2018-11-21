@@ -1,6 +1,6 @@
 
 
-#include "../alarmClock/RTC/timeTypes.h"   // EpochTime, Duration
+#include <time/timeTypes.h>   // EpochTime, Duration
 
 
 

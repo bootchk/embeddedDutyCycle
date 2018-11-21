@@ -1,17 +1,16 @@
 
-#include <src/mainObject.h>
+
+#include "mainObject.h"
 
 #include "dutyMain.h"
 
+// MSP430Drivers
+#include <PMM/powerMgtModule.h>
+#include <SoC/SoC.h>
+#include <assert/myAssert.h>
 
-#include "PMM/powerMgtModule.h"
-#include <src/debug/test.h>
-#include <src/debug/myAssert.h>
-#include <src/SoC/SoC.h>
+//#include <src/debug/test.h>
 
-//#include "pinFunction/pinFunction.h"
-
-/// #include "myAssert.h"
 
 /*
  * Two versions, working and non-working development.
@@ -109,7 +108,7 @@ void Main::onResetPostlude() {
     Test::configureButtonWakeupSource();
 #else
     // For testing, an alternate source of wake
-    Test::configureButtonWakeupSource();
+    /// Test::configureButtonWakeupSource();
 
     // For duty cycling, set alarm source of wake
     DutyMain::onResetPostlude();

@@ -4,9 +4,10 @@
  * Requires proto hw: solar cell Vcc to pin 1.4/A4
  */
 
-#include <src/SoC/SoC.h>
-#include "../peripheral/lightSensor/lightSensor.h"
-#include "../debug/test.h"
+#include <SoC/SoC.h>
+#include <lightSensor/lightSensor.h>
+
+#include "../test/test.h"
 
 
 

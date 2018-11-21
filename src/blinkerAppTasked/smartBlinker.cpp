@@ -1,19 +1,18 @@
 
-#include <src/blinkerAppTasked/day.h>
-#include <src/blinkerAppTasked/smartBlinker.h>
-#include <src/blinkerAppTasked/powerMgr.h>
+#include "day.h"
+#include "smartBlinker.h"
+#include "powerMgr.h"
 
 #include "parameters.h"
 
 #include "../OS/taskScheduler.h"
 
-// implementation
-#include "../peripheral/LED/led.h"
-#include "../peripheral/lightSensor/lightSensor.h"
+// MSP430Drivers
+#include <LED/led.h>
+#include <lightSensor/lightSensor.h>
+#include <assert/myAssert.h>
 
-
-#include "../debug/myAssert.h"
-#include "../debug/test.h"
+//#include "../debug/test.h"
 
 // Configures code by ifdef
 #include "../board.h"

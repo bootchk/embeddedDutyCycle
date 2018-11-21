@@ -1,9 +1,11 @@
 
-#include <src/OS/scheduledTaskSlot.h>
-#include "taskScheduler.h"
-#include "../alarmClock/epochClock/epochClock.h"
 
-#include "../debug/myAssert.h"
+#include "scheduledTaskSlot.h"
+#include "taskScheduler.h"
+
+// MSP430Drivers
+#include <assert/myAssert.h>
+#include <realTimeClock/epochClock/epochClock.h>
 
 
 

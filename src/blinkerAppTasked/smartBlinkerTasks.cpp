@@ -2,9 +2,9 @@
 #include "smartBlinker.h"
 
 #include "blinker.h"
-#include <src/blinkerAppTasked/blinkPeriod.h>
+#include "blinkPeriod.h"
 
-#include "../debug/myAssert.h"
+#include <assert/myAssert.h>
 
 
 /*

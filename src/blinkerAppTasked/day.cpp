@@ -1,9 +1,10 @@
 
-#include <src/blinkerAppTasked/day.h>
-#include "../alarmClock/epochClock/epochClock.h"
+#include "day.h"
 #include "parameters.h"
 
-#include "../debug/myAssert.h"
+// MSP430Drivers
+#include <realTimeClock/epochClock/epochClock.h>
+#include <assert/myAssert.h>
 
 
 

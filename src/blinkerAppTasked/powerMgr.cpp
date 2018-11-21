@@ -1,6 +1,7 @@
 
-#include <src/blinkerAppTasked/powerMgr.h>
-#include "../peripheral/ADC/adc.h"
+#include "powerMgr.h"
+
+#include <ADC/adc.h>
 
 #include "parameters.h"
 

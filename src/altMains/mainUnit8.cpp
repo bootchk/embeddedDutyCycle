@@ -5,11 +5,11 @@
  * in board.h, temporarily configure ADC pin to A0 instead of A4
  */
 
-#include <src/SoC/SoC.h>
-#include "../peripheral/LEDAndLightSensor/ledAndLightSensor.h"
+#include <PMM/powerMgtModule.h>
+#include <SoC/SoC.h>
+#include <timer/timer.h>
+#include <LEDAndLightSensor/ledAndLightSensor.h>
 
-#include "../timer/timer.h"
-#include "../PMM/powerMgtModule.h"
 
 //#include "../peripheral/ADC/adc.h"
 //#include "../peripheral/LED/led.h"
@@ -93,7 +93,7 @@ void sampleAndBlink2() {
  * - green LED should blink if LED illuminated by night dark
  */
 
-int main() {
+int main888() {
 
     SoC::stopWatchDog();
 

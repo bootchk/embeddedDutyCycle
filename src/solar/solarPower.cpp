@@ -1,9 +1,11 @@
 
 #include "solarPower.h"
 
-#include "../timer/timer.h"
+#include <timer/timer.h>
+#include <ADC/adc.h>
+
 #include "../blinkerAppTasked/parameters.h"
-#include "../peripheral/ADC/adc.h"
+
 
 
 

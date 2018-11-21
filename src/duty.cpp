@@ -1,9 +1,9 @@
 
 #include "duty.h"
 
-#include "alarm/alarm.h"
-
-#include "debug/softFault.h"
+// MSP430Drivers
+#include <alarm/alarm.h>
+#include <softFault/softFault.h>
 
 
 

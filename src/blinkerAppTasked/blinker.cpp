@@ -1,10 +1,12 @@
 
 #include "blinker.h"
 
+// MSP430Drivers
+
 // Use two-sided, dual purpose LED
-#include "../peripheral/LEDAndLightSensor/ledAndLightSensor.h"
+#include <LEDAndLightSensor/ledAndLightSensor.h>
 // Use low power timer
-#include "../timer/timer.h"
+#include <timer/timer.h>
 
 
 void Blinker::blink()

@@ -1,10 +1,9 @@
 
 #pragma once
 
-#include "../alarmClock/RTC/timeTypes.h"
-
-// include governing definitions
 #include "../board.h"
+
+#include <time/timeTypes.h>
 
 /*
  * Parameters of application (smart blinking)
@@ -68,10 +67,7 @@ public:
 
 
 
-/*
- * Count of loop cycles discharging reversed biased LED to sense light.
- */
-static const unsigned int MinCyclesInLightToDischargeLEDCapacitance = 90;
+
 
 
 
