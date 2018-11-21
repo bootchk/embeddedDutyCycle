@@ -26,9 +26,9 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>MSP430Drivers</name>
+			<name>msp430Drivers</name>
 			<type>2</type>
-			<location>/Users/lloydkonneker/git/msp430Drivers/src</location>
+			<location>/home/bootch/git/msp430Drivers/src</location>
 		</link>
 	</linkedResources>
 </projectDescription>

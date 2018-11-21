@@ -46,6 +46,8 @@
 									<listOptionValue builtIn="false" value="/Users/lloydkonneker/git/msp430Drivers/MSP430FR2xx_4xx"/>
 									<listOptionValue builtIn="false" value="/Users/lloydkonneker/git/msp430Drivers/src"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
+									<listOptionValue builtIn="false" value="/home/bootch/git/msp430Drivers/src"/>
+									<listOptionValue builtIn="false" value="/home/bootch/git/msp430Drivers/MSP430FR2xx_4xx"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP430_18.1.compilerID.ADVICE__POWER.1876194455" name="Enable checking of ULP power rules (--advice:power)" superClass="com.ti.ccstudio.buildDefinitions.MSP430_18.1.compilerID.ADVICE__POWER" value="" valueType="string"/>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP430_18.1.compilerID.DEBUGGING_MODEL.847532852" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.MSP430_18.1.compilerID.DEBUGGING_MODEL" value="com.ti.ccstudio.buildDefinitions.MSP430_18.1.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>
@@ -99,11 +101,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="src/test/test.h|src/test/test.cpp|src/altMains/main2.cpp|src/altMains/mainNMIExample.cpp|src/cruft|src/altMains/msp430fr243x_lpm4_5_01.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/cruft/alarmClock"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/cruft/debug"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/cruft/PMM"/>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src/cruft/SoC"/>
+						<entry excluding="msp430Drivers|src/test/test.h|src/test/test.cpp|src/altMains/main2.cpp|src/altMains/mainNMIExample.cpp|src/cruft|src/altMains/msp430fr243x_lpm4_5_01.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="msp430Drivers"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -153,6 +152,8 @@
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}/driverlib/MSP430FR2xx_4xx"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
+									<listOptionValue builtIn="false" value="/home/bootch/git/msp430Drivers"/>
+									<listOptionValue builtIn="false" value="/home/bootch/git/msp430Drivers/MSP430FR2xx_4xx"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP430_18.1.compilerID.ADVICE__POWER.1812470581" name="Enable checking of ULP power rules (--advice:power)" superClass="com.ti.ccstudio.buildDefinitions.MSP430_18.1.compilerID.ADVICE__POWER" value="&quot;none&quot;" valueType="string"/>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP430_18.1.compilerID.DIAG_WARNING.887057607" name="Treat diagnostic &lt;id&gt; as warning (--diag_warning, -pdsw)" superClass="com.ti.ccstudio.buildDefinitions.MSP430_18.1.compilerID.DIAG_WARNING" valueType="stringList">
@@ -217,6 +218,6 @@
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="emptyProject.com.ti.ccstudio.buildDefinitions.MSP430.ProjectType.1894033771" name="MSP430" projectType="com.ti.ccstudio.buildDefinitions.MSP430.ProjectType"/>
 	</storageModule>
-	<storageModule moduleId="scannerConfiguration"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="scannerConfiguration"/>
 </cproject>
