@@ -3,7 +3,9 @@
 
 #include "../dutyCycle/duty.h"
 
-#include "../board.h"  // board config
+// msp430Drivers
+#include <board.h>  // board config
+
 
 
 

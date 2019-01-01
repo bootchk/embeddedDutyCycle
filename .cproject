@@ -101,8 +101,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="msp430Drivers|src/test/test.h|src/test/test.cpp|src/altMains/main2.cpp|src/altMains/mainNMIExample.cpp|src/cruft|src/altMains/msp430fr243x_lpm4_5_01.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="msp430Drivers"/>
+						<entry excluding="altMains/msp430fr243x_lpm4_5_01.c|altMains/mainNMIExample.cpp|altMains/main2.cpp|cruft|msp430Drivers|src/test/test.h|src/test/test.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

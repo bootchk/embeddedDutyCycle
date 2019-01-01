@@ -7,7 +7,7 @@
 #include <SoC/SoC.h>
 #include <lightSensor/lightSensor.h>
 
-#include "../test/test.h"
+#include "../src/test/test.h"
 
 
 

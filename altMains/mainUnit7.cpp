@@ -10,7 +10,7 @@
 #include <ADC/adc.h>
 #include <LED/led.h>
 
-#include "../test/test.h"
+#include "../src/test/test.h"
 
 
 

@@ -1,10 +1,11 @@
 
 #include "solarPower.h"
 
+// msp430Drivers
 #include <timer/timer.h>
 #include <ADC/adc.h>
+#include <board.h>
 
-#include "../blinkerAppTasked/parameters.h"
 
 
 
@@ -13,8 +14,12 @@ bool SolarPower::isPowerForStarting() {
     // Does not require GPIO configuration
     // Does not change GPIO configuration
 
-    // Greater than 1.9 volts
-    return ADC::measureVccCentiVolts() > Parameters::MinVccForStarting ;
+    /*
+     * Greater than mcu's Vmin typically 1.9 volts or 190 centivolts
+     *
+     * Formerly a parameter of the app (Parameters::MinVccForStarting), now a parameter of the board.
+     */
+    return ADC::measureVccCentiVolts() >  MinVccForStarting;
 }
 
 

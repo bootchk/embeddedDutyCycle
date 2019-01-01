@@ -23,7 +23,11 @@
 class App {
 public:
 	/*
-	 * app should initialize state (FRAM is initialized at load time, not in resetHandler)
+	 * app should initialize state.
+	 * All RAM contents was lost and RAM variables set to initial values by resetHandler.
+	 *
+	 * Persistent state of application can be kept in FRAM.
+	 * (FRAM is initialized at load time, not in resetHandler)
 	 */
 	static void onPowerOnReset();
 
@@ -33,8 +37,7 @@ public:
 	static void onWakeForAlarm();
 
 	/*
-	 * Called from postlude.
-	 * About to low power sleep in duty cycle.
+	 * Called from postlude, just before entering low power sleep in duty cycle.
 	 * Result depends on state of app.
 	 */
 	/*

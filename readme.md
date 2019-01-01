@@ -37,14 +37,23 @@ The combination duty-cycles the mcu.  Average current drawn by the system depend
 
 The duty cycle can be very large.  For example, the system theoretically could wake up for one second every hundred years, powered by a coin cell battery.
 
-Solar power
+
+
+
+Solar power coldstart
 -
 
 The framework also allows for operation with a wide ranging Vcc.
 In particular, where the power supply is solar without a battery and without voltage regulation.
 For such a power supply, Vcc ranges from the Vmin of the mcu to the Voc of the solar panel.
 For such a power supply, power reserves may be low when the system cold starts.
-The framework can wait until power reserves are adequate for application power requirements.
+At coldstart, the framework wait until Vcc climbs a little more (until power reserves are adequate)
+to continue the booting process (when the application may use a burst of power.)
+In other words, it stretches out the booting process to avoid immediately brown out.
+
+Redundant?  The framework assumes a solar power source.
+The framework implements a wait for a power reserve during a cold restart (since a solar powered voltage monitor has small hysteresis.)
+
 
 Dev env
 -
@@ -56,20 +65,15 @@ The repository needs but does not contain a driverlib/ directory, which you can 
 The project derives from an example project for DriverLib.
 
 
-Low level time libraries
+Building
 -
 
-"Calendar time" is broken into second, minute, hour, day, ...
-"Epoch time" is seconds from a reference instant.
+The project ordinarily does not build so as to produce a binary.  
+Linker gives unresolved symbols: you must provide an app.cpp (see "Architecture")
 
-The RTC chip implements calendar time.  (Do any of them support epoch time?)
+See my "blinker" repository for an application that uses the framework.
 
-Unix has a standard library for calendar time and epoch time. (time.h)
-Energia doesn't support it.
-Paul Stoffgren's Arduino Time library is similar to the Unix standard library (implements calendar and epoch time.)
-
-The design for setting alarm converts from calendar time to epoch time, does the math (simple integer math), and converts back.
-
+For development, I change the name of main() and use a main() that is a test harness, from the directory altMains.
 
 
 Features of Alarm class
@@ -95,27 +99,29 @@ Dependencies
 
 Depends on these other libraries: 
 
-    not:  https://github.com/nigelb/Arduino-AB08XX
-    SPI library (in Arduino or Energia distribution)
-    MSP430 DriverLib
-    Arduino Time, Paul Stoffgren
+    My repository msp430Drivers
+    From TI, MSPWare for MSP430 DriverLib
+   
 
 Classes
 -
-
-    app main.c
+    App (inversion of control, this is called from the framework)
+    main.c (the event loop for inversion of control)
        DutyCycleLib
            AlarmLib
+           
+    These classes are now in msp430Drivers but the framework depends on them
                RTC  ( similar to Arduino-AB08XX library)
                   Bridge
                   SPI 
-               Time (for Arduino, author Paul Stoffgren)
+               Time (some derived from author Paul Stoffgren)
                Some mcu HAL e.g. MSP430 DriverLib (to set up the interrupt pin)
+
 
 Power on reset (POR) and independent processes
 -
 
-The library assumes both chips are powered on and off together, only when Vcc is above both chips minimum.
+The library assumes both chips are powered on and off together, only when Vcc is above both chip's minimum.
 The two chips are independent processes and either could be in reset (and not communicating) independently.
 The library does not assume that mcu and rtc reset timing is the same.
 
@@ -133,14 +139,16 @@ See the API about isSPIReady().
 API
 -
 
-See externalAlarmLib.h
+See app.h
+
+
 
 Implementation
 -
 
 Library defines static classes (class methods only.)
 No instances need be allocated.
-No class has any state variables.
+No class has any state variables.  (TODO is that true?)
 The library has state, but it is in the rtc registers.
  and mcu registers.
 
@@ -219,3 +227,64 @@ On waking from low-power mode (GPIO configuration is locked):
      set alarm
      enter sleep
     
+    
+    
+Architecture
+-
+
+This is a framework.  An app is called by it (inversion of control).  The main() function is defined by the framework.
+
+The app must implement the standard API that the framework calls (a static design, not a design where callbacks are registered at runtime.)
+
+The framework depends on certain drivers implemented by msp430Drivers.
+
+Dependencies:   App -> embeddedDutyCycle -> msp430Drivers -> DriverLib for MSP430
+                App ----------------------> msp430Drivers
+
+embeddedDutyCycle uses peripherals: 
+
+     - ADC: used to measure Vcc
+     - Alarm: interface to the external, ultra low power RTC
+
+Configuration
+-
+
+Configuration of the board (which must have an AB08015 RTC) is in board.h in msp430Drivers
+
+
+Tasks
+-
+
+The framework also contains a very minimal task scheduler.
+You can schedule a task.
+The scheduler knows the time to wake up for the next scheduled task.
+The scheduler when it received onAlarm signal, dispatches the ready task.
+
+Testing
+-
+
+A minimal test is an app that does nothing (a null app.)
+You can test using EnergyTrace.
+The power graph should show periods of ultra low power (tens of nW, while in LPM4.5) 
+followed by spikes of a few mW while cpu is executing the framework.
+
+
+
+
+
+
+Low level time libraries
+-
+
+TODO this needs moving to msp430Drivers
+
+"Calendar time" is broken into second, minute, hour, day, ...
+"Epoch time" is seconds from a reference instant.
+
+The RTC chip implements calendar time.  (Do any of them support epoch time?)
+
+Unix has a standard library for calendar time and epoch time. (time.h)
+Energia doesn't support it.
+Paul Stoffgren's Arduino Time library is similar to the Unix standard library (implements calendar and epoch time.)
+
+The design for setting alarm converts from calendar time to epoch time, does the math (simple integer math), and converts back.

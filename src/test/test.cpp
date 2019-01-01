@@ -2,12 +2,13 @@
 /*
  * For testing on msp-exp430fr2433 LaunchPad
  */
+#include "test.h"
 
 #include <msp430.h>
 
-#include <src/debug/test.h>
 
-#include "fatal.h"
+// msp430Drivers
+#include <assert/fatal.h>
 
 
 /*
