@@ -1,87 +1,34 @@
 #include "pinFunction.h"
 
+// Delegates to App
+#include "../app/app.h"
+
 // mcu hal layer e.g. MSPWare DriverLib
 #include <gpio.h>	// depends on msp430.h
 
 // MSP430Drivers
 #include <pinFunction/spiPins.h>
-#include <pinFunction/ledPins.h>
+
 
 
 
 
 
 void PinFunction::configure() {
-    configureUnusedPinsLowPower();
-    configureUsedPins();
 
-}
-
-
-/*
- * OLD prototype
- * Used pins:
- * - SPI 1.4-1.6
- * - slave select 3.2
- * - alarm 2.7
- */
+    // Only the app knows all unused pins
+    App::configureUnusedPinsLowPower();
 
 
-void PinFunction::configureUnusedPinsLowPower() {
-    /*
-     * Not require LPM5 locked.
-     *
-     * Only configure pins not connected,
-     * since configuring connected pins as output can trigger connected devices.
-     *
-     * Alternatives for low power:  input with pullup/pulldown or output.
-     * Do not leave as input without pull: floats and wastes power.
-     */
+    // Pins used by framework
 
-    // TODO optimize: configure entire register at once
-
-    // P1.0 red LED or LEDP
-    // P1.1 not used or green LED or LEDPWM
-
-    // TODO set known OUT
-    // hack, if it is launchpad, dark the sourced green led
-    GPIO_setOutputLowOnPin(GPIO_PORT_P1, GPIO_PIN1);
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN1);
-    // P1.2 SPI Slave select (out)
-    // P1.3 Alarm (in)
-    // P1.4 LEDN
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN5);
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN6);
-    GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN7);
-
-    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN0);
-    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN1);
-    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN2);
-    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN3);
-    // SPI data pins
-    //GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN4);
-    //GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN5);
-    //GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN6);
-    GPIO_setAsOutputPin(GPIO_PORT_P2, GPIO_PIN7);
-
-    // Only 5 pins on port 3
-    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN0);
-    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN1);
-    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN2);
-    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN3);
-    GPIO_setAsOutputPin(GPIO_PORT_P3, GPIO_PIN4);
-
-    // Not ensure configuration is effective, since LPM5 might be locked
-}
-
-
-
-void PinFunction::configureUsedPins() {
-
+    // requires SPI access to RTC
     SPIPins::configureSelectSPIPin();
     // Other SPI pins configured as needed
 
-    LEDPins::configure();
+
+    // Pins used by app
+    App::configureUsedPins();
 
     // TODO Alarm pin configured later???
 }

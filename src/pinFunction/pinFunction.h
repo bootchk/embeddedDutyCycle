@@ -1,35 +1,27 @@
 
 /*
- * Abstracts functions of GPIO pins.
- * Hides implementation: TI MSPWare Driverlib
+ * Abstracts configuring module's GPIO pins.
+ * Hides that the framework drives configuration,
+ * but the app defines it.
  *
  * Application and board specific.
  * Knows which devices (that use pins) are used by application.
+ *
  * board.h knows which devices use which pins.
  *
- * Pin functions:
- * - alarm interrupt from RTC
- * - chip (slave) select for SPI to RTC
- * - LED / light sensor
+ * Framework pin functions:
+ * During sleep:
+ * - alarm interrupt from external RTC
+ * - chip (slave) select for SPI to external RTC
+ * During wake:
+ * - three other SPI pins, as needed (MOSI, SIMO, CLK)
  *
- * Three other pins are used by SPI, as needed
+ * App pin functions (for example.)
+ * - LED / light sensor
  */
 
 class PinFunction {
 public:
     static void configure();
 
-private:
-	static void configureUsedPins();
-
-	/*
-	 * Configure unused and unconnected pins as low power.
-	 *
-	 * On most platforms, outputs.
-	 * On reset, default to inputs.
-	 * If left as inputs and unconnected, they float and draw excess power.
-	 *
-	 * Does not ensure determinate output values.
-	 */
-	static void configureUnusedPinsLowPower();
 };

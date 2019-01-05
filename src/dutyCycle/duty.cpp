@@ -38,6 +38,7 @@ void Duty::onWakeForAlarm() {
 	 */
 
 	// require alarm pin (also mean SPI ready) still configured as input
+    // TODO 2019 add assertions here
 
     Alarm::configureAfterWake();
 
