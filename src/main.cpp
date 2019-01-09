@@ -51,6 +51,12 @@ void configureSystem() {
 
     // Prevent NMI on FRAM writes
     SoC::disableFRAMWriteProtect();
+
+    /*
+     *  XT1 defaults to autooff.
+     *  Framework does not use XT1, so it should be off and this is not required.
+     */
+    /// SoC::disableXT1();
 }
 
 /*
@@ -154,6 +160,7 @@ int main(void)
     // require a wakeup source else never wake
 
     // assert GPIO configured for sleeping, to soon be locked
+    // myAssert(SoC::areGPIOGeneralPurpose());
 
     /*
      * Some TI sources say there is a race here,

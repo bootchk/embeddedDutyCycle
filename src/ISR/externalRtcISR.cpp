@@ -40,18 +40,47 @@
  * Here, the ISR just clears interrupt flag, so no infinite interrupt loop.
  */
 
+
+/*
+ * This implementation is somewhat fragile, it only covers 3 GPIO ports
+ *
+ * !!! Also, it does not share the interrupt vector for other interrupts on the same port.
+ */
+
+
+
 #if  GPIO_PORT_P2 == AlarmSignalPort
+
 #pragma vector = PORT2_VECTOR
 __interrupt void Port2_ISR(void)
 {
     Duty::clearAlarmOnMCU();
 }
-#else
+#elif GPIO_PORT_P1 == AlarmSignalPort
+
 #pragma vector = PORT1_VECTOR
 __interrupt void Port1_ISR(void)
 {
     Duty::clearAlarmOnMCU();
 }
+
+#elif GPIO_PORT_P3 == AlarmSignalPort
+
+#ifndef PORT3_VECTOR
+// !!! Some family members have no interrupts on port 3
+#error PORT3_VECTOR not defined!
+#endif
+
+#pragma vector = PORT3_VECTOR
+__interrupt void Port3_ISR(void)
+{
+    Duty::clearAlarmOnMCU();
+}
+
+#else
+
+#error AlarmSignalPort not match any GPIO Port!
+
 #endif
 
 

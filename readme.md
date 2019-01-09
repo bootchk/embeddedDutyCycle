@@ -241,10 +241,21 @@ The framework depends on certain drivers implemented by msp430Drivers.
 Dependencies:   App -> embeddedDutyCycle -> msp430Drivers -> DriverLib for MSP430
                 App ----------------------> msp430Drivers
 
-embeddedDutyCycle uses peripherals: 
+embeddedDutyCycle uses peripherals from msp430Driver: 
 
      - ADC: used to measure Vcc
      - Alarm: interface to the external, ultra low power RTC
+     - Timer: to delay in LPM3 until there is a power reserve
+     
+     
+ISRs
+-
+
+The framework includes ISR (interrupt service routines) for the peripherals it uses AND for NMI interrupts.
+
+!!! The ISR for the Alarm peripheral must be configured in board.h
+
+
 
 Configuration
 -

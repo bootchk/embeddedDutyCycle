@@ -4,6 +4,9 @@
 #include <rtc.h>
 
 
+/*
+ * ISR to support Timer (msp430Drivers)
+ */
 
 
 #pragma vector = RTC_VECTOR
