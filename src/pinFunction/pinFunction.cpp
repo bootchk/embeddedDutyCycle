@@ -7,27 +7,30 @@
 #include <gpio.h>	// depends on msp430.h
 
 // MSP430Drivers
-#include <pinFunction/spiPins.h>
+#include <bridge/bridge.h>
 
 
 
 
 
 
-void PinFunction::configure() {
+void PinFunction::configureToSleepState() {
 
     // Only the app knows all unused pins
     App::configureUnusedPinsLowPower();
 
 
-    // Pins used by framework
+    // Framework knows pins it uses
 
-    // requires SPI access to RTC
-    SPIPins::configureSelectSPIPin();
-    // Other SPI pins configured as needed
+    /*
+     * Framework requires bus access to RTC
+     */
+    Bridge::configureToSleepState();
+
+    // Other bus pins configured as needed
 
 
-    // Pins used by app
+    // App knows pins it uses
     App::configureUsedPins();
 
     // TODO Alarm pin configured later???

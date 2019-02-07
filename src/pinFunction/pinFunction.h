@@ -1,8 +1,12 @@
 
 /*
- * Abstracts configuring module's GPIO pins.
- * Hides that the framework drives configuration,
- * but the app defines it.
+ * Framework understands that pins are held during LPM4.5.
+ *
+ * Abstracts configuring GPIO pins for the framework.
+ *
+ * The framework drives configuration.
+ * Both the framework and the app defines configurations.
+ * IOW, this configures pins owned by the framework, and gives app chance to configure pins owned by app.
  *
  * Application and board specific.
  * Knows which devices (that use pins) are used by application.
@@ -22,6 +26,5 @@
 
 class PinFunction {
 public:
-    static void configure();
-
+    static void configureToSleepState();
 };

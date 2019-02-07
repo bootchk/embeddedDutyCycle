@@ -108,7 +108,7 @@ int main(void)
     if ( DutyMain::isResetAwakeFromSleep() and didColdstart ) {
 
         ///delayForStartup();
-        PinFunction::configure();
+        PinFunction::configureToSleepState();
 
 #ifdef TRAP_WAKE
         // Trap to allow debugger to synch when using "Free Run" ?
@@ -137,7 +137,7 @@ int main(void)
          * and set output values (because they are indeterminate, possibly LED on)
          * BEFORE delay for Startup
          */
-        PinFunction::configure();
+        PinFunction::configureToSleepState();
 
         //delayForStartup();
 
@@ -159,7 +159,11 @@ int main(void)
 
     // require a wakeup source else never wake
 
-    // assert GPIO configured for sleeping, to soon be locked
+    /*
+     * Ensure GPIO configured for sleeping, to soon be locked.
+     * No modules in use, all GPIO are general purpose.
+     * (FUTURE: assert only alarm pin is an input.)
+     */
     // myAssert(SoC::areGPIOGeneralPurpose());
 
     /*

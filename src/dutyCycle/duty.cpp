@@ -89,7 +89,7 @@ void Duty::restoreMCUToPresleepConfiguration() {
 }
 
 void Duty::lowerMCUToPresleepConfiguration() {
-	Alarm::unconfigureMcuSPIInterface();
+	Alarm::unconfigureMcuBusInterface();
 }
 
 void Duty::clearAlarmOnMCU() {
