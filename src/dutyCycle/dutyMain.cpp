@@ -10,7 +10,11 @@
 // MSP430Drivers
 #include <SoC/SoC.h>
 #include <assert/myAssert.h>
+
+
+// TEMP
 //#include <src/debug/test.h>
+#include <timer/timer.h>
 
 
 
@@ -56,6 +60,9 @@ void DutyMain::onWakeFromLPMReset() {
 
     SoC::clearIsResetAWakeFromSleep();
 
+    // TEMP testing
+    //LowPowerTimer::delayHalfSecond();
+
     /*
      * GPIO config registers were reset (but GPIO state is held.)
      * Preconfigure as it was before sleep.
@@ -66,10 +73,14 @@ void DutyMain::onWakeFromLPMReset() {
 
     SoC::unlockMCUFromSleep();
 
-    // Interrupt is serviced now, if presleep configuration enables interrupts
+    // Interrupt would be serviced now, but the configuration at this point has NOT enabled alarm interrupt
+
+    // TEMP debugging
+    //LowPowerTimer::delayFiveSeconds();
 
     Duty::onWakeForAlarm();
     // assert alarm interrupt is cleared and Duty is ready for setAlarm
+
 
     App::onWakeForAlarm();
     // assert app done with useful work
@@ -95,12 +106,19 @@ void DutyMain::onResetPostlude() {
      * Alternatives, depending on whether app schedules in terms of type Duration or EpochTime
      */
 
-#define SET_ALARM_BY_TIME
-#ifdef SET_ALARM_BY_TIME
+
+#ifdef OLD
+    Formerly, scheduling was by time
     Duty::setTimeAlarmOrReset(App::timeToWake());
-#else
-    Duty::setDurationAlarmOrReset(App::constantDurationOfSleep());
 #endif
+    Duty::setDurationAlarmOrReset(App::durationOfSleep());
+
+    /*
+     * Also, for testing you can:
+     * Duty::setDurationAlarmOrReset(App::constantDurationOfSleep());
+     */
+
+
 
 
     Duty::lowerMCUToPresleepConfiguration();

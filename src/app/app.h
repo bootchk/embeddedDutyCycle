@@ -87,7 +87,8 @@ public:
 	static Duration constantDurationOfSleep();
 
 	// Duty at variable intervals, using task scheduler
-	static EpochTime timeToWake();
+	// OLD static EpochTime timeToWake();
+	static Duration durationOfSleep();
 
 
 	/*

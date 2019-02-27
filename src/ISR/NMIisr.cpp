@@ -75,7 +75,7 @@ __interrupt void SYSNMI_ISR(void)
 
     case SYSSNIV_VMAIFG:       /* SYSSNIV : VMAIFG */
         // Common case, in my experience
-        Fatal::fatalReset();
+        Fatal::fatalHWFault();
 
 
     case SYSSNIV_SVSLIFG:      /* SYSSNIV : SVS low-power reset entry */
@@ -89,7 +89,7 @@ __interrupt void SYSNMI_ISR(void)
     default:
         // Uncommon, in my experience
         // In production, should do SW reset
-        Fatal::fatalReset();
+        Fatal::fatalHWFault();
     }
   }
 }

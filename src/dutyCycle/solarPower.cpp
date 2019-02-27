@@ -4,7 +4,8 @@
 // msp430Drivers
 #include <timer/timer.h>
 #include <ADC/adc.h>
-#include <board.h>
+
+#include <board.h>  // MinVccForStarting
 
 
 
@@ -36,5 +37,6 @@ void SolarPower::sleepUntilPowerReserve() {
     LowPowerTimer::delayFiveSeconds();
 
     while (not isPowerForStarting())
+        // LPT sleeps in LPM3 (clocks stopped, RAM retained, typically 1uA current)
         LowPowerTimer::delayFiveSeconds();
 }

@@ -34,12 +34,22 @@ class TaskScheduler {
 private:
     /*
      * Make ready the task of given kind.
-     * Return time for which alarm should be set for the task.
+     * Only one ready task at a time.
+     */
+    static void readyATask(unsigned int);
+
+    /*
+     * Return time for which alarm should be set for the ready task.
      *
      * !!! The time must be in the future, else alarm would not go off.
      * This enforces that by adding to the task's scheduledTime, when it is already in the past.
      */
-    static EpochTime readyATask(unsigned int);
+    static EpochTime getTimeOfReadyTask();
+
+    /*
+     * Return duration from now until the ready task should be executed.
+     */
+    static Duration getDurationUntilReadyTask();
 
     /*
      * Adjust scheduled time of given task so it is in the future.
@@ -55,10 +65,11 @@ public:
     static void onAlarm();
 
     /*
-     * Activate next task and return time it should execute.
+     * Activate next task and return time/duration  it should execute.
      * Caller will set alarm, alarm will call onAlarm()
      */
-    static EpochTime timeOfNextTask();
+    // OLD static EpochTime timeOfNextTask();
+    static Duration durationUntilNextTask();
 
     /*
      * Schedule a task of kind.
@@ -67,7 +78,7 @@ public:
      */
     static void scheduleTask(unsigned int kind,
         TaskMethodPtr method,
-        EpochTime epochTime);
+        Duration durationUntilExecution);
 
     /*
      * Is some task scheduled? (Of either kind)

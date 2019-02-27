@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <time/timeTypes.h>   // EpochTime
+#include <time/timeTypes.h>   // Duration
 
 //#include "../debug/test.h"
 #include "task.h"
@@ -16,7 +16,7 @@
 
 class ScheduledTaskSlot {
 public:
-    EpochTime scheduledTime;
+    Duration durationUntilExecution;
     TaskMethodPtr taskMethodPtr;
     bool isEmpty = true;
 

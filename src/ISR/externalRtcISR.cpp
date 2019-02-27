@@ -6,6 +6,8 @@
 // msp430Drivers
 #include <board.h>  // board config
 
+#include <assert/myAssert.h>
+
 
 
 
@@ -61,6 +63,13 @@ __interrupt void Port2_ISR(void)
 #pragma vector = PORT1_VECTOR
 __interrupt void Port1_ISR(void)
 {
+    /*
+     * This ISR never executes since we don't enable the interrupt after waking from LPM4.5.
+     * The interrupt generator does wake from LPM4.5 and the IFG is set,
+     * but the ISR is not called.
+     */
+    myAssert(false);
+
     Duty::clearAlarmOnMCU();
 }
 

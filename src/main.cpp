@@ -6,12 +6,17 @@
 #include <PMM/powerMgtModule.h>
 #include <SoC/SoC.h>
 #include <assert/myAssert.h>
+#include <bridge/serialBus/i2c/i2c.h>
 
 #include "dutyCycle/dutyMain.h"
 #include "pinFunction/pinFunction.h"
 
+// Assertions
+#include "pinFunction/allPins.h"
 
+// Testing
 //#include <src/debug/test.h>
+#include <timer/timer.h>
 
 
 
@@ -19,7 +24,8 @@
  * Basic framework for an app that sleeps in LPM4.5 between external interrupts.
  *
  * Derived from TI example code.
- * This portion should not be changed.
+ *
+ * Ideally, none of the framework shouldbe changed; only implement the hooks.
  *
  * See mainObject.cpp for prelude, cold reset, wake, and postlude implementations.
  *
@@ -34,6 +40,7 @@
 /*
  * For debugging.
  * Without this, the debugging probe makes the app always think it is wake from sleep?
+ * !!! May need to reload program while debugging to reset this.
  */
 #pragma PERSISTENT
 bool didColdstart = false;
@@ -57,6 +64,11 @@ void configureSystem() {
      *  Framework does not use XT1, so it should be off and this is not required.
      */
     /// SoC::disableXT1();
+
+    // This doesn't seem to have any effect.
+    // Docs show that SMCLK defaults to on, but since it is driven by MCLK and divisor is 1,
+    // turning it off does not save power.  But we drive eUSCI_B with it?
+    //SoC::turnOffSMCLK();
 }
 
 /*
@@ -67,18 +79,12 @@ void configureSystem() {
  * It also seems to work only for coldstart.
  */
 
-#ifdef UNUSED
+
 void delayForStartup()
 {
-    ///Test::blinkForcedGreenLED(1);
-
-    // 500k cycles at 8mHz SMCLK is .05 seconds
-    //Test::delayHalfMillionCycles();
-
-    // 5k * 10uSec tick is 50kuSec is .05 seconds
-    LowPowerTimer::delay(5000);
+    LowPowerTimer::delayHalfSecond();
 }
-#endif
+
 
 }
 
@@ -107,8 +113,9 @@ int main(void)
     // Dispatch on reset reason: reset is wake out of an LPMx.5 OR any other (typically cold start.)
     if ( DutyMain::isResetAwakeFromSleep() and didColdstart ) {
 
-        ///delayForStartup();
+        //delayForStartup();
         PinFunction::configureToSleepState();
+        AllPins::assertAreConfiguredForSleep();
 
 #ifdef TRAP_WAKE
         // Trap to allow debugger to synch when using "Free Run" ?
@@ -119,11 +126,7 @@ int main(void)
             ;
 #endif
 
-        ///Test::blinkForcedGreenLED(3);
-        ///Debug::leaveCrumb(20);
-
         DutyMain::onWakeFromLPMReset();
-        ///Test::blinkRedLED(5);
     }
     else {
         /*
@@ -138,33 +141,43 @@ int main(void)
          * BEFORE delay for Startup
          */
         PinFunction::configureToSleepState();
+        AllPins::assertAreConfiguredForSleep();
 
         //delayForStartup();
 
-        /// Debug::leaveCrumb(10);
-        ///Test::blinkForcedGreenLED(2);
-
         DutyMain::onColdReset();
-        ///Test::blinkRedLED(2);
     }
 
     myAssert(not PMM::isLockedLPM5());
 
-    /// Debug::leaveCrumb(30);
+    //LowPowerTimer::delayHalfSecond();
+
     // Configure one or more wakeup sources
     DutyMain::onResetPostlude();
-
-    ///Test::blinkRedLED(10);
-    ///Test::delayBriefly();
 
     // require a wakeup source else never wake
 
     /*
      * Ensure GPIO configured for sleeping, to soon be locked.
-     * No modules in use, all GPIO are general purpose.
      * (FUTURE: assert only alarm pin is an input.)
+     *
+     * This assertion holds:
+     * - just before we sleep
+     * - after we wake, just before we unlock.
+     * If we attempt to sleep when assertion if false, power consumption could be excess.
+     * If we unlock while assertion is false, power consumption could be excess.
      */
-    // myAssert(SoC::areGPIOGeneralPurpose());
+    AllPins::assertAreConfiguredForSleep();
+
+    /*
+     * Assert no modules in use.
+     * These are assertions about their state, not about their pins.
+     * There exists some overlap in these assertions.
+     * These only cover the modules used by the framework, not by the app.
+     * The app must no use any modules during sleep (else sleep won't be LPM4.5)
+     */
+    myAssert(I2C::isInSleepState());
+    // TODO assert internal Timer RTC off
 
     /*
      * Some TI sources say there is a race here,

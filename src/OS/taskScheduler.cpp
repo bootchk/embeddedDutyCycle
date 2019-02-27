@@ -36,7 +36,43 @@ ScheduledTaskSlot tasks[2] = {0,0};
 #pragma PERSISTENT
 unsigned int readyTaskIndex = 666;
 
+
+unsigned int getReadyTaskIndex() {
+    // At least one task slot is not empty
+    // At most two task slots are not empty
+
+    unsigned int result;
+
+    if (tasks[0].isEmpty)
+    {
+        // only task 1
+        myAssert(not tasks[1].isEmpty);
+        result = 1;
+    }
+    else if (tasks[1].isEmpty)
+    {
+        // only task 0
+        myAssert(not tasks[0].isEmpty);
+        result = 0;
+    }
+    else
+    {
+        // both slots non-empty
+        // choose task with soonest time
+
+        if (tasks[0].durationUntilExecution.seconds < tasks[1].durationUntilExecution.seconds)
+        {
+            result = 0;
+        }
+        else
+        {
+            result = 1;
+        }
+    }
+    return result;
 }
+
+}  // namespace
 
 
 
@@ -69,13 +105,21 @@ void TaskScheduler::onAlarm() {
 }
 
 
-EpochTime TaskScheduler::readyATask(unsigned int taskIndex) {
+void TaskScheduler::readyATask(unsigned int taskIndex) {
     myAssert( not tasks[taskIndex].isEmpty );
 
     readyTaskIndex = taskIndex;
-    return tasks[taskIndex].scheduledTime;
+
 }
 
+
+Duration TaskScheduler::getDurationUntilReadyTask() {
+    return tasks[readyTaskIndex].durationUntilExecution;
+}
+
+
+#ifdef OLD
+Now we schedule by duration
 
 
 void TaskScheduler::makeTaskScheduledTimeInFuture(unsigned int taskIndex) {
@@ -84,35 +128,13 @@ void TaskScheduler::makeTaskScheduledTimeInFuture(unsigned int taskIndex) {
 }
 
 
+
 EpochTime TaskScheduler::timeOfNextTask() {
     myAssert(isTaskScheduled());
 
     unsigned int theReadyTaskIndex;
 
-    // At least one task slot is not empty
-    // At most two task slots are not empty
-
-    if (tasks[0].isEmpty) {
-        // only task 1
-        myAssert(not tasks[1].isEmpty);
-        theReadyTaskIndex = 1;
-    }
-    else if (tasks[1].isEmpty) {
-        // only task 0
-        myAssert(not tasks[0].isEmpty);
-        theReadyTaskIndex = 0;
-    }
-    else {
-        // both slots non-empty
-        // choose task with soonest time
-
-        if (tasks[0].scheduledTime < tasks[1].scheduledTime) {
-            theReadyTaskIndex = 0;
-        }
-        else {
-            theReadyTaskIndex = 1;
-        }
-    }
+    theReadyTaskIndex = getReadyTaskIndex();
 
     /*
      * Caller will set alarm and sleep.
@@ -125,18 +147,30 @@ EpochTime TaskScheduler::timeOfNextTask() {
 
     return readyATask(theReadyTaskIndex);
 }
+#endif
+
+
+Duration TaskScheduler::durationUntilNextTask() {
+    myAssert(isTaskScheduled());
+
+    unsigned int theReadyTaskIndex;
+
+    theReadyTaskIndex = getReadyTaskIndex();
+    readyATask(theReadyTaskIndex);
+    return getDurationUntilReadyTask();
+}
 
 
 void TaskScheduler::scheduleTask(
         unsigned int kind,
         TaskMethodPtr method,
-        EpochTime epochTime) {
+        Duration aDurationUntilExecution) {
 
     // slot must be empty, to reuse it
     myAssert( tasks[kind].isEmpty );
 
     tasks[kind].taskMethodPtr = method;
-    tasks[kind].scheduledTime = epochTime;
+    tasks[kind].durationUntilExecution = aDurationUntilExecution;
     tasks[kind].isEmpty = false;
 }
 

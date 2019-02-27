@@ -38,18 +38,26 @@ void Duty::onWakeForAlarm() {
 	 */
 
 	// require alarm pin (also mean SPI ready) still configured as input
-    // TODO 2019 add assertions here
-
-    Alarm::configureAfterWake();
-
-    Alarm::clearAlarm();
 
 	/*
-	 * Assert alarm is cleared and no more will come, yet.
-	 * Assert ready for setAlarm()
+	 *
+	 * Assert  no more alarms will come, until we set a new one.
 	 *
 	 * Continuation typically is to act, then sleep mcu.
 	 */
+
+    // We do nothing, until as late as possible.
+
+    /*
+     * Alternatively we could clear alarm IFG here, and ready Alarm now.
+     * This is the old design.
+     *
+     * Alarm::clearAlarm();
+     * Alarm::configureAfterWake();
+     *
+     * Ensure alarm is cleared.
+     * Ensure ready for setAlarm()
+     */
 }
 
 
@@ -62,6 +70,8 @@ void Duty::setDurationAlarmOrReset(Duration duration) {
 	}
 }
 
+#ifdef OLD
+
 void Duty::setTimeAlarmOrReset(EpochTime time) {
     /*
      * Fail means system might sleep forever, so only adequate response is reset mcu
@@ -70,6 +80,7 @@ void Duty::setTimeAlarmOrReset(EpochTime time) {
         SoftFault::failSetAlarm();
     }
 }
+#endif
 
 /*
  * Three simple delegations.

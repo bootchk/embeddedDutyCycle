@@ -6,8 +6,9 @@
 // mcu hal layer e.g. MSPWare DriverLib
 #include <gpio.h>	// depends on msp430.h
 
-// MSP430Drivers
+// msp430Drivers
 #include <bridge/bridge.h>
+#include <alarm/alarm.h>
 
 
 
@@ -23,17 +24,22 @@ void PinFunction::configureToSleepState() {
     // Framework knows pins it uses
 
     /*
-     * Framework requires bus access to RTC
+     * Framework reserves bus access to RTC.
+     * App knows they are reserved but doesn't know how to configure them.
      */
     Bridge::configureToSleepState();
 
-    // Other bus pins configured as needed
+    /*
+     * Framework reserves alarm pin.
+     * App knows they are reserved but doesn't know how to configure them.
+     */
+    Alarm::configureMcuAlarmInterface();
 
 
-    // App knows pins it uses
+    // App knows pins it uses during sleep (e.g. a pin that lights an LED during sleep.)
     App::configureUsedPins();
 
-    // TODO Alarm pin configured later???
+    // ensure all pins configured for sleep
 }
 
 
