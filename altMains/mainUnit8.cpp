@@ -103,7 +103,7 @@ int main888() {
     LEDAndLightSensor::toOffFromUnconfigured();
     PMM::unlockLPM5();
 
-    SoC::unlockMCUFromSleep();
+    SoC::unlockGPIOFromSleep();
 
     // No sleeping
     while (true) {

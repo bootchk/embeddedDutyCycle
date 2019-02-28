@@ -8,8 +8,12 @@
 #include <assert/myAssert.h>
 #include <bridge/serialBus/i2c/i2c.h>
 
-#include "dutyCycle/dutyMain.h"
+#include "dutyCycle/solarPower.h"
+#include "dutyCycle/duty.h"
+// OLD #include "dutyCycle/dutyMain.h"
 #include "pinFunction/pinFunction.h"
+#include "app/app.h"
+
 
 // Assertions
 #include "pinFunction/allPins.h"
@@ -111,7 +115,7 @@ int main(void)
     ///delayForStartup();
 
     // Dispatch on reset reason: reset is wake out of an LPMx.5 OR any other (typically cold start.)
-    if ( DutyMain::isResetAwakeFromSleep() and didColdstart ) {
+    if ( SoC::isResetWakeFromSleep() and didColdstart ) {
 
         //delayForStartup();
         PinFunction::configureToSleepState();
@@ -126,7 +130,22 @@ int main(void)
             ;
 #endif
 
-        DutyMain::onWakeFromLPMReset();
+        SoC::clearIFGForResetWakeFromSleep();
+        SoC::unlockGPIOFromSleep();
+        // Interrupt would be serviced now, but the configuration at this point has NOT enabled alarm interrupt
+
+        /*
+         * App hook.
+         * App may use GPIO and modules not reserved for framework, but leaves any such GPIO and modules in sleeping state.
+         * RTC and its EpochClock are not available to App.
+         */
+        App::onWakeForAlarm();
+
+        /*
+         * Only now clear the alarm IFG and ready Alarm.
+         * RTC chip should not have been reset, and remains configured.
+         */
+        Duty::prepareForAlarmingAfterWake();
     }
     else {
         /*
@@ -145,20 +164,38 @@ int main(void)
 
         //delayForStartup();
 
-        DutyMain::onColdReset();
+        // When solar powered, must sleep until power is adequate.
+        SolarPower::sleepUntilPowerReserve();
+
+        /*
+         * App hook.
+         * App go to initial state
+         */
+        App::onPowerOnReset();
+
+        /*
+         * RTC chip should also have been power on reset, and needs configuring.
+         */
+        Duty::prepareForAlarmingAfterColdReset();
     }
 
     myAssert(not PMM::isLockedLPM5());
 
     //LowPowerTimer::delayHalfSecond();
 
-    // Configure one or more wakeup sources
-    DutyMain::onResetPostlude();
+    /*
+     * Configure framework's wakeup source.
+     * Only now do we configure GPIO and modules needed for Alarm.
+     */
 
-    // require a wakeup source else never wake
+    Duty::setDurationAlarmOrReset(App::durationOfSleep());
+    // Undo GPIO and modules for Alarm
+    Duty::lowerMCUToPresleepConfiguration();
+
+    // TODO, RTC may not have been configured
 
     /*
-     * Ensure GPIO configured for sleeping, to soon be locked.
+     * Require GPIO configured for sleeping, to soon be locked.
      * (FUTURE: assert only alarm pin is an input.)
      *
      * This assertion holds:

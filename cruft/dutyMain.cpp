@@ -18,17 +18,12 @@
 
 
 
-bool DutyMain::isResetAwakeFromSleep() {
-    /*
-     * decodes all reasons.
-     * May assert if reset reason is not an expected one,
-     * e.g. some fault and not a wake from sleep reset or a coldstart reset.
-     */
+bool DutyMain2::isResetAwakeFromSleep() {
     return SoC::isResetAWakeFromSleep();
 }
 
 
-void DutyMain::onColdReset() {
+void DutyMain2::onColdReset() {
     // assert unused GPIO configured
 
     // When solar powered, must sleep until power is adequate.
@@ -54,7 +49,7 @@ void DutyMain::onColdReset() {
 }
 
 
-void DutyMain::onWakeFromLPMReset() {
+void DutyMain2::onWakeFromLPMReset() {
     // LOCKLPM5 is set unless we are using forceBlink functions
     /// myAssert(PMM::isLockedLPM5());
 
@@ -71,7 +66,7 @@ void DutyMain::onWakeFromLPMReset() {
     Duty::restoreMCUToPresleepConfiguration();
     App::configureSleepingGPIO();
 
-    SoC::unlockMCUFromSleep();
+    SoC::unlockGPIOFromSleep();
 
     // Interrupt would be serviced now, but the configuration at this point has NOT enabled alarm interrupt
 
@@ -89,7 +84,7 @@ void DutyMain::onWakeFromLPMReset() {
 }
 
 
-void DutyMain::onResetPostlude() {
+void DutyMain2::onResetPostlude() {
     // Assert app is done with its useful work, or is in initial state
 
     // Assert app has unconfigured any devices used temporarily in its useful work.
@@ -106,6 +101,7 @@ void DutyMain::onResetPostlude() {
      * Alternatives, depending on whether app schedules in terms of type Duration or EpochTime
      */
 
+    Duty::prepareForAlarming();
 
 #ifdef OLD
     Formerly, scheduling was by time

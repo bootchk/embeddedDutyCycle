@@ -11,7 +11,7 @@
  * This slices: calls both the framework and the app.
  */
 
-class DutyMain {
+class DutyMain2 {
 public:
     /*
      * Determine why we reset

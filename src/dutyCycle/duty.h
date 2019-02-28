@@ -19,6 +19,9 @@
  */
 
 
+
+
+
 class Duty {
 public:
 	/*
@@ -33,30 +36,6 @@ public:
 	static void restoreMCUToPresleepConfiguration();
 
 
-	/*
-	 * Configures RTC interface and RTC for duty cycling Alarm
-	 *
-	 * Called infrequently.
-	 * The system is intended to avoid power on reset caused by exhausting power.
-	 *
-	 * Exceptions:
-	 * sw resets the mcu if rtc is non-communicative (times out or other error).
-	 * Since this is called on reset, and might sw reset the mcu,
-	 * the mcu could continually reset while rtc is not functioning.
-	 */
-	static void onPowerOnReset();
-
-
-	/*
-	 * Handle duty cycling aspect of waking:
-	 * Restore interface to RTC and clear the alarm.
-	 *
-	 * Called on wake for alarm interrupt,
-	 * which is a reset (for TI LPM4.5, called BOR reset)
-	 * Called frequently as part of duty cycling.
-	 * RTC has not been reset.
-	 */
-	static void onWakeForAlarm();
 
 	/*
 	 * Caller should follow immediately with:
@@ -74,7 +53,52 @@ public:
 	static void setTimeAlarmOrReset(EpochTime);
 
 	/*
-	 * Clear alarm interrupt.
+	 * Clear alarm interrupt flag.
+	 * Does not clear alarm on RTC chip.
 	 */
 	static void clearAlarmOnMCU();
+
+
+	/*
+	 * Configure GPIO and modules so we can talk to RTC chip.
+	 * Does not configure RTC chip.
+	 */
+	static void prepareForAlarmingAfterWake();
+
+	/*
+     * Configure GPIO and modules so we can talk to RTC chip.
+     * AND configure RTC chip.
+     * Does not configure GPIO for alarm signal (it is an input, configured earlier.)
+     */
+    static void prepareForAlarmingAfterColdReset();
+
 };
+
+
+#ifdef OLD
+/*
+     * Configures RTC interface and RTC for duty cycling Alarm
+     *
+     * Called infrequently.
+     * The system is intended to avoid power on reset caused by exhausting power.
+     *
+     * Exceptions:
+     * sw resets the mcu if rtc is non-communicative (times out or other error).
+     * Since this is called on reset, and might sw reset the mcu,
+     * the mcu could continually reset while rtc is not functioning.
+     */
+    static void onPowerOnReset();
+
+
+    /*
+     * Handle duty cycling aspect of waking:
+     * Restore interface to RTC and clear the alarm.
+     *
+     * Called on wake for alarm interrupt,
+     * which is a reset (for TI LPM4.5, called BOR reset)
+     * Called frequently as part of duty cycling.
+     * RTC has not been reset.
+     */
+    static void onWakeForAlarm();
+
+#endif

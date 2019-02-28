@@ -8,7 +8,7 @@
 
 
 
-
+#ifdef OLD
 /*
  * The mcu has seen a power on reset event (Vcc rising).
  * The mcu was not in LPM sleep previously (a hard reset.)
@@ -59,7 +59,50 @@ void Duty::onWakeForAlarm() {
      * Ensure ready for setAlarm()
      */
 }
+#endif
 
+void Duty::prepareForAlarmingAfterWake() {
+    /*
+     * Alarm went off some time ago.
+     * Alarm has not been cleared.
+     * Alarm has not been configured.
+     * RTC chip remains configured.
+     */
+
+    Alarm::configureAfterWake();
+    /*
+     * Ensure Alarm is ready for clearing and setting.
+     */
+
+    // This may reset if RTC is non-responsive
+    Alarm::clearBothSidesOfSignal();
+
+    /*
+     * Ensure alarm pin IFG is clear.
+     * Ensure RTC alarm is clear
+     * Ensure Alarm ready for new alarm.
+     */
+}
+
+
+void Duty::prepareForAlarmingAfterColdReset() {
+    /*
+     * MCU was power on reset.
+     * Assume RTC chip also power on reset.
+     * Alarm pin is configured as input with interrupt.
+     */
+
+    Alarm::configureAfterColdReset();
+    /*
+     * Ensure Alarm is ready for clearing and setting.
+     */
+
+    /*
+     * Ensure alarm pin IFG is clear.
+     * Ensure RTC alarm is clear.
+     * Ensure Alarm ready for new alarm.
+     */
+}
 
 void Duty::setDurationAlarmOrReset(Duration duration) {
 	/*
