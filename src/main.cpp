@@ -10,7 +10,7 @@
 
 #include "dutyCycle/solarPower.h"
 #include "dutyCycle/duty.h"
-// OLD #include "dutyCycle/dutyMain.h"
+#include "dutyCycle/centralSystem.h"
 #include "pinFunction/pinFunction.h"
 #include "app/app.h"
 
@@ -52,37 +52,14 @@ bool didColdstart = false;
 
 namespace {
 
-/*
- * Configure system (after reset)
- * - faults we want to catch (NMI for vacant memory access)
- * - capability we want (write to FRAM)
- */
-void configureSystem() {
-    SoC::enableBSLOffAndVacantMemoryNMI();
-
-    // Prevent NMI on FRAM writes
-    SoC::disableFRAMWriteProtect();
-
-    /*
-     *  XT1 defaults to autooff.
-     *  Framework does not use XT1, so it should be off and this is not required.
-     */
-    /// SoC::disableXT1();
-
-    // This doesn't seem to have any effect.
-    // Docs show that SMCLK defaults to on, but since it is driven by MCLK and divisor is 1,
-    // turning it off does not save power.  But we drive eUSCI_B with it?
-    //SoC::turnOffSMCLK();
-}
 
 /*
- * Delay is needed for some unknown reason.
+ * Delay might be needed for some unknown reason.
  * When I remove this delay, fails assert RTC::isReadable in alarmConfigure
  * !!! This delay, determined experimentally, seems necessary.
  * Originally it was on every reset.
  * It also seems to work only for coldstart.
  */
-
 
 void delayForStartup()
 {
@@ -110,7 +87,7 @@ int main(void)
      */
     SoC::stopWatchDog();
 
-    configureSystem();
+    CentralSystem::configureAfterReset();
 
     ///delayForStartup();
 
@@ -180,19 +157,12 @@ int main(void)
     }
 
     myAssert(not PMM::isLockedLPM5());
-
-    //LowPowerTimer::delayHalfSecond();
-
-    /*
-     * Configure framework's wakeup source.
-     * Only now do we configure GPIO and modules needed for Alarm.
-     */
+    // assert we configured GPIO and modules needed for Alarm.
 
     Duty::setDurationAlarmOrReset(App::durationOfSleep());
+
     // Undo GPIO and modules for Alarm
     Duty::lowerMCUToPresleepConfiguration();
-
-    // TODO, RTC may not have been configured
 
     /*
      * Require GPIO configured for sleeping, to soon be locked.
