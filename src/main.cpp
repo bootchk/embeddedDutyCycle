@@ -145,6 +145,11 @@ int main(void)
         SolarPower::sleepUntilPowerReserve();
 
         /*
+         * LPM5 should not be locked if is a true cold restart, but debugger may do funny things.
+         */
+        if (PMM::isLockedLPM5()) PMM::unlockLPM5();
+
+        /*
          * App hook.
          * App go to initial state
          */

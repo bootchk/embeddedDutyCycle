@@ -57,11 +57,11 @@ void blinkAmber() {
     // Same pin as used to measure light, now used to generate light
     LED::configureLED1();
 
-    LED::blink(); // spins, using power
+    // OLD LED::blink(); // spins, using power
 
-    //LED::turnOn();
-    //LowPowerTimer::delayTicksOf100uSec(5000);
-    //LED::turnOff();
+    LED::turnOn();
+    LowPowerTimer::delayTicksOf100uSec(5000);
+    LED::turnOff();
 }
 
 
