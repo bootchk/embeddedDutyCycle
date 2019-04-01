@@ -112,17 +112,21 @@ int main(void)
         // Interrupt would be serviced now, but the configuration at this point has NOT enabled alarm interrupt
 
         /*
-         * App hook.
-         * App may use GPIO and modules not reserved for framework, but leaves any such GPIO and modules in sleeping state.
-         * RTC and its EpochClock are not available to App.
+         * The order of the next two calls is important.
+         * If App expects to use EpochClock, which depends on RTC, then Alarm must be configured first.
          */
-        App::onWakeForAlarm();
 
         /*
-         * Only now clear the alarm IFG and ready Alarm.
+         * Clear the alarm IFG and ready Alarm (and its dependency: RTC, and therefore also ready EpochClock)
          * RTC chip should not have been reset, and remains configured.
          */
         Duty::prepareForAlarmingAfterWake();
+
+        /*
+         * App hook.
+         * App may use GPIO and modules not reserved for framework, but leaves any such GPIO and modules in sleeping state.
+         */
+        App::onWakeForAlarm();
     }
     else {
         /*
