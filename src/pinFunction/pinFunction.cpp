@@ -3,12 +3,10 @@
 // Delegates to App
 #include "../app/app.h"
 
-// mcu hal layer e.g. MSPWare DriverLib
-#include <gpio.h>	// depends on msp430.h
-
 // msp430Drivers
 #include <bridge/bridge.h>
 #include <alarm/alarm.h>
+#include <pinFunction/allPins.h>
 
 
 
@@ -18,7 +16,11 @@
 void PinFunction::configureToSleepState() {
 
     // Only the app knows all unused pins
-    App::configureUnusedPinsLowPower();
+    // OLD App::configureUnusedPinsLowPower();
+
+    // msp430Drivers knows all pins and how to set to a base state.
+    // Configure all to a base state, to be soon changed.
+    AllPins::setHighOutput();
 
 
     // Framework knows pins it uses
