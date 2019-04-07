@@ -109,4 +109,12 @@ public:
     static void configureUnusedPinsLowPower();
 
     static void configureUsedPins();
+
+    /*
+     * Tell app that timeNow() is available.
+     * Until after this call, app should not access timeNow()
+     * In other words, this is a hook for the app called after EpochClock is available.
+     */
+    static void takeTimeNow();
+
 };

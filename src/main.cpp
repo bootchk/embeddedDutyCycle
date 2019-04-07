@@ -5,6 +5,8 @@
 // MSP430Drivers
 #include <PMM/powerMgtModule.h>
 #include <SoC/SoC.h>
+
+// assertion
 #include <assert/myAssert.h>
 #include <bridge/serialBus/i2c/i2c.h>
 
@@ -117,16 +119,16 @@ int main(void)
          */
 
         /*
-         * Clear the alarm IFG and ready Alarm (and its dependency: RTC, and therefore also ready EpochClock)
-         * RTC chip should not have been reset, and remains configured.
-         */
-        Duty::prepareForAlarmingAfterWake();
-
-        /*
          * App hook.
          * App may use GPIO and modules not reserved for framework, but leaves any such GPIO and modules in sleeping state.
          */
         App::onWakeForAlarm();
+
+        /*
+         * Clear the alarm IFG and ready Alarm (and its dependency: RTC, and therefore also ready EpochClock)
+         * RTC chip should not have been reset, and remains configured.
+         */
+        Duty::prepareForAlarmingAfterWake();
     }
     else {
         /*
@@ -168,13 +170,20 @@ int main(void)
     myAssert(not PMM::isLockedLPM5());
     // assert we configured GPIO and modules needed for Alarm.
 
+    /*
+     * App usually is using task scheduler.
+     * Some task must be scheduled. Scheduled task determines duration of sleep.
+     */
     Duty::setDurationAlarmOrReset(App::durationOfSleep());
+
+    // Give app chance to use timeNow()
+    App::takeTimeNow();
 
     // Undo GPIO and modules for Alarm
     Duty::lowerMCUToPresleepConfiguration();
 
     /*
-     * Require GPIO configured for sleeping, to soon be locked.
+     * Require GPIO configured for sleeping, soon to be locked.
      * (FUTURE: assert only alarm pin is an input.)
      *
      * This assertion holds:
@@ -194,6 +203,7 @@ int main(void)
      */
     myAssert(I2C::isInSleepState());
     // TODO assert internal Timer RTC off
+    // TODO assert ADC off
 
     /*
      * Some TI sources say there is a race here,
