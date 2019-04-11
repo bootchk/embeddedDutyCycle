@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <time/timeTypes.h>   // Duration
+#include <alarmClock/time/timeTypes.h>   // Duration
 
 //#include "../debug/test.h"
 #include "task.h"

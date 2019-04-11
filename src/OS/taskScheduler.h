@@ -2,7 +2,7 @@
 
 #include "scheduledTaskSlot.h"
 
-#include <time/timeTypes.h>  // EpochTime
+#include <alarmClock/time/timeTypes.h>  // EpochTime
 
 
 

@@ -5,7 +5,7 @@
 
 // MSP430Drivers
 #include <assert/myAssert.h>
-#include <realTimeClock/epochClock/epochClock.h>
+#include <alarmClock/epochClock/epochClock.h>
 
 
 

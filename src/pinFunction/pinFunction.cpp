@@ -5,7 +5,7 @@
 
 // msp430Drivers
 #include <bridge/bridge.h>
-#include <alarm/alarm.h>
+#include <alarmClock/alarm/alarm.h>
 #include <pinFunction/allPins.h>
 
 
