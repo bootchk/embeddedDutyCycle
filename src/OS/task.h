@@ -1,12 +1,19 @@
 
-// function or method that is the task
+/*
+ * Function or static method that is the task.
+ */
+typedef void (*TaskMethodPtr) (void);
+
+
+typedef Duration (*MomentMethodPtr) (void);
+
+#ifdef OLD
 ///typedef void TaskMethod(void);
 
 // Pointer to it
 ///typedef TaskMethod* TaskMethodPtr;
+#endif
 
-// Alternative:
-typedef void (*TaskMethodPtr) (void);
 
 
 

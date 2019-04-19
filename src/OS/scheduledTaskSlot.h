@@ -12,11 +12,29 @@
  * Knows a scheduled task.
  *
  * Many instances, in a container.
+ *
+ * Tasks are created with two actions: schedule() and ready().
+ * Scheduled when the task and MomentMethod is known but not the moment.
+ * Later ready()ed at a moment defined by the time of ready() plus duration returned by MomentMethod.
+ * In other words, at the time of scheduling, the duration til the moment need not be known,
+ * only a method that will return the moment when the task is actually ready()ed.
+ *
  */
 
 class ScheduledTaskSlot {
 public:
-    Duration durationUntilExecution;
+    /*
+     * Method returning moment to be scheduled.
+     */
+    MomentMethodPtr momentMethodPtr;
+
+    //OLD: duration known when slotted
+    // Duration durationUntilExecution;
+
+
+    /*
+     * Task to be executed.
+     */
     TaskMethodPtr taskMethodPtr;
     bool isEmpty = true;
 

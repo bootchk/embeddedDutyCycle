@@ -13,15 +13,30 @@
 namespace {
 
 /*
+ * MULTIPLE_TASK_SLOTS
+ * Slot for two types of task can be scheduled concurrently.
+ *
+ * Without this, at most one task is ever scheduled.
+ */
+
+/*
  * Owns container, here a simple array.
- * Two types of task can be scheduled.
+ *
  *
  * Must be persistent through low power sleep.
  *
  * !!! Must be initialized, else CCS compiler puts them in .bss RAM.  Compile time initial value is moot.
+ *
+ *
  */
+#ifdef MULTIPLE_TASK_SLOTS
 #pragma PERSISTENT
 ScheduledTaskSlot tasks[2] = {0,0};
+#else
+#pragma PERSISTENT
+ScheduledTaskSlot tasks[1] = {0};
+#endif
+
 
 
 
@@ -36,7 +51,7 @@ ScheduledTaskSlot tasks[2] = {0,0};
 #pragma PERSISTENT
 unsigned int readyTaskIndex = 666;
 
-
+#ifdef MULTIPLE_TASK_SLOTS
 unsigned int getReadyTaskIndex() {
     // At least one task slot is not empty
     // At most two task slots are not empty
@@ -71,6 +86,14 @@ unsigned int getReadyTaskIndex() {
     }
     return result;
 }
+#else
+unsigned int getReadyTaskIndex() {
+    // At least one task slot is not empty
+
+    myAssert(not tasks[0].isEmpty);
+    return 0;
+}
+#endif
 
 }  // namespace
 
@@ -80,7 +103,9 @@ unsigned int getReadyTaskIndex() {
 void TaskScheduler::init() {
     // No tasks scheduled
     tasks[0].isEmpty = true;
+#ifdef MULTIPLE_TASK_SLOTS
     tasks[1].isEmpty = true;
+#endif
 
     // readyTaskIndex will not be accessed until scheduling alarm makes it valid
 }
@@ -114,8 +139,78 @@ void TaskScheduler::readyATask(unsigned int taskIndex) {
 
 
 Duration TaskScheduler::getDurationUntilReadyTask() {
-    return tasks[readyTaskIndex].durationUntilExecution;
+    // Invoke MomentMethod to get Duration
+    return tasks[readyTaskIndex].momentMethodPtr();
+    // OLD return tasks[readyTaskIndex].durationUntilExecution;
 }
+
+
+
+
+
+Duration TaskScheduler::durationUntilNextTask() {
+    myAssert(isTaskScheduled());
+
+    unsigned int theReadyTaskIndex;
+
+    theReadyTaskIndex = getReadyTaskIndex();
+    readyATask(theReadyTaskIndex);
+    return getDurationUntilReadyTask();
+}
+
+#ifdef MULTIPLE_TASK_SLOTS
+void TaskScheduler::scheduleTask(
+        unsigned int kind,
+        TaskMethodPtr taskMethod,
+        //OLD Duration aDurationUntilExecution
+        MomentMethodPtr momentMethod
+        ) {
+
+    // slot must be empty, to reuse it
+    myAssert( tasks[kind].isEmpty );
+
+    tasks[kind].taskMethodPtr = taskMethod;
+    // OLD tasks[kind].durationUntilExecution = aDurationUntilExecution;
+    tasks[kind].momentMethodPtr = momentMethod;
+    tasks[kind].isEmpty = false;
+}
+#else
+
+void TaskScheduler::scheduleTask(
+        TaskMethodPtr taskMethod,
+        MomentMethodPtr momentMethod
+        ) {
+
+    // slot must be empty, to reuse it
+    myAssert( tasks[0].isEmpty );
+
+    tasks[0].taskMethodPtr = taskMethod;
+    // OLD tasks[0].durationUntilExecution = aDurationUntilExecution;
+    tasks[0].momentMethodPtr = momentMethod;
+    tasks[0].isEmpty = false;
+}
+#endif
+
+
+
+bool TaskScheduler::isTaskScheduled() {
+#ifdef MULTIPLE_TASK_SLOTS
+    return (not (tasks[0].isEmpty and tasks[1].isEmpty ));
+#else
+    return (not (tasks[0].isEmpty));
+#endif
+}
+
+
+bool TaskScheduler::isTaskReady() {
+    // readyTaskIndex is the index of some slot, not the NULL value
+#ifdef MULTIPLE_TASK_SLOTS
+    return (readyTaskIndex == 0 or readyTaskIndex == 1);
+#else
+    return (readyTaskIndex == 0 );
+#endif
+}
+
 
 
 #ifdef OLD
@@ -148,39 +243,3 @@ EpochTime TaskScheduler::timeOfNextTask() {
     return readyATask(theReadyTaskIndex);
 }
 #endif
-
-
-Duration TaskScheduler::durationUntilNextTask() {
-    myAssert(isTaskScheduled());
-
-    unsigned int theReadyTaskIndex;
-
-    theReadyTaskIndex = getReadyTaskIndex();
-    readyATask(theReadyTaskIndex);
-    return getDurationUntilReadyTask();
-}
-
-
-void TaskScheduler::scheduleTask(
-        unsigned int kind,
-        TaskMethodPtr method,
-        Duration aDurationUntilExecution) {
-
-    // slot must be empty, to reuse it
-    myAssert( tasks[kind].isEmpty );
-
-    tasks[kind].taskMethodPtr = method;
-    tasks[kind].durationUntilExecution = aDurationUntilExecution;
-    tasks[kind].isEmpty = false;
-}
-
-
-
-bool TaskScheduler::isTaskScheduled() {
-    return (not (tasks[0].isEmpty and tasks[1].isEmpty ));
-}
-
-
-bool TaskScheduler::isTaskReady() {
-    return (readyTaskIndex == 0 or readyTaskIndex == 1);
-}

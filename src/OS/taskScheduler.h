@@ -76,9 +76,11 @@ public:
      * Asserts if there is already a task scheduled of that kind.
      * Only one task of a kind can be scheduled.
      */
-    static void scheduleTask(unsigned int kind,
-        TaskMethodPtr method,
-        Duration durationUntilExecution);
+    static void scheduleTask(
+        // OLD unsigned int kind,
+        TaskMethodPtr taskMethod,
+        // OLD Duration durationUntilExecution
+        MomentMethodPtr momentMethod);
 
     /*
      * Is some task scheduled? (Of either kind)
