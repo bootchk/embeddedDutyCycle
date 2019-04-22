@@ -173,6 +173,7 @@ int main(void)
     /*
      * App usually is using task scheduler.
      * Some task must be scheduled. Scheduled task determines duration of sleep.
+     * !!! Duration may be zero, but Alarm handles that by bumping to 2.
      */
     Duty::setDurationAlarmOrReset(App::durationOfSleep());
 
