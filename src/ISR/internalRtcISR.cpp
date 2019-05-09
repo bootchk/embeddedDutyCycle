@@ -1,17 +1,23 @@
 
-#include <msp430.h>
+#include <msp430.h> // RTC_VECTOR
 
+// Driverlib
 #include <rtc.h>
+
+// msp430Drivers
+#include <timer/counter.h>
 
 
 /*
- * ISR to support Timer (msp430Drivers)
+ * ISR to support Counter (and Timer) in msp430Drivers.
  */
 
 
 #pragma vector = RTC_VECTOR
 __interrupt void RTC_ISR(void)
 {
+    Counter::setOverflowFlag();
+
     /*
      * RTC interrupts for many reasons.
      * We expect overflow reason, and clear only it.
