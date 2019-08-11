@@ -134,6 +134,7 @@ SECTIONS
        GROUP(READ_WRITE_MEMORY)
        {
           .TI.persistent : {}                /* For #pragma persistent            */
+          .TI.noinit  : {}
        }
 
        GROUP(READ_ONLY_MEMORY)
@@ -168,7 +169,7 @@ SECTIONS
 
     .bss        : {} > RAM                /* Global & static vars              */
     .data       : {} > RAM                /* Global & static vars              */
-    .TI.noinit  : {} > RAM                /* For #pragma noinit                */
+    /* lkk .TI.noinit  : {} > RAM                /* For #pragma noinit                */
     .cio        : {} > RAM                /* C I/O buffer                      */
     .sysmem     : {} > RAM                /* Dynamic memory allocation area    */
     .stack      : {} > RAM (HIGH)         /* Software system stack             */

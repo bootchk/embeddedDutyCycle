@@ -5,11 +5,11 @@
 // MSP430Drivers
 #include <PMM/powerMgtModule.h>
 #include <SoC/SoC.h>
-
-// assertion
 #include <assert/myAssert.h>
 #include <bridge/serialBus/i2c/i2c.h>
 
+
+// embeddedDutyCycle framework
 #include "dutyCycle/solarPower.h"
 #include "dutyCycle/duty.h"
 #include "dutyCycle/centralSystem.h"
@@ -21,8 +21,8 @@
 #include "pinFunction/allPins.h"
 
 // Testing
-//#include <src/debug/test.h>
-#include <timer/timer.h>
+// #include <src/debug/test.h>
+// #include "delay.h"
 
 
 
@@ -31,7 +31,7 @@
  *
  * Derived from TI example code.
  *
- * Ideally, none of the framework shouldbe changed; only implement the hooks.
+ * Ideally, none of the framework should be changed; only implement the hooks.
  *
  * See mainObject.cpp for prelude, cold reset, wake, and postlude implementations.
  *
@@ -39,8 +39,6 @@
  * Must disconnect from debug probe for it to work.
  * I have posted a bug report to TI forum.
  */
-
-
 
 
 /*
@@ -52,24 +50,6 @@
 bool didColdstart = false;
 
 
-namespace {
-
-
-/*
- * Delay might be needed for some unknown reason.
- * When I remove this delay, fails assert RTC::isReadable in alarmConfigure
- * !!! This delay, determined experimentally, seems necessary.
- * Originally it was on every reset.
- * It also seems to work only for coldstart.
- */
-
-void delayForStartup()
-{
-    LowPowerTimer::delayHalfSecond();
-}
-
-
-}
 
 
 /*
@@ -119,16 +99,23 @@ int main(void)
          */
 
         /*
-         * App hook.
-         * App may use GPIO and modules not reserved for framework, but leaves any such GPIO and modules in sleeping state.
+         * Clear the alarm IFG and ready Alarm (and its dependency: RTC, and therefore also ready EpochClock)
+         * RTC chip should not have POR reset, and remains configured.
+         */
+        Duty::prepareForAlarmingAfterWake();
+
+        /*
+         * App may use GPIO and modules not reserved for framework.
+         * App must leave any such GPIO and modules in sleeping state.
          */
         App::onWakeForAlarm();
-
+#ifdef TEMP
         /*
          * Clear the alarm IFG and ready Alarm (and its dependency: RTC, and therefore also ready EpochClock)
          * RTC chip should not have been reset, and remains configured.
          */
         Duty::prepareForAlarmingAfterWake();
+#endif
     }
     else {
         /*
@@ -156,13 +143,13 @@ int main(void)
         if (PMM::isLockedLPM5()) PMM::unlockLPM5();
 
         /*
-         * App hook.
          * App go to initial state
          */
         App::onPowerOnReset();
 
         /*
-         * RTC chip should also have been power on reset, and needs configuring.
+         * RTC chip also might have been power on reset.
+         * If so, RTC needs configuring.
          */
         Duty::prepareForAlarmingAfterColdReset();
     }
