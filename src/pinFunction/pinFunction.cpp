@@ -14,12 +14,24 @@
 
 
 void PinFunction::configureToSleepState() {
+    /*
+     * This has no effect on actual signals (only affects GPIO config regs), since GPIO pins are locked.
+     */
+    // require GPIO pins LPM45 locked
 
     // Only the app knows all unused pins
     // OLD App::configureUnusedPinsLowPower();
 
     // msp430Drivers knows all pins and how to set to a base state.
-    // Configure all to a base state, to be soon changed.
+    /*
+     * Configure all pins to a base, default state.
+     * To be soon changed for pins used by framework and app.
+     *
+     * Default state is somewhat arbitrary.
+     * Default state concerns pins which are not connected (or tied to a rail, see the board design.)
+     * Direction must be out to prevent excess current from floating inputs.
+     * Value can be high or low, here we choose High (since unused pins are not connected on the board.)
+     */
     AllPins::setHighOutput();
 
 
