@@ -6,7 +6,9 @@
 #include <PMM/powerMgtModule.h>
 #include <SoC/SoC.h>
 #include <assert/myAssert.h>
-#include <bridge/serialBus/i2c/i2c.h>
+
+// For assertions on drivers in msp43Drivers
+#include <i2c/i2c.h>
 
 
 // embeddedDutyCycle framework
@@ -164,8 +166,7 @@ int main(void)
      */
     Duty::setDurationAlarmOrReset(App::durationOfSleep());
 
-    // Give app chance to use timeNow()
-    App::takeTimeNow();
+    App::hookBeforeSleep();
 
     // Undo GPIO and modules for Alarm
     Duty::lowerMCUToPresleepConfiguration();

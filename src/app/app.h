@@ -111,10 +111,10 @@ public:
     static void configureUsedPins();
 
     /*
-     * Tell app that timeNow() is available.
-     * Until after this call, app should not access timeNow()
-     * In other words, this is a hook for the app called after EpochClock is available.
+     * Give app a last slot of time, after alarm was set and just before sleeping.
+     * Usually not used.
+     * (It is largely vestigial from a bug whereby EpochClock::timeNow() only worked in this slot.)
      */
-    static void takeTimeNow();
+    static void hookBeforeSleep();
 
 };
