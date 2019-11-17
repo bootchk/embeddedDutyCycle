@@ -35,6 +35,8 @@
 
 
 
+#define I2C_HAS_INTERNAL_PULLUPS
+
 /*
  * SPI config
  */

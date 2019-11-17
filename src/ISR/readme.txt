@@ -1,7 +1,4 @@
-The ISR's are in this project because the framework uses msp430Driver modules that require them.
-And generally, a client of msp430Drivers might want to modify the ISR.
+Some ISR's are defined in msp430Drivers.
+Since this project uses many msp430Drivers, those ISR's are also used.
 
-
-Note there are duplicates for Timer.
-Depends on the msp430Drivers/config.h
-Whether Timer uses WDT or internal RTC0.
+NMIISR is defined here since it is not in msp430Drivers, and we do enable and catch NMI's.
